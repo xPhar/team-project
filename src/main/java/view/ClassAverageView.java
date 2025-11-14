@@ -17,7 +17,7 @@ import java.beans.PropertyChangeListener;
  */
 public class ClassAverageView extends JPanel implements ActionListener, PropertyChangeListener {
 
-    private final String viewName = "average";
+    private final String viewName = "class average";
 
     private final ClassAverageViewModel classAverageViewModel;
 
