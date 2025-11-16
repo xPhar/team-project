@@ -3,7 +3,6 @@ package data_access;
 import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 
 /**
@@ -156,6 +155,15 @@ public class GradeAPIDataAccessObject {
         modifyUserInfoEndpoint(username, password, info);
     }
 
+    // Second example method, this one updates info non-destructively by first fetching the user data
+    public void appendToUser(String username, String password) throws DataAccessException {
+        JSONObject info = getUserInfo(username);
+
+        info.put("newField", "This got appended!");
+
+        modifyUserInfoEndpoint(username, password, info);
+    }
+
     private void modifyUserInfoEndpoint(String username, String password, JSONObject infoObject)
             throws DataAccessException {
         final OkHttpClient client = new OkHttpClient().newBuilder()
@@ -188,6 +196,31 @@ public class GradeAPIDataAccessObject {
         }
         catch (IOException | JSONException ex) {
             throw new DataAccessException(ex.getMessage());
+        }
+    }
+
+    private JSONObject getUserInfo(String username) throws DataAccessException {
+        // Make an API call to get the user object.
+        final OkHttpClient client = new OkHttpClient().newBuilder().build();
+        final Request request = new Request.Builder()
+                .url(String.format("http://vm003.teach.cs.toronto.edu:20112/user?username=%s", username))
+                .addHeader("Content-Type", CONTENT_TYPE_JSON)
+                .build();
+        try {
+            final Response response = client.newCall(request).execute();
+
+            final JSONObject responseBody = new JSONObject(response.body().string());
+
+            if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
+                final JSONObject userJSONObject = responseBody.getJSONObject("user");
+                return userJSONObject.getJSONObject("info");
+            }
+            else {
+                throw new DataAccessException(responseBody.getString(MESSAGE));
+            }
+        }
+        catch (IOException | JSONException ex) {
+            throw new RuntimeException(ex);
         }
     }
 }
