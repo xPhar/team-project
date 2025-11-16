@@ -25,6 +25,11 @@ public class SubmissionBuilder {
         return this;
     }
 
+    public SubmissionBuilder submissionName(String submissionName) {
+        this.submission.setSubmissionName(submissionName);
+        return this;
+    }
+
     public SubmissionBuilder submissionData(String submissionData) {
         this.submission.setSubmissionData(submissionData);
         return this;
@@ -32,6 +37,11 @@ public class SubmissionBuilder {
 
     public SubmissionBuilder grade(double grade) {
         this.submission.setGrade(grade);
+        return this;
+    }
+
+    public SubmissionBuilder feedback(String feedback) {
+        this.submission.setFeedback(feedback);
         return this;
     }
 

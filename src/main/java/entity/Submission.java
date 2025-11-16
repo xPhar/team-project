@@ -6,8 +6,10 @@ public class Submission {
     private String assignment;
     private String submitter;
     private LocalDateTime submissionTime;
+    private String submissionName;
     private String submissionData;
     private double grade;
+    private String feedback;
     private Status status;
 
     public enum Status {
@@ -41,6 +43,14 @@ public class Submission {
         this.submissionTime = submissionTime;
     }
 
+    public String getSubmissionName() {
+        return submissionName;
+    }
+
+    public void setSubmissionName(String submissionName) {
+        this.submissionName = submissionName;
+    }
+
     public String getSubmissionData() {
         return submissionData;
     }
@@ -55,6 +65,14 @@ public class Submission {
 
     public void setGrade(double grade) {
         this.grade = grade;
+    }
+
+    public String getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
     }
 
     public Status getStatus() {
