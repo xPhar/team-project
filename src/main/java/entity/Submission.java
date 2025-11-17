@@ -22,7 +22,6 @@ public class Submission {
     public String getAssignment() {
         return assignment;
     }
-    public void setAssignment(String assignment) { this.assignment = assignment; }
 
     public void setAssignment(String assignment) {
         this.assignment = assignment;
@@ -31,7 +30,6 @@ public class Submission {
     public String getSubmitter() {
         return submitter;
     }
-    public void setSubmitter(String submitter) { this.submitter = submitter; }
 
     public void setSubmitter(String submitter) {
         this.submitter = submitter;
@@ -40,7 +38,6 @@ public class Submission {
     public LocalDateTime getSubmissionTime() {
         return submissionTime;
     }
-    public void setSubmissionTime(LocalDateTime submissionTime) { this.submissionTime = submissionTime; }
 
     public void setSubmissionTime(LocalDateTime submissionTime) {
         this.submissionTime = submissionTime;
@@ -57,7 +54,6 @@ public class Submission {
     public String getSubmissionData() {
         return submissionData;
     }
-    public void setSubmissionData(String submissionData) { this.submissionData = submissionData; }
 
     public void setSubmissionData(String submissionData) {
         this.submissionData = submissionData;
@@ -65,10 +61,6 @@ public class Submission {
 
     public double getGrade() {
         return grade;
-    }
-
-    public void setGrade(double grade) {
-        this.grade = grade;
     }
 
     public String getFeedback() {
@@ -82,8 +74,6 @@ public class Submission {
     public void setGrade(double grade) {
         this.grade = grade;
     }
-
-    public void setStatus(Status status) { this.status = status; }
 
     public Status getStatus() {
         return status;

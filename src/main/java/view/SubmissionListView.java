@@ -1,6 +1,7 @@
 package view;
 
 import entity.Submission;
+import entity.SubmissionBuilder;
 import interface_adapter.submission_list.SubmissionTableModel;
 
 import javax.swing.*;
@@ -22,14 +23,14 @@ public class SubmissionListView extends JPanel {
         ArrayList<Submission> submissions = new ArrayList<>();
         LocalDateTime time = LocalDateTime.now();
         for (int i = 0; i < 100; i++) {
-            Submission newSubmission = new Submission();
-            newSubmission.setSubmitter("Indy");
-            newSubmission.setSubmissionTime(time);
+            SubmissionBuilder submissionBuilder = new SubmissionBuilder();
+            submissionBuilder.submitter("Indy")
+                    .submissionTime(time);
             if (Math.random() <= 0.8) {
-                newSubmission.setGrade(Math.random()*100);
-                newSubmission.setStatus(Submission.Status.GRADED);
+                submissionBuilder.grade(Math.random()*100);
+                submissionBuilder.status(Submission.Status.GRADED);
             }
-            submissions.add(newSubmission);
+            submissions.add(submissionBuilder.build());
             time = time.plusSeconds(1);
         }
         SubmissionTableModel model = new SubmissionTableModel(submissions);

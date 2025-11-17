@@ -6,7 +6,7 @@ import java.util.List;
 public class SubmissionBuilder {
     private final Submission submission;
 
-    SubmissionBuilder() {
+    public SubmissionBuilder() {
         this.submission = new Submission();
     }
 
