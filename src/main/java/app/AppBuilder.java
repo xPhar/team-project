@@ -2,6 +2,10 @@ package app;
 
 import interface_adapter.Submit.SubmitViewModel;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.submission.SubmissionViewModel;
+import interface_adapter.submission_list.SubmissionListViewModel;
+import view.SubmissionListView;
+import view.SubmissionView;
 import view.SubmitView;
 import view.ViewManager;
 
@@ -31,6 +35,20 @@ public class AppBuilder {
         return this;
     }
     // TODO: Implement builder methods
+
+    public AppBuilder addSubmissionListView() {
+        SubmissionListViewModel submissionListViewModel = new SubmissionListViewModel();
+        SubmissionListView submissionListView = new SubmissionListView(submissionListViewModel);
+        cardPanel.add(submissionListView, submissionListView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addSubmissionView() {
+        SubmissionViewModel submissionViewModel = new SubmissionViewModel();
+        SubmissionView submissionView = new SubmissionView(submissionViewModel);
+        cardPanel.add(submissionView, submissionView.getViewName());
+        return this;
+    }
 
     public JFrame build() {
         final JFrame application = new JFrame("User Login Example");
