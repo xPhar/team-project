@@ -2,10 +2,10 @@ package app;
 
 import data_access.DummyDataAccessObject;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
-import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
@@ -15,6 +15,7 @@ import usecase.login.LoginOutputBoundary;
 import usecase.signup.SignupInputBoundary;
 import usecase.signup.SignupInteractor;
 import usecase.signup.SignupOutputBoundary;
+import view.LoggedInView;
 import view.LoginView;
 import view.SignupView;
 import view.ViewManager;
@@ -36,6 +37,7 @@ public class AppBuilder {
     private SignupView signupView;
     private SignupViewModel signupViewModel;
 
+    private LoggedInView loggedInView;
     private LoggedInViewModel loggedInViewModel;
 
     public AppBuilder() {
@@ -57,17 +59,16 @@ public class AppBuilder {
     }
 
     public AppBuilder addLoggedInView() {
-        // We'll create this later, but adding the structure for now
         loggedInViewModel = new LoggedInViewModel();
-        // loggedInView = new LoggedInView(loggedInViewModel);
-        // cardPanel.add(loggedInView, loggedInView.getViewName());
+        loggedInView = new LoggedInView(loggedInViewModel);
+        cardPanel.add(loggedInView, loggedInView.getViewName());
         return this;
     }
 
     public AppBuilder addLoginUsecase() {
         final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(
                 viewManagerModel,
-                loggedInViewModel,  // We'll create this
+                loggedInViewModel,
                 signupViewModel,
                 loginViewModel
         );
@@ -81,11 +82,10 @@ public class AppBuilder {
     }
 
     public AppBuilder addSignupUsecase() {
-        // Fix: SignupPresenter now requires LoginViewModel as third parameter
         final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(
                 viewManagerModel,
                 signupViewModel,
-                loginViewModel  // Added this parameter
+                loginViewModel
         );
 
         final SignupInputBoundary signupInteractor = new SignupInteractor(
@@ -97,11 +97,11 @@ public class AppBuilder {
     }
 
     public JFrame build() {
-        final JFrame application = new JFrame("Coursework Submission & Grading Platform");
+        final JFrame application = new JFrame("Coursework Submission & Grading Platform - DEMO");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        // Set preferred size for better initial window size
-        cardPanel.setPreferredSize(new Dimension(600, 500));
+        // Set preferred size for better demo experience
+        cardPanel.setPreferredSize(new Dimension(700, 550));
         application.add(cardPanel);
 
         // Start with login view
@@ -109,11 +109,16 @@ public class AppBuilder {
         viewManagerModel.firePropertyChange();
 
         application.pack();
-        application.setLocationRelativeTo(null); // Center the window
+        application.setLocationRelativeTo(null);
 
-        // Print initial state for debugging
-        System.out.println("Application started successfully!");
-        System.out.println("Available views: Login, Signup");
+        // Print demo instructions
+        System.out.println("=== DEMO APPLICATION STARTED ===");
+        System.out.println("Available Views: Login, Signup, Logged-In Dashboard");
+        System.out.println("Try these test scenarios:");
+        System.out.println("1. Register as Student: username 'student1', password 'password123'");
+        System.out.println("2. Register as Instructor: username 'prof1', password 'password123'");
+        System.out.println("3. Try duplicate username to see error handling");
+        System.out.println("4. Test validation with short passwords/usernames");
         userDataAccessObject.printAllUsers();
 
         return application;
