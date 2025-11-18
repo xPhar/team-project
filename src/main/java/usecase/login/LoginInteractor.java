@@ -17,23 +17,36 @@ public class LoginInteractor implements LoginInputBoundary {
 
     @Override
     public void execute(LoginInputData loginInputData) {
-        final String username = loginInputData.getUsername();
+        final String username = loginInputData.getUsername().trim();
         final String password = loginInputData.getPassword();
-        if (!userDataAccessObject.existsByName(username)) {
-            loginPresenter.prepareFailView(username + ": Account does not exist.");
+
+        // Input validation
+        if (username.isEmpty()) {
+            loginPresenter.prepareFailView("Username cannot be empty.");
+            return;
         }
-        else {
-            final String pwd = userDataAccessObject.get(username).getPassword();
-            if (!password.equals(pwd)) {
-                loginPresenter.prepareFailView("Incorrect password for \"" + username + "\".");
+
+        if (password == null || password.isEmpty()) {
+            loginPresenter.prepareFailView("Password cannot be empty.");
+            return;
+        }
+
+        if (!userDataAccessObject.existsByName(username)) {
+            loginPresenter.prepareFailView("Account '" + username + "' does not exist.");
+        } else {
+            final User user = userDataAccessObject.get(username);
+            if (user == null) {
+                loginPresenter.prepareFailView("Error retrieving user data.");
+                return;
             }
-            else {
 
-                final User user = userDataAccessObject.get(loginInputData.getUsername());
-
+            final String storedPassword = user.getPassword();
+            if (!password.equals(storedPassword)) {
+                loginPresenter.prepareFailView("Incorrect password for \"" + username + "\".");
+            } else {
                 userDataAccessObject.setCurrentUsername(username);
 
-                final LoginOutputData loginOutputData = new LoginOutputData(user.getName());
+                final LoginOutputData loginOutputData = new LoginOutputData(user.getName(), user.getClass().getSimpleName());
                 loginPresenter.prepareSuccessView(loginOutputData);
             }
         }

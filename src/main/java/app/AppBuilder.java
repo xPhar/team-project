@@ -5,6 +5,7 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
+import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
@@ -22,7 +23,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class AppBuilder {
-    // TODO: Add instance variables
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
     final ViewManagerModel viewManagerModel = new ViewManagerModel();
@@ -36,11 +36,11 @@ public class AppBuilder {
     private SignupView signupView;
     private SignupViewModel signupViewModel;
 
+    private LoggedInViewModel loggedInViewModel;
+
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
     }
-
-    // TODO: Implement builder methods
 
     public AppBuilder addLoginView() {
         loginViewModel = new LoginViewModel();
@@ -56,11 +56,22 @@ public class AppBuilder {
         return this;
     }
 
-
+    public AppBuilder addLoggedInView() {
+        // We'll create this later, but adding the structure for now
+        loggedInViewModel = new LoggedInViewModel();
+        // loggedInView = new LoggedInView(loggedInViewModel);
+        // cardPanel.add(loggedInView, loggedInView.getViewName());
+        return this;
+    }
 
     public AppBuilder addLoginUsecase() {
-        final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel,
-                signupViewModel, loginViewModel);
+        final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(
+                viewManagerModel,
+                loggedInViewModel,  // We'll create this
+                signupViewModel,
+                loginViewModel
+        );
+
         final LoginInputBoundary loginInteractor = new LoginInteractor(
                 userDataAccessObject, loginOutputBoundary);
 
@@ -70,8 +81,13 @@ public class AppBuilder {
     }
 
     public AppBuilder addSignupUsecase() {
-        final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel,
-                signupViewModel);
+        // Fix: SignupPresenter now requires LoginViewModel as third parameter
+        final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(
+                viewManagerModel,
+                signupViewModel,
+                loginViewModel  // Added this parameter
+        );
+
         final SignupInputBoundary signupInteractor = new SignupInteractor(
                 userDataAccessObject, signupOutputBoundary);
 
@@ -80,15 +96,25 @@ public class AppBuilder {
         return this;
     }
 
-    // TODO: Update builder once full login flow is complete
     public JFrame build() {
-        final JFrame application = new JFrame("User Login Example");
+        final JFrame application = new JFrame("Coursework Submission & Grading Platform");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
+        // Set preferred size for better initial window size
+        cardPanel.setPreferredSize(new Dimension(600, 500));
         application.add(cardPanel);
 
+        // Start with login view
         viewManagerModel.setState(loginView.getViewName());
         viewManagerModel.firePropertyChange();
+
+        application.pack();
+        application.setLocationRelativeTo(null); // Center the window
+
+        // Print initial state for debugging
+        System.out.println("Application started successfully!");
+        System.out.println("Available views: Login, Signup");
+        userDataAccessObject.printAllUsers();
 
         return application;
     }

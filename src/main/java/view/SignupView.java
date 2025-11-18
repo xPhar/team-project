@@ -12,139 +12,334 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
 /**
- * The View for when the user is logging in to the program.
+ * The View for user registration.
  */
 public class SignupView extends JPanel implements ActionListener, PropertyChangeListener {
 
     private final String viewName = "signup";
     private final SignupViewModel signupViewModel;
 
-    private final JTextField usernameInputField = new JTextField(24);
+    // Form fields
+    private final JTextField fullNameInputField = new JTextField(20);
+    private final JTextField usernameInputField = new JTextField(20);
+    private final JPasswordField passwordInputField = new JPasswordField(20);
+    private final JPasswordField confirmPasswordField = new JPasswordField(20);
+    private final JComboBox<String> roleComboBox = new JComboBox<>(new String[]{"Student", "Instructor"});
+
+    // Error labels
+    private final JLabel fullNameErrorField = new JLabel();
     private final JLabel usernameErrorField = new JLabel();
-
-    private final JPasswordField passwordInputField = new JPasswordField(24);
     private final JLabel passwordErrorField = new JLabel();
+    private final JLabel confirmPasswordErrorField = new JLabel();
+    private final JLabel generalErrorField = new JLabel();
 
-    private final JButton register;
-    private final JButton cancel;
-    private SignupController signupController = null;
+    // Buttons
+    private final JButton registerButton;
+    private final JButton cancelButton;
+    private SignupController signupController;
 
     public SignupView(SignupViewModel signupViewModel) {
-
         this.signupViewModel = signupViewModel;
         this.signupViewModel.addPropertyChangeListener(this);
 
-        final JLabel title = new JLabel("Signup Screen");
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        final LabelTextPanel usernameInfo = new LabelTextPanel(
-                new JLabel("Username"), usernameInputField);
-        final LabelTextPanel passwordInfo = new LabelTextPanel(
-                new JLabel("Password"), passwordInputField);
-
-        final JPanel buttons = new JPanel();
-        register = new JButton("Register");
-        buttons.add(register);
-        cancel = new JButton("cancel");
-        buttons.add(cancel);
-
-        register.addActionListener(
-                evt -> {
-                    if (evt.getSource().equals(register)) {
-                        final SignupState currentState = signupViewModel.getState();
-
-                        signupController.execute(
-                                currentState.getUsername(),
-                                currentState.getPassword()
-                        );
-                    }
-                }
-        );
-
-        cancel.addActionListener(this);
-
-        usernameInputField.getDocument().addDocumentListener(new DocumentListener() {
-
-            private void documentListenerHelper() {
-                final SignupState currentState = signupViewModel.getState();
-                currentState.setUsername(usernameInputField.getText());
-                signupViewModel.setState(currentState);
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-        });
-
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-        passwordInputField.getDocument().addDocumentListener(new DocumentListener() {
-
-            private void documentListenerHelper() {
-                final SignupState currentState = signupViewModel.getState();
-                currentState.setPassword(new String(passwordInputField.getPassword()));
-                signupViewModel.setState(currentState);
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-        });
-
-        this.add(title);
-        this.add(usernameInfo);
-        this.add(usernameErrorField);
-        this.add(passwordInfo);
-        this.add(buttons);
+        setupUI();
+        setupListeners();
     }
 
-    /**
-     * React to a button click that results in evt.
-     * @param evt the ActionEvent to react to
-     */
-    public void actionPerformed(ActionEvent evt) {
-        System.out.println("Click " + evt.getActionCommand());
+    private void setupUI() {
+        setLayout(new BorderLayout(10, 10));
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        // Title
+        JLabel title = new JLabel("Create Your Account", JLabel.CENTER);
+        title.setFont(new Font("Arial", Font.BOLD, 24));
+        title.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+        add(title, BorderLayout.NORTH);
+
+        // Form panel
+        JPanel formPanel = createFormPanel();
+        add(formPanel, BorderLayout.CENTER);
+
+        // Buttons and error panel
+        JPanel bottomPanel = createBottomPanel();
+        add(bottomPanel, BorderLayout.SOUTH);
+    }
+
+    private JPanel createFormPanel() {
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBorder(BorderFactory.createTitledBorder("Registration Information"));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        // Full Name
+        gbc.gridx = 0; gbc.gridy = 0;
+        formPanel.add(new JLabel("Full Name:*"), gbc);
+        gbc.gridx = 1;
+        formPanel.add(fullNameInputField, gbc);
+        gbc.gridx = 2;
+        fullNameErrorField.setForeground(Color.RED);
+        fullNameErrorField.setPreferredSize(new Dimension(200, 20));
+        formPanel.add(fullNameErrorField, gbc);
+
+        // Username
+        gbc.gridx = 0; gbc.gridy = 1;
+        formPanel.add(new JLabel("Username:*"), gbc);
+        gbc.gridx = 1;
+        formPanel.add(usernameInputField, gbc);
+        gbc.gridx = 2;
+        usernameErrorField.setForeground(Color.RED);
+        usernameErrorField.setPreferredSize(new Dimension(200, 20));
+        formPanel.add(usernameErrorField, gbc);
+
+        // Password
+        gbc.gridx = 0; gbc.gridy = 2;
+        formPanel.add(new JLabel("Password:*"), gbc);
+        gbc.gridx = 1;
+        formPanel.add(passwordInputField, gbc);
+        gbc.gridx = 2;
+        passwordErrorField.setForeground(Color.RED);
+        passwordErrorField.setPreferredSize(new Dimension(200, 20));
+        formPanel.add(passwordErrorField, gbc);
+
+        // Confirm Password
+        gbc.gridx = 0; gbc.gridy = 3;
+        formPanel.add(new JLabel("Confirm Password:*"), gbc);
+        gbc.gridx = 1;
+        formPanel.add(confirmPasswordField, gbc);
+        gbc.gridx = 2;
+        confirmPasswordErrorField.setForeground(Color.RED);
+        confirmPasswordErrorField.setPreferredSize(new Dimension(200, 20));
+        formPanel.add(confirmPasswordErrorField, gbc);
+
+        // Role
+        gbc.gridx = 0; gbc.gridy = 4;
+        formPanel.add(new JLabel("Account Type:*"), gbc);
+        gbc.gridx = 1;
+        formPanel.add(roleComboBox, gbc);
+
+        return formPanel;
+    }
+
+    private JPanel createBottomPanel() {
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        registerButton = new JButton("Register");
+        cancelButton = new JButton("Cancel");
+
+        // Style buttons
+        registerButton.setBackground(new Color(76, 175, 80));
+        registerButton.setForeground(Color.WHITE);
+        registerButton.setFocusPainted(false);
+        cancelButton.setBackground(new Color(244, 67, 54));
+        cancelButton.setForeground(Color.WHITE);
+        cancelButton.setFocusPainted(false);
+
+        buttonPanel.add(registerButton);
+        buttonPanel.add(cancelButton);
+
+        // General error message
+        generalErrorField.setForeground(Color.RED);
+        generalErrorField.setHorizontalAlignment(SwingConstants.CENTER);
+
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(buttonPanel, BorderLayout.CENTER);
+        bottomPanel.add(generalErrorField, BorderLayout.SOUTH);
+
+        return bottomPanel;
+    }
+
+    private void setupListeners() {
+        // Register button action
+        registerButton.addActionListener(evt -> {
+            SignupState currentState = signupViewModel.getState();
+
+            // Clear previous errors
+            clearErrors();
+
+            // Validate form
+            if (!validateForm(currentState)) {
+                return;
+            }
+
+            // Call controller
+            signupController.execute(
+                    currentState.getUsername(),
+                    currentState.getPassword(),
+                    currentState.getUserRole(),
+                    currentState.getFullName()
+            );
+        });
+
+        // Cancel button action
+        cancelButton.addActionListener(evt -> {
+            // Clear form and switch to login (this would be handled by controller)
+            signupViewModel.setState(new SignupState());
+            System.out.println("Cancel registration");
+        });
+
+        // Document listeners for real-time validation
+        addDocumentListener(fullNameInputField, "fullName");
+        addDocumentListener(usernameInputField, "username");
+        addDocumentListener(passwordInputField, "password");
+        addDocumentListener(confirmPasswordField, "confirmPassword");
+
+        // Role selection listener
+        roleComboBox.addActionListener(e -> {
+            SignupState currentState = signupViewModel.getState();
+            currentState.setUserRole((String) roleComboBox.getSelectedItem());
+            signupViewModel.setState(currentState);
+        });
+    }
+
+    private void addDocumentListener(JTextField field, String fieldType) {
+        field.getDocument().addDocumentListener(new DocumentListener() {
+            private void update() {
+                SignupState currentState = signupViewModel.getState();
+                String text = field.getText();
+
+                switch (fieldType) {
+                    case "fullName":
+                        currentState.setFullName(text);
+                        validateFullName(text);
+                        break;
+                    case "username":
+                        currentState.setUsername(text);
+                        validateUsername(text);
+                        break;
+                    case "password":
+                        currentState.setPassword(text);
+                        validatePassword(text);
+                        break;
+                    case "confirmPassword":
+                        validateConfirmPassword(text);
+                        break;
+                }
+                signupViewModel.setState(currentState);
+            }
+
+            public void insertUpdate(DocumentEvent e) { update(); }
+            public void removeUpdate(DocumentEvent e) { update(); }
+            public void changedUpdate(DocumentEvent e) { update(); }
+        });
+    }
+
+    private boolean validateForm(SignupState state) {
+        boolean isValid = true;
+
+        if (state.getFullName() == null || state.getFullName().trim().isEmpty()) {
+            fullNameErrorField.setText("Full name is required");
+            isValid = false;
+        }
+
+        if (state.getUsername() == null || state.getUsername().trim().isEmpty()) {
+            usernameErrorField.setText("Username is required");
+            isValid = false;
+        } else if (state.getUsername().length() < 3) {
+            usernameErrorField.setText("Username must be at least 3 characters");
+            isValid = false;
+        }
+
+        if (state.getPassword() == null || state.getPassword().isEmpty()) {
+            passwordErrorField.setText("Password is required");
+            isValid = false;
+        } else if (state.getPassword().length() < 6) {
+            passwordErrorField.setText("Password must be at least 6 characters");
+            isValid = false;
+        }
+
+        String confirmPassword = new String(confirmPasswordField.getPassword());
+        if (!state.getPassword().equals(confirmPassword)) {
+            confirmPasswordErrorField.setText("Passwords do not match");
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    private void validateFullName(String fullName) {
+        if (fullName == null || fullName.trim().isEmpty()) {
+            fullNameErrorField.setText("Full name is required");
+        } else {
+            fullNameErrorField.setText("");
+        }
+    }
+
+    private void validateUsername(String username) {
+        if (username == null || username.trim().isEmpty()) {
+            usernameErrorField.setText("Username is required");
+        } else if (username.length() < 3) {
+            usernameErrorField.setText("Username must be at least 3 characters");
+        } else {
+            usernameErrorField.setText("");
+        }
+    }
+
+    private void validatePassword(String password) {
+        if (password == null || password.isEmpty()) {
+            passwordErrorField.setText("Password is required");
+        } else if (password.length() < 6) {
+            passwordErrorField.setText("Password must be at least 6 characters");
+        } else {
+            passwordErrorField.setText("");
+        }
+
+        // Also validate confirm password when password changes
+        validateConfirmPassword(new String(confirmPasswordField.getPassword()));
+    }
+
+    private void validateConfirmPassword(String confirmPassword) {
+        String password = new String(passwordInputField.getPassword());
+        if (!password.equals(confirmPassword)) {
+            confirmPasswordErrorField.setText("Passwords do not match");
+        } else {
+            confirmPasswordErrorField.setText("");
+        }
+    }
+
+    private void clearErrors() {
+        fullNameErrorField.setText("");
+        usernameErrorField.setText("");
+        passwordErrorField.setText("");
+        confirmPasswordErrorField.setText("");
+        generalErrorField.setText("");
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        final SignupState state = (SignupState) evt.getNewValue();
+        SignupState state = (SignupState) evt.getNewValue();
         setFields(state);
-        usernameErrorField.setText(state.getSignupError());
+        if (state.getSignupError() != null && !state.getSignupError().isEmpty()) {
+            generalErrorField.setText(state.getSignupError());
+        }
     }
 
     private void setFields(SignupState state) {
-        usernameInputField.setText(state.getUsername());
+        // Only set fields if they're different to avoid cursor jumping
+        if (!fullNameInputField.getText().equals(state.getFullName())) {
+            fullNameInputField.setText(state.getFullName());
+        }
+        if (!usernameInputField.getText().equals(state.getUsername())) {
+            usernameInputField.setText(state.getUsername());
+        }
+        // Don't set passwords for security reasons
+        if (roleComboBox.getSelectedItem() != state.getUserRole()) {
+            roleComboBox.setSelectedItem(state.getUserRole());
+        }
     }
 
     public String getViewName() {
         return viewName;
     }
 
-    public void setSignupController(SignupController signupController) {
-        this.signupController = signupController;
+    public void setSignupController(SignupController controller) {
+        this.signupController = controller;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent evt) {
+        System.out.println("Action: " + evt.getActionCommand());
     }
 }

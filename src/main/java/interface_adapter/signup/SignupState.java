@@ -3,12 +3,25 @@ package interface_adapter.signup;
 /**
  * The State for the signup View.
  *
- * <p>The signup view holds a username and a password specified by the user.</p>
+ * <p>The signup view holds a username, password, role, and full name specified by the user.</p>
  */
 public class SignupState {
     private String username = "";
     private String password = "";
-    private String signupError;
+    private String userRole = "Student"; // Default to Student
+    private String fullName = "";
+    private String signupError = "";
+
+    // Copy constructor for creating a new state from existing one
+    public SignupState() {}
+
+    public SignupState(SignupState copy) {
+        this.username = copy.username;
+        this.password = copy.password;
+        this.userRole = copy.userRole;
+        this.fullName = copy.fullName;
+        this.signupError = copy.signupError;
+    }
 
     public String getPassword() {
         return password;
@@ -34,4 +47,30 @@ public class SignupState {
         return signupError;
     }
 
+    public String getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    @Override
+    public String toString() {
+        return "SignupState{" +
+                "username='" + username + '\'' +
+                ", password='" + (password != null ? "[PROTECTED]" : "null") + '\'' +
+                ", userRole='" + userRole + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", signupError='" + signupError + '\'' +
+                '}';
+    }
 }
