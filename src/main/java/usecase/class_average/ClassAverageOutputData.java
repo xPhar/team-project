@@ -16,6 +16,7 @@ public class ClassAverageOutputData {
     private final double stdDev;
     private final double myScore;
     private final Map<String, Integer> histogram;
+    private final String assignmentName;
 
     public ClassAverageOutputData(List<String> assignmentNames,
                                   int studentCount,
@@ -23,7 +24,8 @@ public class ClassAverageOutputData {
                                   double median,
                                   double stdDev,
                                   double myScore,
-                                  Map<String, Integer> histogram) {
+                                  Map<String, Integer> histogram,
+                                  String assignmentName) {
         this.assignmentNames = assignmentNames;
         this.studentCount = studentCount;
         this.mean = mean;
@@ -31,6 +33,7 @@ public class ClassAverageOutputData {
         this.stdDev = stdDev;
         this.myScore = myScore;
         this.histogram = histogram;
+        this.assignmentName = assignmentName;
     }
 
     public List<String> getAssignmentNames() {
@@ -60,4 +63,7 @@ public class ClassAverageOutputData {
     public Map<String, Integer> getHistogram() {
         return histogram;
     }
+
+    public String getAssignmentName() { return assignmentName; }
 }
+

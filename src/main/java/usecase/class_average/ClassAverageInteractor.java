@@ -25,20 +25,26 @@ public class ClassAverageInteractor implements ClassAverageInputBoundary {
 
         List<Submission> submissions = submissionDAO.getSubmissionsFor(assignmentName);
 
-        if (submissions == null || submissions.isEmpty()) {
-            presenter.prepareFailView("No submissions found for assignment: " + assignmentName);
+        if (assignmentName == null || assignmentName.equals("Assignment")) {
+            List<String> assignmentNames = submissionDAO.getAllAssignmentNames();
+            ClassAverageOutputData outputData = new ClassAverageOutputData(
+                    assignmentNames,
+                    0, 0, 0, 0, 0,
+                    new LinkedHashMap<>(), " "
+            );
+            presenter.prepareSuccessView(outputData);
             return;
         }
 
         List<Double> grades = new ArrayList<>();
         for (Submission s : submissions) {
-            if (s.getStatus() == Submission.Status.GRADED && s.getGrade() >= 0) {
+            if (s.getStatus() == Submission.Status.GRADED) {
                 grades.add(s.getGrade());
             }
         }
 
         if (grades.isEmpty()) {
-            presenter.prepareFailView("No graded submissions yet for " + assignmentName);
+            presenter.prepareFailView("Assignment not graded yet!");
             return;
         }
 
@@ -57,7 +63,8 @@ public class ClassAverageInteractor implements ClassAverageInputBoundary {
                 median,
                 stdDev,
                 myScore,
-                histogram
+                histogram,
+                assignmentName
         );
 
         presenter.prepareSuccessView(outputData);

@@ -35,7 +35,7 @@ public class ClassAveragePresenter implements ClassAverageOutputBoundary {
         JPanel chartPanel = buildHistogramChart(data);
         state.setChartPanel(chartPanel);
         viewModel.setState(state);
-        viewModel.firePropertyChange();
+        viewModel.firePropertyChanged();
     }
 
     @Override
@@ -56,7 +56,7 @@ public class ClassAveragePresenter implements ClassAverageOutputBoundary {
         }
 
         JFreeChart chart = ChartFactory.createBarChart(
-                "Grade Distribution",
+                data.getAssignmentName() + " Grade Distribution",
                 "Range",
                 "Students",
                 dataset

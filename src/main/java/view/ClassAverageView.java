@@ -3,7 +3,7 @@ package view;
 import interface_adapter.class_average.ClassAverageController;
 import interface_adapter.class_average.ClassAverageState;
 import interface_adapter.class_average.ClassAverageViewModel;
-import interface_adapter.class_average.LoggedInController;
+import interface_adapter.logged_in.LoggedInController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,7 +60,7 @@ public class ClassAverageView extends JPanel implements ActionListener, Property
         topRow.add(assignmentComboBox);
 
         JPanel statsRow = new JPanel();
-        statsRow.setLayout(new FlowLayout(FlowLayout.LEFT));
+        statsRow.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         studentsLabel = new JLabel("Students: ");
         meanLabel = new JLabel("   Mean: ");
@@ -113,9 +113,9 @@ public class ClassAverageView extends JPanel implements ActionListener, Property
         }
 
         studentsLabel.setText("Students: " + state.getStudentCount());
-        meanLabel.setText("   Mean: " + state.getMean());
-        medianLabel.setText("   Median: " + state.getMedian());
-        stdDevLabel.setText("   Std. Dev.: " + state.getStdDev());
+        meanLabel.setText("   Mean: " + String.format("%.1f", state.getMean()));
+        medianLabel.setText("   Median: " + String.format("%.1f", state.getMedian()));
+        stdDevLabel.setText("   Std. Dev.: " + String.format("%.1f", state.getStdDev()));
 
         myScoreLabel.setText("My Score: " + state.getMyScore());
 
