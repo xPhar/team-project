@@ -15,8 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SubmissionListView extends JPanel implements PropertyChangeListener {
-    private final SubmissionListViewModel submissionListModel;
+    private final String viewName = "SubmissionList";
 
+    private final SubmissionListViewModel submissionListModel;
     private final JTable submissionTable = new JTable();
     final JLabel title;
 
@@ -88,5 +89,9 @@ public class SubmissionListView extends JPanel implements PropertyChangeListener
             submissionTable.setModel(state.getTableModel());
             state.getTableModel().fireTableDataChanged();
         }
+    }
+
+    public String getViewName() {
+        return viewName;
     }
 }

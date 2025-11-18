@@ -2,6 +2,7 @@ package view;
 
 import interface_adapter.submission.SubmissionState;
 import interface_adapter.submission.SubmissionViewModel;
+import interface_adapter.submission_list.SubmissionListViewModel;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
@@ -11,6 +12,8 @@ import java.beans.PropertyChangeListener;
  * Submission detail view.
  */
 public class SubmissionView extends JPanel implements PropertyChangeListener {
+    private final String viewName = "Submission";
+
     private final JLabel submitterLabel = new JLabel("Submitter:");
     private final JLabel submittedDateLabel = new JLabel("Submitted at:");
     private final JLabel submissionStatusLabel = new JLabel("Status:");
@@ -46,7 +49,10 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
         infoPanel.add(submissionStatusLabel);
         infoPanel.add(downloadButton);
 
+        final JButton backButton = new JButton("Back");
+
         this.setLayout(new BoxLayout(this,  BoxLayout.Y_AXIS));
+        this.add(backButton);
         this.add(infoPanel);
         this.add(feedbackPanel);
 
@@ -73,5 +79,9 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
             feedbackTextArea.setText(submissionState.getFeedback());
         }
 
+    }
+
+    public String getViewName() {
+        return viewName;
     }
 }

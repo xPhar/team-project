@@ -1,5 +1,6 @@
 package interface_adapter.submission_list;
 
+import interface_adapter.ViewManagerModel;
 import usecase.SubmissionList.SubmissionListOutputBoundary;
 import usecase.SubmissionList.SubmissionListOutputData;
 
@@ -8,9 +9,14 @@ import usecase.SubmissionList.SubmissionListOutputData;
  */
 public class SubmissionListPresenter implements SubmissionListOutputBoundary {
     private final SubmissionListViewModel viewModel;
+    private final ViewManagerModel viewManagerModel;
 
-    public SubmissionListPresenter(SubmissionListViewModel viewModel) {
+    public SubmissionListPresenter(
+            SubmissionListViewModel viewModel,
+            ViewManagerModel viewManagerModel
+    ) {
         this.viewModel = viewModel;
+        this.viewManagerModel = viewManagerModel;
     }
 
     @Override
@@ -22,10 +28,13 @@ public class SubmissionListPresenter implements SubmissionListOutputBoundary {
         viewModel.setState(state);
         viewModel.firePropertyChange("title");
         viewModel.firePropertyChange("tableModel");
+        viewManagerModel.setState(viewModel.getViewName());
+        viewManagerModel.firePropertyChange();
     }
 
     @Override
     public void showListView() {
-        
+        viewManagerModel.setState(viewModel.getViewName());
+        viewManagerModel.firePropertyChange();
     }
 }

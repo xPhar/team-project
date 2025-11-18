@@ -1,6 +1,7 @@
 package interface_adapter.submission;
 
 import entity.Submission;
+import interface_adapter.ViewManagerModel;
 import usecase.Submission.SubmissionOutputBoundary;
 
 import java.time.format.DateTimeFormatter;
@@ -10,9 +11,14 @@ import java.time.format.DateTimeFormatter;
  */
 public class SubmissionPresenter implements SubmissionOutputBoundary {
     private final SubmissionViewModel viewModel;
+    private final ViewManagerModel viewManagerModel;
 
-    public SubmissionPresenter(SubmissionViewModel viewModel) {
+    public SubmissionPresenter(
+            SubmissionViewModel viewModel,
+            ViewManagerModel viewManagerModel
+    ) {
         this.viewModel = viewModel;
+        this.viewManagerModel = viewManagerModel;
     }
 
     @Override
@@ -30,5 +36,7 @@ public class SubmissionPresenter implements SubmissionOutputBoundary {
 
         viewModel.setState(state);
         viewModel.firePropertyChange();
+        viewManagerModel.setState(viewModel.getViewName());
+        viewManagerModel.firePropertyChange();
     }
 }
