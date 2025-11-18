@@ -2,7 +2,6 @@ package view;
 
 import interface_adapter.submission.SubmissionState;
 import interface_adapter.submission.SubmissionViewModel;
-import interface_adapter.submission_list.SubmissionListViewModel;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
