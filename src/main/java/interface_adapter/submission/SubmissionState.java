@@ -10,6 +10,7 @@ public class SubmissionState {
     private String status;
     private String submissionDate;
     private String grade;
+    private String feedback;
 
     public SubmissionState() {}
 
@@ -43,5 +44,13 @@ public class SubmissionState {
 
     public void setGrade(String grade) {
         this.grade = grade;
+    }
+
+    public String getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
     }
 }

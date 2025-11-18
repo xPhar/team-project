@@ -15,6 +15,7 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
     private final JLabel submittedDateLabel = new JLabel("Submitted at:");
     private final JLabel submissionStatusLabel = new JLabel("Status:");
     private final JTextField gradeTextField = new JTextField();
+    private final JTextArea feedbackTextArea = new JTextArea();
 
     private final SubmissionViewModel viewModel;
 
@@ -26,10 +27,17 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
         final JButton gradeButton = new JButton("Grade");
 
         final JPanel gradePanel = new JPanel();
+        final JPanel feedbackPanel = new JPanel();
+        gradePanel.add(new JLabel("Grade"));
         gradePanel.add(gradeTextField);
-        gradePanel.add(gradeButton);
+        feedbackPanel.add(gradePanel);
+        feedbackPanel.add(new JLabel("Feedback:"));
+        feedbackPanel.add(feedbackTextArea);
+        feedbackPanel.add(gradeButton);
+        feedbackPanel.setLayout(new BoxLayout(feedbackPanel, BoxLayout.Y_AXIS));
 
-        gradeTextField.setColumns(5);
+        gradeTextField.setColumns(8);
+        feedbackTextArea.setRows(5);
 
         final JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
@@ -40,7 +48,7 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
 
         this.setLayout(new BoxLayout(this,  BoxLayout.Y_AXIS));
         this.add(infoPanel);
-        this.add(gradePanel);
+        this.add(feedbackPanel);
 
         populateTestData();
     }
@@ -50,6 +58,7 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
         viewModel.getState().setStatus("Grading");
         viewModel.getState().setSubmissionDate("11/18/2025 12:30:30");
         viewModel.getState().setGrade("20");
+        viewModel.getState().setFeedback("This is a sample feedback.\n You did great!");
         viewModel.firePropertyChange();
     }
 
@@ -61,6 +70,7 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
             submittedDateLabel.setText("Submitted at: " + submissionState.getSubmissionDate());
             submissionStatusLabel.setText("Status: " + submissionState.getStatus());
             gradeTextField.setText(submissionState.getGrade());
+            feedbackTextArea.setText(submissionState.getFeedback());
         }
 
     }
