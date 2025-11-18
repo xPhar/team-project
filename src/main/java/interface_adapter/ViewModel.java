@@ -37,7 +37,7 @@ public class ViewModel<T> {
     /**
      * Fires a property changed event for the state of this ViewModel.
      */
-    public void firePropertyChanged() {
+    public void firePropertyChange() {
         this.support.firePropertyChange("state", null, this.state);
     }
 
@@ -50,7 +50,7 @@ public class ViewModel<T> {
      * it can use the property name to distinguish which property has changed.</p>
      * @param propertyName the label for the property that was changed
      */
-    public void firePropertyChanged(String propertyName) {
+    public void firePropertyChange(String propertyName) {
         this.support.firePropertyChange(propertyName, null, this.state);
     }
 

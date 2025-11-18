@@ -6,7 +6,7 @@ import java.util.List;
 public class AssignmentBuilder {
     private final Assignment assignment;
 
-    public AssignmentBuilder() {
+    AssignmentBuilder() {
         this.assignment = new Assignment();
     }
 

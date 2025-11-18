@@ -12,59 +12,59 @@ public class Assignment {
     private String latePenalty;
     private List<String> supportedFileTypes;
 
-     public String getName() {
-         return name;
-     }
+    public String getName() {
+        return name;
+    }
 
-     public void setName(String name) {
-         this.name = name;
-     }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-     public String getDescription() {
-         return description;
-     }
+    public String getDescription() {
+        return description;
+    }
 
-     public void setDescription(String description) {
-         this.description = description;
-     }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-     public LocalDateTime getCreationDate() {
-         return creationDate;
-     }
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
 
-     public void setCreationDate(LocalDateTime creationDate) {
-         this.creationDate = creationDate;
-     }
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
 
-     public LocalDateTime getDueDate() {
-         return dueDate;
-     }
+    public LocalDateTime getDueDate() {
+        return dueDate;
+    }
 
-     public void setDueDate(LocalDateTime dueDate) {
-         this.dueDate = dueDate;
-     }
+    public void setDueDate(LocalDateTime dueDate) {
+        this.dueDate = dueDate;
+    }
 
-     public double getGracePeriod() {
-         return gracePeriod;
-     }
+    public double getGracePeriod() {
+        return gracePeriod;
+    }
 
-     public void setGracePeriod(double gracePeriod) {
-         this.gracePeriod = gracePeriod;
-     }
+    public void setGracePeriod(double gracePeriod) {
+        this.gracePeriod = gracePeriod;
+    }
 
-     public String getLatePenalty() {
-         return latePenalty;
-     }
+    public String getLatePenalty() {
+        return latePenalty;
+    }
 
-     public void setLatePenalty(String latePenalty) {
-         this.latePenalty = latePenalty;
-     }
+    public void setLatePenalty(String latePenalty) {
+        this.latePenalty = latePenalty;
+    }
 
-     public List<String> getSupportedFileTypes() {
-         return supportedFileTypes;
-     }
+    public List<String> getSupportedFileTypes() {
+        return supportedFileTypes;
+    }
 
-     public void setSupportedFileTypes(List<String> supportedFileTypes) {
-         this.supportedFileTypes = supportedFileTypes;
-     }
+    public void setSupportedFileTypes(List<String> supportedFileTypes) {
+        this.supportedFileTypes = supportedFileTypes;
+    }
 }
