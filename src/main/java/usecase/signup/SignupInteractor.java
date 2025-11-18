@@ -57,7 +57,7 @@ public class SignupInteractor implements SignupInputBoundary {
         }
 
         try {
-            // Create the appropriate user type
+            // Create the appropriate user type - using basic 2-parameter constructors
             User newUser;
             if ("Instructor".equals(userRole)) {
                 newUser = new Instructor(username, password);

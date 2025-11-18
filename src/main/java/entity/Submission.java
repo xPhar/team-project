@@ -17,6 +17,32 @@ public class Submission {
         UNDER_REVIEW
     }
 
+    // Add all the missing setter methods
+    public void setAssignment(String assignment) {
+        this.assignment = assignment;
+    }
+
+    public void setSubmitter(String submitter) {
+        this.submitter = submitter;
+    }
+
+    public void setSubmissionTime(LocalDateTime submissionTime) {
+        this.submissionTime = submissionTime;
+    }
+
+    public void setSubmissionData(String submissionData) {
+        this.submissionData = submissionData;
+    }
+
+    public void setGrade(double grade) {
+        this.grade = grade;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    // Existing getters
     public String getAssignment() {
         return assignment;
     }

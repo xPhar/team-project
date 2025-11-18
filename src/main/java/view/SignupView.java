@@ -35,9 +35,9 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     private final JLabel confirmPasswordErrorField = new JLabel();
     private final JLabel generalErrorField = new JLabel();
 
-    // Buttons
-    private final JButton registerButton;
-    private final JButton cancelButton;
+    // Buttons - REMOVED FINAL KEYWORD
+    private JButton registerButton;
+    private JButton cancelButton;
     private SignupController signupController;
 
     public SignupView(SignupViewModel signupViewModel) {
@@ -126,6 +126,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
 
     private JPanel createBottomPanel() {
         JPanel buttonPanel = new JPanel(new FlowLayout());
+        // INITIALIZE BUTTONS HERE INSTEAD OF DECLARING THEM FINAL
         registerButton = new JButton("Register");
         cancelButton = new JButton("Cancel");
 
@@ -152,7 +153,6 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     }
 
     private void setupListeners() {
-        // Register button action
         registerButton.addActionListener(evt -> {
             SignupState currentState = signupViewModel.getState();
 
@@ -173,9 +173,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
             );
         });
 
-        // Cancel button action
         cancelButton.addActionListener(evt -> {
-            // Clear form and switch to login (this would be handled by controller)
             signupViewModel.setState(new SignupState());
             System.out.println("Cancel registration");
         });
@@ -186,7 +184,6 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         addDocumentListener(passwordInputField, "password");
         addDocumentListener(confirmPasswordField, "confirmPassword");
 
-        // Role selection listener
         roleComboBox.addActionListener(e -> {
             SignupState currentState = signupViewModel.getState();
             currentState.setUserRole((String) roleComboBox.getSelectedItem());
@@ -286,7 +283,6 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
             passwordErrorField.setText("");
         }
 
-        // Also validate confirm password when password changes
         validateConfirmPassword(new String(confirmPasswordField.getPassword()));
     }
 
@@ -317,14 +313,12 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     }
 
     private void setFields(SignupState state) {
-        // Only set fields if they're different to avoid cursor jumping
         if (!fullNameInputField.getText().equals(state.getFullName())) {
             fullNameInputField.setText(state.getFullName());
         }
         if (!usernameInputField.getText().equals(state.getUsername())) {
             usernameInputField.setText(state.getUsername());
         }
-        // Don't set passwords for security reasons
         if (roleComboBox.getSelectedItem() != state.getUserRole()) {
             roleComboBox.setSelectedItem(state.getUserRole());
         }
