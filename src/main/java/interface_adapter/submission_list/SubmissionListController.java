@@ -14,7 +14,7 @@ public class SubmissionListController {
     }
 
     public void executeChooseSubmission() {
-        submissionListInputBoundary.getSubmissionList("");
+        submissionListInputBoundary.getSubmission("", "");
     }
 
     public void executeBack() {

@@ -2,6 +2,7 @@ package interface_adapter.submission;
 
 import entity.Submission;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.submission_list.SubmissionListViewModel;
 import usecase.Submission.SubmissionOutputBoundary;
 
 import java.time.format.DateTimeFormatter;
@@ -11,32 +12,22 @@ import java.time.format.DateTimeFormatter;
  */
 public class SubmissionPresenter implements SubmissionOutputBoundary {
     private final SubmissionViewModel viewModel;
+    private final SubmissionListViewModel submissionListViewModel;
     private final ViewManagerModel viewManagerModel;
 
     public SubmissionPresenter(
             SubmissionViewModel viewModel,
-            ViewManagerModel viewManagerModel
+            ViewManagerModel viewManagerModel,
+            SubmissionListViewModel submissionListViewModel
     ) {
         this.viewModel = viewModel;
         this.viewManagerModel = viewManagerModel;
+        this.submissionListViewModel = submissionListViewModel;
     }
 
     @Override
-    public void prepareSubmissionView(Submission outputData) {
-        SubmissionState state = new SubmissionState();
-        state.setSubmitter(outputData.getSubmitter());
-        state.setSubmissionDate(
-                outputData.getSubmissionTime().format(
-                        DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss")
-                )
-        );
-        state.setStatus(outputData.getStatus().toString());
-        state.setGrade(String.format("%.1f", outputData.getGrade()));
-        state.setFeedback(outputData.getFeedback());
-
-        viewModel.setState(state);
-        viewModel.firePropertyChange();
-        viewManagerModel.setState(viewModel.getViewName());
+    public void backToSubmissionListView() {
+        viewManagerModel.setState(submissionListViewModel.getViewName());
         viewManagerModel.firePropertyChange();
     }
 }

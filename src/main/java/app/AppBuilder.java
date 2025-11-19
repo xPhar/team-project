@@ -1,9 +1,20 @@
 package app;
 
+import data_access.TestDAO;
 import interface_adapter.Submit.SubmitViewModel;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.submission.SubmissionController;
+import interface_adapter.submission.SubmissionPresenter;
 import interface_adapter.submission.SubmissionViewModel;
+import interface_adapter.submission_list.SubmissionListController;
+import interface_adapter.submission_list.SubmissionListPresenter;
 import interface_adapter.submission_list.SubmissionListViewModel;
+import usecase.Submission.SubmissionInputBoundary;
+import usecase.Submission.SubmissionInteractor;
+import usecase.Submission.SubmissionOutputBoundary;
+import usecase.SubmissionList.SubmissionListInputBoundary;
+import usecase.SubmissionList.SubmissionListInteractor;
+import usecase.SubmissionList.SubmissionListOutputBoundary;
 import view.SubmissionListView;
 import view.SubmissionView;
 import view.SubmitView;
@@ -19,10 +30,17 @@ public class AppBuilder {
     final ViewManagerModel viewManagerModel = new ViewManagerModel();
     ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
+    final TestDAO testDAO = new TestDAO();
+
     // TODO: Add instance variables
 
     private SubmitView submitView;
     private SubmitViewModel submitViewModel;
+
+    private SubmissionListViewModel submissionListViewModel;
+    private SubmissionListView submissionListView;
+    private SubmissionViewModel submissionViewModel;
+    private SubmissionView submissionView;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -37,16 +55,42 @@ public class AppBuilder {
     // TODO: Implement builder methods
 
     public AppBuilder addSubmissionListView() {
-        SubmissionListViewModel submissionListViewModel = new SubmissionListViewModel();
-        SubmissionListView submissionListView = new SubmissionListView(submissionListViewModel);
+        submissionListViewModel = new SubmissionListViewModel();
+        submissionListView = new SubmissionListView(submissionListViewModel);
         cardPanel.add(submissionListView, submissionListView.getViewName());
         return this;
     }
 
     public AppBuilder addSubmissionView() {
-        SubmissionViewModel submissionViewModel = new SubmissionViewModel();
-        SubmissionView submissionView = new SubmissionView(submissionViewModel);
+        submissionViewModel = new SubmissionViewModel();
+        submissionView = new SubmissionView(submissionViewModel);
         cardPanel.add(submissionView, submissionView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addSubmissionListUseCase() {
+        final SubmissionListOutputBoundary submissionListOutputBoundary =
+                new SubmissionListPresenter(submissionListViewModel, viewManagerModel,
+                        submissionViewModel);
+        SubmissionListInputBoundary submissionListInputBoundary =
+                new SubmissionListInteractor(submissionListOutputBoundary, testDAO);
+
+        SubmissionListController submissionListController =
+                new SubmissionListController(submissionListInputBoundary);
+        submissionListView.setSubmissionListController(submissionListController);
+        return this;
+    }
+
+    public AppBuilder addSubmissionUseCase() {
+        final SubmissionOutputBoundary submissionOutputBoundary =
+                new SubmissionPresenter(submissionViewModel,
+                        viewManagerModel, submissionListViewModel);
+        final SubmissionInputBoundary submissionInputBoundary =
+                new SubmissionInteractor(submissionOutputBoundary);
+
+        SubmissionController submissionController =
+                new SubmissionController(submissionInputBoundary);
+        submissionView.setSubmissionController(submissionController);
         return this;
     }
 

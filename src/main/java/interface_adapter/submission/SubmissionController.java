@@ -1,18 +1,17 @@
 package interface_adapter.submission;
 
-import usecase.SubmissionList.SubmissionListInputBoundary;
-import usecase.SubmissionList.SubmissionListInteractor;
+import usecase.Submission.SubmissionInputBoundary;
 
 /**
  * Submission related use case.
  */
 public class SubmissionController {
-    private final SubmissionListInputBoundary submissionListInputBoundary;
+    private final SubmissionInputBoundary submissionInputBoundary;
 
     public SubmissionController(
-            SubmissionListInputBoundary submissionListInputBoundary
+            SubmissionInputBoundary submissionInputBoundary
     ) {
-        this.submissionListInputBoundary = submissionListInputBoundary;
+        this.submissionInputBoundary = submissionInputBoundary;
     }
 
     public void executeGrade() {
@@ -20,7 +19,7 @@ public class SubmissionController {
     }
 
     public void executeBack() {
-        submissionListInputBoundary.backToSubmissionList();
+        submissionInputBoundary.backToSubmissionList();
     }
 
     public void executeDownload() {

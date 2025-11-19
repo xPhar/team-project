@@ -1,6 +1,8 @@
 package usecase.SubmissionList;
 
+import entity.Submission;
+
 public interface SubmissionListOutputBoundary {
     void prepareListView(SubmissionListOutputData submissionListOutputData);
-    void showListView();
+    void prepareSubmissionView(Submission outputData);
 }

@@ -1,9 +1,12 @@
 package view;
 
+import interface_adapter.submission.SubmissionController;
 import interface_adapter.submission.SubmissionState;
 import interface_adapter.submission.SubmissionViewModel;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -12,6 +15,7 @@ import java.beans.PropertyChangeListener;
  */
 public class SubmissionView extends JPanel implements PropertyChangeListener {
     private final String viewName = "Submission";
+    private SubmissionController submissionController;
 
     private final JLabel submitterLabel = new JLabel("Submitter:");
     private final JLabel submittedDateLabel = new JLabel("Submitted at:");
@@ -55,16 +59,14 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
         this.add(infoPanel);
         this.add(feedbackPanel);
 
-        populateTestData();
-    }
-
-    private void populateTestData() {
-        viewModel.getState().setSubmitter("Indy");
-        viewModel.getState().setStatus("Grading");
-        viewModel.getState().setSubmissionDate("11/18/2025 12:30:30");
-        viewModel.getState().setGrade("20");
-        viewModel.getState().setFeedback("This is a sample feedback.\n You did great!");
-        viewModel.firePropertyChange();
+        backButton.addActionListener(
+                new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        submissionController.executeBack();
+                    }
+                }
+        );
     }
 
     @Override
@@ -82,5 +84,13 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
 
     public String getViewName() {
         return viewName;
+    }
+
+    public SubmissionController getSubmissionController() {
+        return submissionController;
+    }
+
+    public void setSubmissionController(SubmissionController submissionController) {
+        this.submissionController = submissionController;
     }
 }

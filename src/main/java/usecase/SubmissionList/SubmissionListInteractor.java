@@ -1,7 +1,6 @@
 package usecase.SubmissionList;
 
 import entity.Submission;
-import interface_adapter.ViewManagerModel;
 
 import java.util.List;
 
@@ -29,7 +28,15 @@ public class SubmissionListInteractor implements SubmissionListInputBoundary {
     }
 
     @Override
-    public void backToSubmissionList() {
-        submissionListOutputBoundary.showListView();
+    public void getSubmission(String assignmentName, String submitter) {
+        Submission submission = submissionListDataAccessInterface
+                .getSubmission(assignmentName, submitter);
+
+        submissionListOutputBoundary.prepareSubmissionView(submission);
+    }
+
+    @Override
+    public void backToAssignment() {
+
     }
 }
