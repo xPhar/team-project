@@ -24,7 +24,7 @@ public class SubmitInteractor implements SubmitInputBoundary {
     public void execute(SubmitInputData inputData) {
 
         LocalDateTime deadline = session.getAssignment().getDueDate();
-        if (deadline.isBefore(LocalDateTime.now())) {
+        if (deadline != null && deadline.isBefore(LocalDateTime.now())) {
             SubmitOutputData outputData = new SubmitOutputData("Deadline is passed, you cannot submit");
             submitPresenter.prepareFailureView(outputData);
         }

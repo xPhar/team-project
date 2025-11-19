@@ -6,6 +6,7 @@ import entity.User;
 
 /*
 Storing runtime data that will be passed between interactor (maybe DAO)
+Can be implemented as pattern Singleton
  */
 public class Session {
 
