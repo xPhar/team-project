@@ -33,9 +33,10 @@ public class SubmitInteractor implements SubmitInputBoundary {
 
         try {
             submitUserDataAccess.submit(studentWork,
-                    session.getUser().getName(),
-                    session.getAssignment().getName(),
-                    session.getCourse().getCourseCode());
+                    session.getUser(),
+                    session.getCourse(),
+                    session.getAssignment()
+                    );
 
             // This part might be useless because we do not need submission for student, we may only
             // use it for instructor fetch data from dataAccessObject
