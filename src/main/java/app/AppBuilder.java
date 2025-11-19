@@ -1,7 +1,6 @@
 package app;
 
-import data_access.FakeUserDataAccessObject;
-
+import data_access.GradeAPIDataAccessObject;
 import interface_adapter.Resubmit.ResubmitController;
 import interface_adapter.Resubmit.ResubmitPresenter;
 import interface_adapter.Resubmit.ResubmitViewModel;
@@ -28,7 +27,7 @@ public class AppBuilder {
 
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
-    private final Session session =  new Session();
+    private Session session =  new Session();
     // TODO: UserFactory
 
     final ViewManagerModel viewManagerModel = new ViewManagerModel();
@@ -41,10 +40,15 @@ public class AppBuilder {
     private SubmitViewModel submitViewModel;
     private ResubmitViewModel resubmitViewModel;
 
-    private final FakeUserDataAccessObject userDataAccessObject =  new FakeUserDataAccessObject();
+    private final GradeAPIDataAccessObject userDataAccessObject =  new GradeAPIDataAccessObject();
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
+    }
+
+    public AppBuilder setSession(Session session) {
+        this.session = session;
+        return this;
     }
 
     public AppBuilder addSubmitView() {

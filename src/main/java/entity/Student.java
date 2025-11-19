@@ -7,17 +7,17 @@ public class Student extends User {
     private List<Submission> submissions;
 
     Student(String name, String password) {
-        super(name, password);
+        super(name, password, "remove", "this");
         this.submissions = new ArrayList<>();
     }
 
     Student(String name, String password, List<Submission> submissions) {
-        super(name, password);
+        super(name, password, "remove", "this");
         this.submissions = List.copyOf(submissions);
     }
 
     Student(String name, String password, List<Course> courses, List<Submission> submissions) {
-        super(name, password, courses);
+        super(name, password, "remove", "this", courses);
         this.submissions = List.copyOf(submissions);
     }
 

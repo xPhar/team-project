@@ -2,24 +2,34 @@ package entity;
 
 import java.util.List;
 
-public abstract class User {
-    private String name;
+public class User {
+    private String username;
     private String password;
+    private String firstName;
+    private String lastName;
     private List<Course> courses;
 
-    User(String name, String password) {
-        this.name = name;
+    public User(String username, String password, String firstName, String lastName) {
+        this.username = username;
         this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
-    User(String name, String password, List<Course> courses) {
-        this.name = name;
+    public User(String username, String password, String firstName, String lastName, List<Course> courses) {
+        this.username = username;
         this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.courses = List.copyOf(courses);
     }
 
-    public String getName() {
-        return this.name;
+    public String getUsername() {
+        return this.username;
+    }
+
+    public String getFullName() {
+        return this.firstName + " " + this.lastName;
     }
 
     public boolean validatePassword(String password) {

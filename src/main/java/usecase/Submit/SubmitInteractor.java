@@ -32,10 +32,7 @@ public class SubmitInteractor implements SubmitInputBoundary {
         File studentWork = inputData.getSelectedFile();
 
         try {
-            submitUserDataAccess.submit(studentWork,
-                    session.getUser().getName(),
-                    session.getAssignment().getName(),
-                    session.getCourse().getCourseCode());
+            submitUserDataAccess.submit(studentWork, session);
 
             // This part might be useless because we do not need submission for student, we may only
             // use it for instructor fetch data from dataAccessObject

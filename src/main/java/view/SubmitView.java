@@ -16,7 +16,7 @@ public class SubmitView extends JPanel implements PropertyChangeListener {
     private final String viewName = "Submit";
     private final SubmitViewModel submitViewModel;
 
-    private final JLabel messageField = new JLabel("Click the botton to submit");
+    private final JLabel messageField = new JLabel("Click the button to submit");
 
     private SubmitController submitController = null;
 
