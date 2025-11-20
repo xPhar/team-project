@@ -110,6 +110,7 @@ public class GradeAPIDataAccessObject {
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
     private static final String MESSAGE = "message";
+    private static final String USER_EXIST_MESSAGE = "User exists";
 
     public String createUser(String username, String password) throws DataAccessException {
         final OkHttpClient client = new OkHttpClient().newBuilder()
@@ -216,6 +217,26 @@ public class GradeAPIDataAccessObject {
                 return userJSONObject.getJSONObject("info");
             }
             else {
+                throw new DataAccessException(responseBody.getString(MESSAGE));
+            }
+        }
+        catch (IOException | JSONException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public boolean checkUserExists(String username) throws DataAccessException {
+        final OkHttpClient client = new OkHttpClient().newBuilder().build();
+        final Request request = new Request.Builder()
+                .url(String.format("http://vm003.teach.cs.toronto.edu:20112/checkIfUserExists?username=%s", username))
+                .build();
+        try {
+            final Response response = client.newCall(request).execute();
+            final JSONObject responseBody = new JSONObject(response.body().string());
+
+            if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
+                return responseBody.getString(MESSAGE).equals(USER_EXIST_MESSAGE);
+            } else {
                 throw new DataAccessException(responseBody.getString(MESSAGE));
             }
         }

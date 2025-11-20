@@ -22,6 +22,17 @@ public class FacadeDAO {
         this.gradeDA = new GradeAPIDataAccessObject();
     }
 
+    private String getCourseUserName(Course course) {
+        // TODO course username
+        return "course-" + course.getCourseCode();
+    }
+    private String getCourseUserName() {
+        // TODO course username
+        return "course-CSC207";
+    }
+
+
+    // Submit
     public void submit(File studentFile, User student, Course course, Assignment assignment)
             throws IOException
     {
@@ -61,15 +72,7 @@ public class FacadeDAO {
         return jobj;
     }
 
-    private String getCourseUserName(Course course) {
-        // TODO course username
-        return "course-" + course.getCourseCode();
-    }
-    private String getCourseUserName() {
-        // TODO course username
-        return "course-CSC207";
-    }
-
+    // Average
     public List<Submission> getSubmissionsFor(String assignmentName) {
         ArrayList<Submission> submissions = new ArrayList<>();
 
@@ -115,5 +118,27 @@ public class FacadeDAO {
         JSONObject submissionArray = assignmentObject.getJSONObject("submissions");
         JSONObject submissionObj = submissionArray.getJSONObject(username);
         return submissionObj.getDouble("grade");
+    }
+
+    // Login
+    public boolean existsByName(String username) {
+        return gradeDA.checkUserExists(username);
+    }
+
+    public void save(User user) {
+
+    }
+
+    public User get(String username) {
+        JSONObject userObj = gradeDA.getUserInfo(username);
+        User user;
+        if (userObj.getString("type").equals("student")) {
+            user = new Student(username, "");
+        } else {
+            user = new Instructor(username, "");
+        }
+        // TODO add course list to user java object
+
+        return user;
     }
 }
