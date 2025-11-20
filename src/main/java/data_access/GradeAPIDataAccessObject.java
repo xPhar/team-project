@@ -164,7 +164,7 @@ public class GradeAPIDataAccessObject {
         modifyUserInfoEndpoint(username, password, info);
     }
 
-    private void modifyUserInfoEndpoint(String username, String password, JSONObject infoObject)
+    public void modifyUserInfoEndpoint(String username, String password, JSONObject infoObject)
             throws DataAccessException {
         final OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
@@ -199,7 +199,7 @@ public class GradeAPIDataAccessObject {
         }
     }
 
-    private JSONObject getUserInfo(String username) throws DataAccessException {
+    public JSONObject getUserInfo(String username) throws DataAccessException {
         // Make an API call to get the user object.
         final OkHttpClient client = new OkHttpClient().newBuilder().build();
         final Request request = new Request.Builder()
