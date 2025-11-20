@@ -9,14 +9,14 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 public class SubmitView extends JPanel implements PropertyChangeListener {
 
     private final String viewName = "Submit";
     private final SubmitViewModel submitViewModel;
 
-    private final JLabel messageField = new JLabel("Are you sure you want to submit?");
+    private final JLabel messageField = new JLabel("Click the botton to submit");
 
     private SubmitController submitController = null;
 
@@ -35,15 +35,17 @@ public class SubmitView extends JPanel implements PropertyChangeListener {
                 JOptionPane.showMessageDialog(this,
                         "File selected: " + selectedFile.getAbsolutePath());
                 // Then go to controller
-                submitController.resubmitExecute(LocalTime.now(), selectedFile);
+                submitController.submitExecute(LocalDateTime.now(), selectedFile);
 
             } else {
                 JOptionPane.showMessageDialog(this, "No file selected");
             }
         });
 
-        this.add(uploadButton);
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.add(messageField);
+        this.add(uploadButton);
+
 
     }
     /**
@@ -67,5 +69,14 @@ public class SubmitView extends JPanel implements PropertyChangeListener {
 
     public String getViewName() {
         return viewName;
+    }
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("SubmitView Demo");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        SubmitView submitView = new SubmitView(new SubmitViewModel());
+        frame.setContentPane(submitView);
+        frame.pack();
+        frame.setVisible(true);
     }
 }

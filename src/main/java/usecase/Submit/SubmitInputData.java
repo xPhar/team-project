@@ -4,15 +4,15 @@ import java.io.File;
 import java.time.*;
 
 public class SubmitInputData {
-    private final LocalTime time;
+    private final LocalDateTime time;
     private final File selectedFile;
 
-    public SubmitInputData(LocalTime time, File selectedFile){
+    public SubmitInputData(LocalDateTime time, File selectedFile){
         this.time = time;
         this.selectedFile = selectedFile;
     }
 
-    public LocalTime getTime() {
+    public LocalDateTime getTime() {
         return time;
     }
 
