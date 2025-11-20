@@ -18,6 +18,7 @@ public class Main {
 
         // Should add verification that the user is a student of the course (they aren't right now :D)
 
+        // TODO: change the user (I already added a submission for this user!)
         User exampleUser = new User("exampleUser", "abc123", "Example", "User");
         Course exampleCourse = new Course("exampleCourse", "course-course-CSC207");
         AssignmentBuilder assignmentBuilder = new AssignmentBuilder();
