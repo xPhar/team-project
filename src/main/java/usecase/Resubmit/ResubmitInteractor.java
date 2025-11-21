@@ -16,6 +16,8 @@ public class ResubmitInteractor implements ResubmitInputBoundary {
     }
     public void execute(ResubmitInputData inputData) {
         LocalDateTime deadline = session.getAssignment().getDueDate();
+        // TODO: if we need to add disability part, we can adjust color of message
+        //  but if we do not need that, then we can delete ResubmitOutputData
         if (deadline.isAfter(inputData.getTime())) {
             switchToSubmitView();
         }else{

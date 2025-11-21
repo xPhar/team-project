@@ -39,7 +39,7 @@ class SubmitInteractorTest {
         SubmitInputData inputData = new SubmitInputData(LocalDateTime.now(), file);
         SubmitUserDataAccessInterface fakeDAO = new FakeUserDataAccessObject();
 
-        SubmitOutputBoundary successPresenter = new SubmitOutputBoundary() {
+        SubmitOutputBoundary presenter = new SubmitOutputBoundary() {
             @Override
             public void prepareSuccessView(SubmitOutputData pack) {
                 assertEquals("Successfully submitted!", pack.getOutputMsg());
@@ -53,7 +53,7 @@ class SubmitInteractorTest {
         };
 
         Session session = generateDummySession(false);
-        SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, successPresenter, session);
+        SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, presenter, session);
         interactor.execute(inputData);
     }
     @Test
@@ -64,7 +64,7 @@ class SubmitInteractorTest {
         SubmitInputData inputData = new SubmitInputData(LocalDateTime.now(), file);
         SubmitUserDataAccessInterface fakeDAO = new FakeUserDataAccessObject();
 
-        SubmitOutputBoundary successPresenter = new SubmitOutputBoundary() {
+        SubmitOutputBoundary presenter = new SubmitOutputBoundary() {
             @Override
             public void prepareSuccessView(SubmitOutputData pack) {
                 fail("SubmitInteractor failed in success case!");
@@ -78,7 +78,7 @@ class SubmitInteractorTest {
         };
 
         Session session = generateDummySession(true);
-        SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, successPresenter, session);
+        SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, presenter, session);
         interactor.execute(inputData);
     }
 
@@ -90,7 +90,7 @@ class SubmitInteractorTest {
         SubmitInputData inputData = new SubmitInputData(LocalDateTime.now(), file);
         SubmitUserDataAccessInterface fakeDAO = new ImposibleUserDataAccessObject();
 
-        SubmitOutputBoundary successPresenter = new SubmitOutputBoundary() {
+        SubmitOutputBoundary presenter = new SubmitOutputBoundary() {
             @Override
             public void prepareSuccessView(SubmitOutputData pack) {
                 fail("SubmitInteractor failed in success case!");
@@ -104,7 +104,7 @@ class SubmitInteractorTest {
         };
 
         Session session = generateDummySession(false);
-        SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, successPresenter, session);
+        SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, presenter, session);
         interactor.execute(inputData);
     }
 }
