@@ -9,6 +9,8 @@ import interface_adapter.submission.SubmissionViewModel;
 import interface_adapter.submission_list.SubmissionListController;
 import interface_adapter.submission_list.SubmissionListPresenter;
 import interface_adapter.submission_list.SubmissionListViewModel;
+import usecase.Grade.GradeInputBoundary;
+import usecase.Grade.GradeInteractor;
 import usecase.Submission.SubmissionInputBoundary;
 import usecase.Submission.SubmissionInteractor;
 import usecase.Submission.SubmissionOutputBoundary;
@@ -82,14 +84,17 @@ public class AppBuilder {
     }
 
     public AppBuilder addSubmissionUseCase() {
-        final SubmissionOutputBoundary submissionOutputBoundary =
-                new SubmissionPresenter(submissionViewModel,
-                        viewManagerModel, submissionListViewModel);
+        final SubmissionPresenter presenter = new SubmissionPresenter(submissionViewModel,
+                viewManagerModel, submissionListViewModel);
         final SubmissionInputBoundary submissionInputBoundary =
-                new SubmissionInteractor(submissionOutputBoundary);
+                new SubmissionInteractor(presenter);
+        final GradeInputBoundary gradeInputBoundary = new GradeInteractor(
+                testDAO,
+                presenter
+        );
 
         SubmissionController submissionController =
-                new SubmissionController(submissionInputBoundary);
+                new SubmissionController(submissionInputBoundary, gradeInputBoundary);
         submissionView.setSubmissionController(submissionController);
         return this;
     }

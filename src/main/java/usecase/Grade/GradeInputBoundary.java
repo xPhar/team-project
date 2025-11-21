@@ -1,5 +1,5 @@
 package usecase.Grade;
 
 public interface GradeInputBoundary {
-    void executeGrade();
+    void grade(GradeInputData inputData);
 }

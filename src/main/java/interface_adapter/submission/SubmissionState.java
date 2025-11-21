@@ -12,6 +12,8 @@ public class SubmissionState {
     private String grade;
     private String feedback;
 
+    private String gradeFailureMessage;
+
     public SubmissionState() {}
 
     public String getSubmitter() {
@@ -52,5 +54,13 @@ public class SubmissionState {
 
     public void setFeedback(String feedback) {
         this.feedback = feedback;
+    }
+
+    public String getGradeFailureMessage() {
+        return gradeFailureMessage;
+    }
+
+    public void setGradeFailureMessage(String gradeFailureMessage) {
+        this.gradeFailureMessage = gradeFailureMessage;
     }
 }

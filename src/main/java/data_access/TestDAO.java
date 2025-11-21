@@ -2,6 +2,7 @@ package data_access;
 
 import entity.Submission;
 import entity.SubmissionBuilder;
+import usecase.Grade.GradeDataAccessInterface;
 import usecase.SubmissionList.SubmissionListDataAccessInterface;
 
 import java.time.LocalDateTime;
@@ -9,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestDAO implements
-        SubmissionListDataAccessInterface
+        SubmissionListDataAccessInterface,
+        GradeDataAccessInterface
 {
 
     @Override
@@ -39,5 +41,10 @@ public class TestDAO implements
         }
 
         return list;
+    }
+
+    @Override
+    public void grade(String assignment, String submitter, double grade, String feedback) {
+        
     }
 }

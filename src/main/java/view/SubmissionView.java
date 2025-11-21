@@ -67,6 +67,19 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
                     }
                 }
         );
+
+        gradeButton.addActionListener(
+                new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String grade = gradeTextField.getText();
+                        String submitter = submitterLabel.getText();
+                        String feedback = feedbackTextArea.getText();
+
+                        submissionController.executeGrade(grade, submitter, feedback);
+                    }
+                }
+        );
     }
 
     @Override
@@ -79,7 +92,27 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
             gradeTextField.setText(submissionState.getGrade());
             feedbackTextArea.setText(submissionState.getFeedback());
         }
+        else if (evt.getPropertyName().equals("success")) {
+            showSuccessDialog();
+        }
+        else if  (evt.getPropertyName().equals("failure")) {
+            SubmissionState submissionState = (SubmissionState) evt.getNewValue();
+            showFailureDialog(submissionState.getGradeFailureMessage());
+        }
+    }
 
+    private void showSuccessDialog() {
+        JOptionPane.showMessageDialog(this,
+                "Graded submission successfully",
+                "Success",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void showFailureDialog(String msg) {
+        JOptionPane.showMessageDialog(this,
+                msg,
+                "Failure",
+                JOptionPane.ERROR_MESSAGE);
     }
 
     public String getViewName() {
