@@ -1,6 +1,6 @@
 package usecase.Resubmit;
 
-import app.Session;
+import entity.Session;
 import entity.AssignmentBuilder;
 import entity.Course;
 import entity.Student;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ResubmitInteractorTest {
-    private Session generateDummySession(boolean ddlPassed) {
+    private void generateDummySession(boolean ddlPassed) {
         LocalDateTime due = ddlPassed ? LocalDateTime.MIN:LocalDateTime.MAX;
         Session session = Session.getInstance();
         session.setUser(new Student("This is a test Name", "This is a test pwd"));
@@ -22,8 +22,6 @@ public class ResubmitInteractorTest {
                         .name("This is a test Name")
                         .build()
         );
-
-        return session;
     }
 
     @Test
@@ -59,8 +57,8 @@ public class ResubmitInteractorTest {
             }
         };
 
-        Session session = generateDummySession(false);
-        ResubmitInputBoundary interactor = new ResubmitInteractor(presenter, session);
+        generateDummySession(false);
+        ResubmitInputBoundary interactor = new ResubmitInteractor(presenter);
         interactor.execute(inputData);
     }
 
@@ -97,8 +95,8 @@ public class ResubmitInteractorTest {
             }
         };
 
-        Session session = generateDummySession(true);
-        ResubmitInputBoundary interactor = new ResubmitInteractor(presenter, session);
+        generateDummySession(true);
+        ResubmitInputBoundary interactor = new ResubmitInteractor(presenter);
         interactor.execute(inputData);
     }
 }

@@ -1,6 +1,6 @@
 package usecase.Resubmit;
 
-import app.Session;
+import entity.Session;
 
 import java.time.LocalDateTime;
 
@@ -9,10 +9,9 @@ public class ResubmitInteractor implements ResubmitInputBoundary {
     private final ResubmitOutputBoundary resubmitOutputBoundary;
     private final Session session;
 
-    public ResubmitInteractor(ResubmitOutputBoundary resubmitOutputBoundary,
-                              Session session) {
+    public ResubmitInteractor(ResubmitOutputBoundary resubmitOutputBoundary) {
         this.resubmitOutputBoundary = resubmitOutputBoundary;
-        this.session = session;
+        this.session = Session.getInstance();
     }
     public void execute(ResubmitInputData inputData) {
         LocalDateTime deadline = session.getAssignment().getDueDate();

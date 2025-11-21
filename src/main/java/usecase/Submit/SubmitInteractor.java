@@ -1,6 +1,6 @@
 package usecase.Submit;
 
-import app.Session;
+import entity.Session;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,11 +13,10 @@ public class SubmitInteractor implements SubmitInputBoundary {
     private final Session session;
 
     public SubmitInteractor(SubmitUserDataAccessInterface submitUserDataAccess,
-                            SubmitOutputBoundary submitOutputBoundary,
-                            Session session) {
+                            SubmitOutputBoundary submitOutputBoundary) {
         this.submitUserDataAccess = submitUserDataAccess;
         this.submitPresenter = submitOutputBoundary;
-        this.session = session;
+        this.session = Session.getInstance();
     }
 
     @Override

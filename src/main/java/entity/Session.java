@@ -1,6 +1,4 @@
-package app;
-
-import entity.*;
+package entity;
 
 /*
 Storing runtime data that will be passed between interactor (maybe DAO)
@@ -14,13 +12,6 @@ public class Session {
     private static Session session = null;
 
     private Session() {
-        //user = new Student("This is a test Name", "This is a test pwd");
-        //course = new Course("Course Name", "TEST101");
-        //assignment = new AssignmentBuilder()
-        //        .dueDate(LocalDateTime.MAX)
-        //        .name("This is a test Name")
-        //        // May or may not add other default properties
-        //        .build();
         user = null;
         course = null;
         assignment = null;

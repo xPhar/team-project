@@ -28,7 +28,6 @@ public class AppBuilder {
 
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
-    private final Session session = Session.getInstance();
     // TODO: UserFactory
 
     final ViewManagerModel viewManagerModel = new ViewManagerModel();
@@ -65,7 +64,7 @@ public class AppBuilder {
     public AppBuilder addSubmitUseCase() {
         final SubmitOutputBoundary submitOutputBoundary = new SubmitPresenter(submitViewModel);
         final SubmitInputBoundary submitInteractor = new SubmitInteractor(
-                userDataAccessObject, submitOutputBoundary, session);
+                userDataAccessObject, submitOutputBoundary);
 
         SubmitController submitController = new SubmitController(submitInteractor);
         submitView.setSubmitController(submitController);
@@ -76,7 +75,7 @@ public class AppBuilder {
         final ResubmitOutputBoundary resubmitOutputBoundary = new ResubmitPresenter(
                 viewManagerModel, resubmitViewModel, submitViewModel
         );
-        final ResubmitInputBoundary resubmitInteractor = new ResubmitInteractor(resubmitOutputBoundary, session);
+        final ResubmitInputBoundary resubmitInteractor = new ResubmitInteractor(resubmitOutputBoundary);
         ResubmitController resubmitController = new ResubmitController(resubmitInteractor);
         resubmitView.setResubmitController(resubmitController);
         return this;

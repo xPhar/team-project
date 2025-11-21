@@ -1,6 +1,6 @@
 package usecase.Submit;
 
-import app.Session;
+import entity.Session;
 import data_access.FakeUserDataAccessObject;
 import data_access.ImposibleUserDataAccessObject;
 import entity.AssignmentBuilder;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 class SubmitInteractorTest {
 
-    private Session generateDummySession(boolean ddlPassed) {
+    private void generateDummySession(boolean ddlPassed) {
         LocalDateTime due = ddlPassed ? LocalDateTime.MIN:LocalDateTime.MAX;
         Session session = Session.getInstance();
         session.setUser(new Student("This is a test Name", "This is a test pwd"));
@@ -27,8 +27,6 @@ class SubmitInteractorTest {
                 .name("This is a test Name")
                 .build()
         );
-
-        return session;
     }
 
     @Test
@@ -52,8 +50,8 @@ class SubmitInteractorTest {
 
         };
 
-        Session session = generateDummySession(false);
-        SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, presenter, session);
+        generateDummySession(false);
+        SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, presenter);
         interactor.execute(inputData);
     }
     @Test
@@ -77,8 +75,8 @@ class SubmitInteractorTest {
 
         };
 
-        Session session = generateDummySession(true);
-        SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, presenter, session);
+        generateDummySession(true);
+        SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, presenter);
         interactor.execute(inputData);
     }
 
@@ -103,8 +101,8 @@ class SubmitInteractorTest {
 
         };
 
-        Session session = generateDummySession(false);
-        SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, presenter, session);
+        generateDummySession(false);
+        SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, presenter);
         interactor.execute(inputData);
     }
 }
