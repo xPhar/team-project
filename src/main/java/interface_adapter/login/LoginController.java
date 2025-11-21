@@ -1,5 +1,6 @@
 package interface_adapter.login;
 
+import app.Session;
 import usecase.login.LoginInputBoundary;
 import usecase.login.LoginInputData;
 
@@ -7,7 +8,6 @@ import usecase.login.LoginInputData;
  * The controller for the Login Use Case.
  */
 public class LoginController {
-
     private final LoginInputBoundary loginUseCaseInteractor;
 
     public LoginController(LoginInputBoundary loginUseCaseInteractor) {
@@ -20,8 +20,7 @@ public class LoginController {
      * @param password the password of the user logging in
      */
     public void execute(String username, String password) {
-        final LoginInputData loginInputData = new LoginInputData(
-                username, password);
+        final LoginInputData loginInputData = new LoginInputData(username, password);
 
         loginUseCaseInteractor.execute(loginInputData);
     }

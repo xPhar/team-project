@@ -1,18 +1,18 @@
 package usecase.login;
 
+import entity.User;
+
 /**
  * Output Data for the Login Use Case.
  */
 public class LoginOutputData {
+    private final User user;
 
-    private final String username;
-
-    public LoginOutputData(String username) {
-        this.username = username;
+    public LoginOutputData(User user) {
+        this.user = user;
     }
 
-    public String getUsername() {
-        return username;
+    public User getUser() {
+        return user;
     }
-
 }
