@@ -4,6 +4,7 @@ import java.io.File;
 import java.time.*;
 
 public class SubmitInputData {
+
     private final LocalDateTime time;
     private final File selectedFile;
 

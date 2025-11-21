@@ -1,17 +1,28 @@
-package app;
-
-import entity.Assignment;
-import entity.Course;
-import entity.User;
+package entity;
 
 /*
 Storing runtime data that will be passed between interactor (maybe DAO)
+Can be implemented as pattern Singleton
  */
 public class Session {
 
     private User user;
     private Course course;
     private Assignment assignment;
+    private static Session session = null;
+
+    private Session() {
+        user = null;
+        course = null;
+        assignment = null;
+    }
+
+    public static Session getInstance() {
+        if (session == null) {
+            session = new Session();
+        }
+        return session;
+    }
 
     // -----------------------
     // User
@@ -64,4 +75,3 @@ public class Session {
         this.assignment = null;
     }
 }
-

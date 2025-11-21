@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Student extends User {
-    private List<Submission> submissions;
+    private final List<Submission> submissions;
 
-    Student(String name, String password) {
+    public Student(String name, String password) {
         super(name, password);
         this.submissions = new ArrayList<>();
     }

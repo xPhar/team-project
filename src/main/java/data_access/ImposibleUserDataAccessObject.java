@@ -8,10 +8,10 @@ import usecase.Submit.SubmitUserDataAccessInterface;
 import java.io.File;
 import java.io.IOException;
 
-public class FakeUserDataAccessObject implements SubmitUserDataAccessInterface {
+public class ImposibleUserDataAccessObject implements SubmitUserDataAccessInterface {
 
     @Override
     public void submit(File studentFile, User student, Course course, Assignment assignment) throws IOException {
-        // Demo use only, will be implemented on GradeAPIDAO
+        throw new IOException("Assume there is network error");
     }
 }
