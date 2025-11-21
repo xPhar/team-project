@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 public class SubmitView extends JPanel implements PropertyChangeListener {
 
-    public static final String viewName = "Submit";
+    private static final String viewName = "Submit";
 
     private final JLabel messageField = new JLabel("Click the botton to submit");
 
