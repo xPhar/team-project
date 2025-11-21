@@ -2,8 +2,6 @@ package app;
 
 import entity.*;
 
-import java.time.LocalDateTime;
-
 /*
 Storing runtime data that will be passed between interactor (maybe DAO)
 Can be implemented as pattern Singleton
@@ -13,16 +11,23 @@ public class Session {
     private User user;
     private Course course;
     private Assignment assignment;
-    public static final Session session = new Session();
+    private static final Session session = null;
 
     private Session() {
-        user = new Student("This is a test Name", "This is a test pwd");
-        course = new Course("Course Name", "TEST101");
-        assignment = new AssignmentBuilder()
-                .dueDate(LocalDateTime.MAX)
-                .name("This is a test Name")
-                // TODO: May or may not add other default properties
-                .build();
+        //user = new Student("This is a test Name", "This is a test pwd");
+        //course = new Course("Course Name", "TEST101");
+        //assignment = new AssignmentBuilder()
+        //        .dueDate(LocalDateTime.MAX)
+        //        .name("This is a test Name")
+        //        // May or may not add other default properties
+        //        .build();
+        user = null;
+        course = null;
+        assignment = null;
+    }
+
+    public static Session getInstance() {
+        return session;
     }
 
     // -----------------------
@@ -76,4 +81,3 @@ public class Session {
         this.assignment = null;
     }
 }
-

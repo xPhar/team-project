@@ -5,13 +5,14 @@ import interface_adapter.Submit.SubmitState;
 import interface_adapter.Submit.SubmitViewModel;
 
 import javax.swing.*;
-import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.time.LocalDateTime;
 
 public class SubmitView extends JPanel implements PropertyChangeListener {
+
+    public static final String viewName = "Submit";
 
     private final JLabel messageField = new JLabel("Click the botton to submit");
 
@@ -70,7 +71,7 @@ public class SubmitView extends JPanel implements PropertyChangeListener {
     }
 
     public String getViewName() {
-        return "Submit";
+        return viewName;
     }
 
 

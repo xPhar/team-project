@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 public class ResubmitView extends JPanel implements PropertyChangeListener {
 
-    private final String viewName = "Resubmit";
+    private static final String viewName = "Resubmit";
     private final ResubmitViewModel resubmitViewModel;
     private final JLabel messageLabel = new JLabel("Are you sure you want to resubmit?" +
             " Only the latest one will be marked.");

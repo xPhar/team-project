@@ -28,7 +28,7 @@ public class AppBuilder {
 
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
-    private final Session session = Session.session;
+    private final Session session = Session.getInstance();
     // TODO: UserFactory
 
     final ViewManagerModel viewManagerModel = new ViewManagerModel();
