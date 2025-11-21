@@ -11,7 +11,7 @@ public class Session {
     private User user;
     private Course course;
     private Assignment assignment;
-    private static final Session session = null;
+    private static Session session = null;
 
     private Session() {
         //user = new Student("This is a test Name", "This is a test pwd");
@@ -27,6 +27,9 @@ public class Session {
     }
 
     public static Session getInstance() {
+        if (session == null) {
+            session = new Session();
+        }
         return session;
     }
 
