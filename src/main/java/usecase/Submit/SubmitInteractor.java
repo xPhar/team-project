@@ -24,32 +24,34 @@ public class SubmitInteractor implements SubmitInputBoundary {
     public void execute(SubmitInputData inputData) {
 
         LocalDateTime deadline = session.getAssignment().getDueDate();
-        if (deadline != null && deadline.isBefore(LocalDateTime.now())) {
+        if (deadline.isBefore(inputData.getTime())) {
             SubmitOutputData outputData = new SubmitOutputData("Deadline is passed, you cannot submit");
             submitPresenter.prepareFailureView(outputData);
-        }
 
-        File studentWork = inputData.getSelectedFile();
+        }else {
 
-        try {
-            submitUserDataAccess.submit(studentWork,
-                    session.getUser(),
-                    session.getCourse(),
-                    session.getAssignment()
-                    );
+            File studentWork = inputData.getSelectedFile();
 
-            // This part might be useless because we do not need submission for student, we may only
-            // use it for instructor fetch data from dataAccessObject
-            //Student student = (Student) session.getUser();
-            //Submission thisSubmission = new Submission();
-            // TODO: add submission data, wait for submission implementation
-            //student.addSubmission(thisSubmission);
+            try {
+                submitUserDataAccess.submit(studentWork,
+                        session.getUser(),
+                        session.getCourse(),
+                        session.getAssignment()
+                );
 
-            SubmitOutputData outputData = new SubmitOutputData("Successfully submitted!");
-            submitPresenter.prepareSuccessView(outputData);
-        } catch (IOException e) {
-            SubmitOutputData outputData = new SubmitOutputData("Network Error! Please try again later.");
-            submitPresenter.prepareFailureView(outputData);
+                // This part might be useless because we do not need submission for student, we may only
+                // use it for instructor fetch data from dataAccessObject
+                //Student student = (Student) session.getUser();
+                //Submission thisSubmission = new Submission();
+                // TODO: add submission data, wait for submission implementation
+                //student.addSubmission(thisSubmission);
+
+                SubmitOutputData outputData = new SubmitOutputData("Successfully submitted!");
+                submitPresenter.prepareSuccessView(outputData);
+            } catch (IOException e) {
+                SubmitOutputData outputData = new SubmitOutputData("Network Error! Please try again later.");
+                submitPresenter.prepareFailureView(outputData);
+            }
         }
     }
 }
