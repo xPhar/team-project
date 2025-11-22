@@ -3,12 +3,13 @@ package entity;
 import java.time.LocalDateTime;
 
 public class Submission {
-    private String assignment;
     private String submitter;
     private LocalDateTime submissionTime;
+    private String submissionName;
     private String submissionData;
     private double grade;
     private Status status;
+    private String feedback;
 
     public enum Status {
         ON_TIME,
@@ -17,18 +18,15 @@ public class Submission {
         UNDER_REVIEW
     }
 
-    public Submission(String assignment, String submitter, LocalDateTime submissionTime,
-                    String submissionData, double grade, Status status) {
-        this.assignment = assignment;
+    public Submission(String submitter, LocalDateTime submissionTime, String submissionName,
+                    String submissionData, double grade, Status status, String feedback) {
         this.submitter = submitter;
         this.submissionTime = submissionTime;
+        this.submissionName = submissionName;
         this.submissionData = submissionData;
         this.grade = grade;
         this.status = status;
-    }
-
-    public String getAssignment() {
-        return assignment;
+        this.feedback = feedback;
     }
 
     public String getSubmitter() {
@@ -39,12 +37,24 @@ public class Submission {
         return submissionTime;
     }
 
+    public String getSubmissionName() {
+        return submissionName;
+    }
+
     public String getSubmissionData() {
         return submissionData;
     }
 
     public double getGrade() {
         return grade;
+    }
+
+    public void setGrade(double grade) {
+        this.grade = grade;
+    }
+
+    public String getFeedback() {
+        return feedback;
     }
 
     public Status getStatus() {
@@ -56,19 +66,15 @@ public class Submission {
     }
 
     public static class SubmissionBuilder {
-        private String assignment;
         private String submitter;
         private LocalDateTime submissionTime;
+        private String submissionName;
         private String submissionData;
         private double grade;
         private Status status;
+        private String feedback;
 
         SubmissionBuilder() {}
-
-        public SubmissionBuilder assignment(String assignment) {
-            this.assignment = assignment;
-            return this;
-        }
 
         public SubmissionBuilder submitter(String submitter) {
             this.submitter = submitter;
@@ -77,6 +83,11 @@ public class Submission {
 
         public SubmissionBuilder submissionTime(LocalDateTime submissionTime) {
             this.submissionTime = submissionTime;
+            return this;
+        }
+
+        public SubmissionBuilder submissionName(String submissionName) {
+            this.submissionName = submissionName;
             return this;
         }
 
@@ -95,9 +106,14 @@ public class Submission {
             return this;
         }
 
+        public SubmissionBuilder feedback(String feedback) {
+            this.feedback = feedback;
+            return this;
+        }
+
         public Submission build() {
-            return new Submission(this.assignment, this.submitter, this.submissionTime,
-                    this.submissionData, this.grade, this.status);
+            return new Submission(this.submitter, this.submissionTime, this.submissionName,
+                    this.submissionData, this.grade, this.status,  this.feedback);
         }
     }
 }

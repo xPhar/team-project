@@ -1,0 +1,44 @@
+Here's an overview of how the data is laid out in the API:
+All of these are within the "info" JSON object in the JSON returned by the API.
+
+Course:
+"type": "course"  - This describes whether this is a user or course. Common between all API users for our application
+"courseData"      - A JSON Object unique to courses.
+    "instructors"   - A JSON Array storing the names of all instructors of this course (in Strings)
+    "students"      - Similar to instructors, but for students. A JSON Array storing the names of all students.
+    "latePolicy"    - A String describing this course's late submission policy.
+    "assignments"   - A JSON Object storing all of the assignments for this course.
+                        All entries within this object will themselves be objects, whose name represents the
+                        assignment name, and whose data is associated with that assignment.
+        "exampleAssignmentName" - A JSON Object representing an assignment in this course.
+            "description"   - A String describing this assignment
+            "creationDate"  - A String representing when this assignment was created
+            "dueDate"       - A String representing when this assignment is due
+            "gradePeriod"   - A String holding an integer value, specifies how many minutes late submissions are accepted.
+            "supportedFileTypes"    - A JSON Array storing the file types this assignment supports.
+                                        If any file type is supported, we can leave the array empty?
+            "submissions"   - A JSON Object storing all of the submissions for this assignment.
+                                All entries within this object will themselves be objects, whose name represents the
+                                submitting student's name, and whose data is associated with that submission.
+                "exampleStudentName"    - A JSON Object representing a submission to this assignment.
+                    "submittedAt"   - A String representing when this submission was published.
+                    "fileName"      - A String holding the name of the file submitted.
+                    "fileData"      - A String holding the data of the file submitted.
+                    "status"        - A String representing the status of this submission.
+                                        One of: "ON_TIME", "LATE", "GRADED", or "UNDER_REVIEW".
+                    "grade"         - A String holding a double value representing the grade of this assignment.
+                                        If the status of this submission isn't GRADED or UNDER_REVIEW, the value
+                                        of this string shouldn't be trusted. That is, the program should never
+                                        use it. That said, I think we should have it set to "-1.0" to be safe.
+                    "feedback"      - A String holding any feedback left by the instructor for this submission.
+                                        Again, if the status isn't GRADED or UNDER_REVIEW, the value of this string
+                                        shouldn't be used. That said, it makes sense to have it be an empty string
+                                        if no feedback has been left.
+
+User:
+"type"      - This describes whether this is a user or course. Common between all API users for our application
+                For a user, this should either be "student" or "instructor", depending on the user type.
+"userData"  - A JSON Object unique to users.
+    "firstName" - A String representing this user's first name
+    "lastName"  - A String representing this user's last name
+    "courses"   - A JSON Array storing the course codes of all courses this user has access to (enrolled in / teaches)
