@@ -7,7 +7,7 @@ public class User {
     private String name;
     private String password;
     private USER_TYPE userType;
-    private List<Course> courses;
+    private List<String> courses;
 
     public enum USER_TYPE {
         STUDENT,
@@ -18,7 +18,7 @@ public class User {
         this(name, password, userType, new ArrayList<>());
     }
 
-    public User(String name, String password, USER_TYPE userType, List<Course> courses) {
+    public User(String name, String password, USER_TYPE userType, List<String> courses) {
         this.name = name;
         this.password = password;
         this.userType =  userType;
@@ -37,7 +37,7 @@ public class User {
         return this.userType;
     }
 
-    public List<Course> getCourses() {
+    public List<String> getCourses() {
         return this.courses;
     }
 }
