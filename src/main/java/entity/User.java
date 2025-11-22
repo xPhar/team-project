@@ -29,20 +29,15 @@ public class User {
         return this.name;
     }
 
-    public boolean validatePassword(String password) {
-        return this.password.equals(password);
+    public String getPassword() {
+        return this.password;
     }
 
-    public Course getCourse(String course) {
-        for (Course c : this.courses) {
-            if (c.getCourseCode().equals(course)) {
-                return c;
-            }
-        }
-        return null;
+    public USER_TYPE getUserType() {
+        return this.userType;
     }
 
-    public void addCourse(Course course) {
-        this.courses.add(course);
+    public List<Course> getCourses() {
+        return this.courses;
     }
 }

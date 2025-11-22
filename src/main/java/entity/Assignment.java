@@ -45,7 +45,7 @@ public class Assignment {
          return supportedFileTypes;
      }
 
-     public AssignmentBuilder builder() {
+     public static AssignmentBuilder builder() {
          return new AssignmentBuilder();
      }
 

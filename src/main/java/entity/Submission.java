@@ -51,7 +51,11 @@ public class Submission {
         return status;
     }
 
-    public class SubmissionBuilder {
+    public static SubmissionBuilder getBuilder() {
+        return new SubmissionBuilder();
+    }
+
+    public static class SubmissionBuilder {
         private String assignment;
         private String submitter;
         private LocalDateTime submissionTime;
