@@ -5,10 +5,9 @@ package usecase.login;
  */
 public interface LoginOutputBoundary {
     /**
-     * Prepares the success view for the Login Use Case.
-     * @param outputData the output data
+     * Switches to logged in view after successful login.
      */
-    void prepareSuccessView(LoginOutputData outputData);
+    void switchToLoggedInView();
 
     /**
      * Prepares the failure view for the Login Use Case.

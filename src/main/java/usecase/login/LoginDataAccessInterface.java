@@ -20,4 +20,10 @@ public interface LoginDataAccessInterface {
      * @return the user with the given username
      */
     User getUser(String username);
+
+    /**
+     * Sets the Session's user to this user.
+     * @param user the user to make active
+     */
+    void setActiveUser(User user);
 }

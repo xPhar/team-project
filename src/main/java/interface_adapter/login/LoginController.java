@@ -1,6 +1,5 @@
 package interface_adapter.login;
 
-import app.Session;
 import usecase.login.LoginInputBoundary;
 import usecase.login.LoginInputData;
 
