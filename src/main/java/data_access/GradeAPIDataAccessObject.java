@@ -1,9 +1,13 @@
 package data_access;
 
+import entity.Course;
+import entity.User;
 import okhttp3.*;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * API Usage idea:
@@ -111,8 +115,56 @@ public class GradeAPIDataAccessObject {
     private static final String PASSWORD = "password";
     private static final String MESSAGE = "message";
     private static final String USER_EXIST_MESSAGE = "User exists";
+    private static final String STUDENT = "student";
+    private static final String INSTRUCTOR = "instructor";
 
-    public String createUser(String username, String password) throws DataAccessException {
+    //"info": {
+    // *         "type": "student"
+    // *         "userData": {
+    // *             "firstName": "first",
+    // *             "lastName": "last",
+    // *             "courses": [
+    // *                  "CSC207"
+    // *             ]
+    // *         }
+    // *     },
+
+    public User getUser(String username) {
+        final JSONObject userObject = getUserObject(username);
+        final JSONObject userInfo =  userObject.getJSONObject("info");
+
+        String password = userObject.getString("password");
+        String firstName = userInfo.getString("firstName");
+        String lastName = userInfo.getString("lastName");
+        User.USER_TYPE type;
+
+        String userType = userInfo.getString("type");
+        if (userType.equals(STUDENT)) {
+            type = User.USER_TYPE.STUDENT;
+        }
+        else if (userType.equals(INSTRUCTOR)) {
+            type = User.USER_TYPE.INSTRUCTOR;
+        }
+        else {
+            throw new DataAccessException("Invalid user type");
+        }
+
+        JSONArray coursesArray = userInfo.getJSONArray("courses");
+        ArrayList<String> courses = new ArrayList<>();
+        for (Object course : coursesArray) {
+            if (course instanceof String courseString) {
+                courses.add(courseString);
+            }
+            else {
+                throw new DataAccessException("Invalid course type");
+            }
+        }
+
+        return new User(username, password, firstName, lastName, type, courses);
+    }
+
+    public void createUser(String username, String password, String firstName, String lastName)
+            throws DataAccessException {
         final OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
 
@@ -133,7 +185,11 @@ public class GradeAPIDataAccessObject {
             final JSONObject responseBody = new JSONObject(response.body().string());
 
             if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
-                return responseBody.getString(MESSAGE);
+                JSONObject userInfo = new JSONObject();
+                userInfo.put("firstName", firstName);
+                userInfo.put("lastName", lastName);
+
+                modifyUserInfo(username, password, userInfo);
             }
             else if (responseBody.getInt(STATUS_CODE_LABEL) == CREDENTIAL_ERROR) {
                 throw new DataAccessException("message could not be found or password was incorrect");
@@ -147,25 +203,63 @@ public class GradeAPIDataAccessObject {
         }
     }
 
-    // Example method, in this case just adds some testing text to the user
-    public void modifyUser(String username, String password) throws DataAccessException {
-        final JSONObject info = new JSONObject();
+    public void createCourse(String courseName, String courseCode)
+            throws DataAccessException {
+        final OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
 
-        info.put("testField", "Hello World!");
+        // POST METHOD
+        final MediaType mediaType = MediaType.parse(CONTENT_TYPE_JSON);
+        final JSONObject requestBody = new JSONObject();
+        // TODO: Decide on prefix for course username
+        requestBody.put(USERNAME, "course-" + courseCode);
+        // TODO: Decide on constant for course password
+        requestBody.put(PASSWORD, "COURSE");
+        final RequestBody body = RequestBody.create(requestBody.toString(), mediaType);
+        final Request request = new Request.Builder()
+                .url("http://vm003.teach.cs.toronto.edu:20112/user")
+                .method("POST", body)
+                .addHeader(CONTENT_TYPE_LABEL, CONTENT_TYPE_JSON)
+                .build();
+        try {
+            final Response response = client.newCall(request).execute();
 
-        modifyUserInfoEndpoint(username, password, info);
+            final JSONObject responseBody = new JSONObject(response.body().string());
+
+            if (responseBody.getInt(STATUS_CODE_LABEL) == CREDENTIAL_ERROR) {
+                throw new DataAccessException("message could not be found or password was incorrect");
+            }
+            else if (responseBody.getInt(STATUS_CODE_LABEL) != SUCCESS_CODE) {
+                throw new DataAccessException("database error: " + responseBody.getString(MESSAGE));
+            }
+            // Else: Success!
+        }
+        catch (IOException | JSONException ex) {
+            throw new DataAccessException(ex.getMessage());
+        }
     }
 
-    // Second example method, this one updates info non-destructively by first fetching the user data
-    public void appendToUser(String username, String password) throws DataAccessException {
-        JSONObject info = getUserInfo(username);
+    public boolean checkUserExists(String username) throws DataAccessException {
+        final OkHttpClient client = new OkHttpClient().newBuilder().build();
+        final Request request = new Request.Builder()
+                .url(String.format("http://vm003.teach.cs.toronto.edu:20112/checkIfUserExists?username=%s", username))
+                .build();
+        try {
+            final Response response = client.newCall(request).execute();
+            final JSONObject responseBody = new JSONObject(response.body().string());
 
-        info.put("newField", "This got appended!");
-
-        modifyUserInfoEndpoint(username, password, info);
+            if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
+                return responseBody.getString(MESSAGE).equals(USER_EXIST_MESSAGE);
+            } else {
+                throw new DataAccessException(responseBody.getString(MESSAGE));
+            }
+        }
+        catch (IOException | JSONException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
-    public void modifyUserInfoEndpoint(String username, String password, JSONObject infoObject)
+    private void modifyUserInfo(String username, String password, JSONObject infoObject)
             throws DataAccessException {
         final OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
@@ -200,7 +294,12 @@ public class GradeAPIDataAccessObject {
         }
     }
 
-    public JSONObject getUserInfo(String username) throws DataAccessException {
+    private JSONObject getUserInfo(String username) throws DataAccessException {
+        final JSONObject userJSONObject = getUserObject(username);
+        return userJSONObject.getJSONObject("info");
+    }
+
+    private JSONObject getUserObject(String username) throws DataAccessException {
         // Make an API call to get the user object.
         final OkHttpClient client = new OkHttpClient().newBuilder().build();
         final Request request = new Request.Builder()
@@ -213,30 +312,9 @@ public class GradeAPIDataAccessObject {
             final JSONObject responseBody = new JSONObject(response.body().string());
 
             if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
-                final JSONObject userJSONObject = responseBody.getJSONObject("user");
-                return userJSONObject.getJSONObject("info");
+                return responseBody.getJSONObject("user");
             }
             else {
-                throw new DataAccessException(responseBody.getString(MESSAGE));
-            }
-        }
-        catch (IOException | JSONException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    public boolean checkUserExists(String username) throws DataAccessException {
-        final OkHttpClient client = new OkHttpClient().newBuilder().build();
-        final Request request = new Request.Builder()
-                .url(String.format("http://vm003.teach.cs.toronto.edu:20112/checkIfUserExists?username=%s", username))
-                .build();
-        try {
-            final Response response = client.newCall(request).execute();
-            final JSONObject responseBody = new JSONObject(response.body().string());
-
-            if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
-                return responseBody.getString(MESSAGE).equals(USER_EXIST_MESSAGE);
-            } else {
                 throw new DataAccessException(responseBody.getString(MESSAGE));
             }
         }

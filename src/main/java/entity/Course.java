@@ -6,12 +6,12 @@ import java.util.List;
 public class Course {
     private String courseName;
     private String courseCode;
-    private List<User> instructors;
-    private List<User> students;
-    private List<Assignment> assignments;
+    private List<String> instructors;
+    private List<String> students;
+    private List<String> assignments;
 
-    public Course(String courseName, String courseCode,  List<User> instructors,
-                  List<User> students, List<Assignment> assignments) {
+    public Course(String courseName, String courseCode,  List<String> instructors,
+                  List<String> students, List<String> assignments) {
         this.courseName = courseName;
         this.courseCode = courseCode;
         this.instructors = instructors;
@@ -27,15 +27,15 @@ public class Course {
         return courseCode;
     }
 
-    public List<User> getInstructors() {
+    public List<String> getInstructors() {
         return instructors;
     }
 
-    public List<User> getStudents() {
+    public List<String> getStudents() {
         return students;
     }
 
-    public List<Assignment> getAssignments() {
+    public List<String> getAssignments() {
         return assignments;
     }
 
@@ -46,9 +46,9 @@ public class Course {
     public static class CourseBuilder {
         private String courseName;
         private String courseCode;
-        private List<User> instructors;
-        private List<User> students;
-        private List<Assignment> assignments;
+        private List<String> instructors;
+        private List<String> students;
+        private List<String> assignments;
 
         CourseBuilder() {
             this.instructors = new ArrayList<>();
@@ -66,17 +66,17 @@ public class Course {
             return this;
         }
 
-        public CourseBuilder addInstructor(User instructor) {
+        public CourseBuilder addInstructor(String instructor) {
             this.instructors.add(instructor);
             return this;
         }
 
-        public CourseBuilder addStudent(User student) {
+        public CourseBuilder addStudent(String student) {
             this.students.add(student);
             return this;
         }
 
-        public CourseBuilder addAssignment(Assignment assignment) {
+        public CourseBuilder addAssignment(String assignment) {
             this.assignments.add(assignment);
             return this;
         }

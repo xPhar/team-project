@@ -14,6 +14,7 @@ import java.util.List;
 public class FacadeDAO implements LoginDataAccessInterface {
     private final FileToStringDataAccessObject fsDA;
     private final GradeAPIDataAccessObject gradeDA;
+    private final SessionDataAccessObject sessionDA;
 
     // TODO course password?
     private final String COURSE_PASSWORD = "";
@@ -21,6 +22,7 @@ public class FacadeDAO implements LoginDataAccessInterface {
     public FacadeDAO() {
         this.fsDA = new FileToStringDataAccessObject();
         this.gradeDA = new GradeAPIDataAccessObject();
+        this.sessionDA = new SessionDataAccessObject();
     }
 
     private String getCourseUserName(Course course) {
@@ -129,11 +131,11 @@ public class FacadeDAO implements LoginDataAccessInterface {
 
     @Override
     public User getUser(String username) {
-        return null;
+        gradeDA.getUser(username);
     }
 
     @Override
     public void setActiveUser(User user) {
-
+        sessionDA.setUser(user);
     }
 }
