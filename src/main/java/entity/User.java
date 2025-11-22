@@ -1,21 +1,28 @@
 package entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public abstract class User {
+public class User {
     private String name;
     private String password;
+    private USER_TYPE userType;
     private List<Course> courses;
 
-    User(String name, String password) {
-        this.name = name;
-        this.password = password;
+    public enum USER_TYPE {
+        STUDENT,
+        INSTRUCTOR
     }
 
-    User(String name, String password, List<Course> courses) {
+    public User(String name, String password, USER_TYPE userType) {
+        this(name, password, userType, new ArrayList<>());
+    }
+
+    public User(String name, String password, USER_TYPE userType, List<Course> courses) {
         this.name = name;
         this.password = password;
-        this.courses = List.copyOf(courses);
+        this.userType =  userType;
+        this.courses = new ArrayList<>(courses);
     }
 
     public String getName() {
@@ -26,16 +33,11 @@ public abstract class User {
         return this.password;
     }
 
-    public Course getCourse(String course) {
-        for (Course c : this.courses) {
-            if (c.getCourseCode().equals(course)) {
-                return c;
-            }
-        }
-        return null;
+    public USER_TYPE getUserType() {
+        return this.userType;
     }
 
-    public void addCourse(Course course) {
-        this.courses.add(course);
+    public List<Course> getCourses() {
+        return this.courses;
     }
 }
