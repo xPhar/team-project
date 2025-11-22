@@ -2,6 +2,7 @@ package data_access;
 
 import entity.*;
 import org.json.JSONObject;
+import usecase.login.LoginDataAccessInterface;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class FacadeDAO {
+public class FacadeDAO implements LoginDataAccessInterface {
     private final FileToStringDataAccessObject fsDA;
     private final GradeAPIDataAccessObject gradeDA;
 
@@ -121,24 +122,18 @@ public class FacadeDAO {
     }
 
     // Login
+    @Override
     public boolean existsByName(String username) {
         return gradeDA.checkUserExists(username);
     }
 
-    public void save(User user) {
-
+    @Override
+    public User getUser(String username) {
+        return null;
     }
 
-    public User get(String username) {
-        JSONObject userObj = gradeDA.getUserInfo(username);
-        User user;
-        if (userObj.getString("type").equals("student")) {
-            user = new Student(username, "");
-        } else {
-            user = new Instructor(username, "");
-        }
-        // TODO add course list to user java object
+    @Override
+    public void setActiveUser(User user) {
 
-        return user;
     }
 }
