@@ -1,8 +1,8 @@
 package view;
 
-import interface_adapter.note.NoteController;
-import interface_adapter.note.NoteState;
-import interface_adapter.note.NoteViewModel;
+import interface_adapter.example.NoteController;
+import interface_adapter.example.NoteState;
+import interface_adapter.example.NoteViewModel;
 
 import javax.swing.*;
 import java.awt.*;

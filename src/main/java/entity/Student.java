@@ -6,7 +6,7 @@ import java.util.List;
 public class Student extends User {
     private List<Submission> submissions;
 
-    Student(String name, String password) {
+    public Student(String name, String password) {
         super(name, password);
         this.submissions = new ArrayList<>();
     }
@@ -23,11 +23,15 @@ public class Student extends User {
 
     public Submission getSubmission(String assignment) {
         for (Submission submission : submissions) {
-           if (submission.getAssignment().equals(assignment)) {
-               return submission;
+            if (submission.getAssignment().equals(assignment)) {
+                return submission;
             }
         }
         return null;
+    }
+
+    public List<Submission> getSubmissions() {
+        return submissions;
     }
 
     public void addSubmission(Submission submission) {

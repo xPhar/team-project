@@ -22,6 +22,8 @@ public abstract class User {
         return this.name;
     }
 
+    public String getPassword() { return this.password; }
+
     public boolean validatePassword(String password) {
         return this.password.equals(password);
     }

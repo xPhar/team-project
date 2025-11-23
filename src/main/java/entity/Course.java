@@ -33,4 +33,8 @@ public class Course {
     public List<Assignment> getAssignments() {
         return assignments;
     }
+
+    public void setAssignments(List<Assignment> assignments) {
+        this.assignments = assignments;
+    }
 }

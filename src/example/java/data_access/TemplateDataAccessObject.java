@@ -4,8 +4,8 @@ import entity.User;
 import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
-import use_case.note.DataAccessException;
-import use_case.note.NoteDataAccessInterface;
+import usecase.example.DataAccessException;
+import usecase.example.NoteDataAccessInterface;
 
 import java.io.IOException;
 
