@@ -1,12 +1,10 @@
 package usecase.Resubmit;
 
-import java.io.File;
-import java.io.IOException;
-import java.time.LocalDateTime;
+import entity.Assignment;
 
 public interface ResubmitUserDataAccessInterface {
     /*
-     * Get due date of the current assignment
+     * Get the current assignment
      */
-    LocalDateTime getAssignmentDueDate();
+    Assignment getAssignment();
 }

@@ -1,8 +1,9 @@
 package usecase.Submit;
 
+import entity.Assignment;
+
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 public interface SubmitUserDataAccessInterface {
     /*
@@ -11,7 +12,7 @@ public interface SubmitUserDataAccessInterface {
     void submit(File studentFile) throws IOException;
 
     /*
-     * Get due date of the current assignment
+     * Get the current assignment
      */
-    LocalDateTime getAssignmentDueDate();
+    Assignment getAssignment();
 }

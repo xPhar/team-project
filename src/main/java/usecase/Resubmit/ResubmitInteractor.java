@@ -1,7 +1,5 @@
 package usecase.Resubmit;
 
-import usecase.Submit.SubmitUserDataAccessInterface;
-
 import java.time.LocalDateTime;
 
 public class ResubmitInteractor implements ResubmitInputBoundary {
@@ -15,7 +13,7 @@ public class ResubmitInteractor implements ResubmitInputBoundary {
         this.resubmitUserDataAccess = resubmitUserDataAccess;
     }
     public void execute(ResubmitInputData inputData) {
-        LocalDateTime deadline = resubmitUserDataAccess.getAssignmentDueDate();
+        LocalDateTime deadline = resubmitUserDataAccess.getAssignment().getDueDate();
         // TODO: if we need to add disability part, we can adjust color of message
         //  but if we do not need that, then we can delete ResubmitOutputData
         if (deadline.isAfter(inputData.getTime())) {

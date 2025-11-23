@@ -1,5 +1,6 @@
 package data_access;
 
+import entity.Assignment;
 import usecase.Resubmit.ResubmitUserDataAccessInterface;
 import usecase.Submit.SubmitUserDataAccessInterface;
 
@@ -8,18 +9,27 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 public class FakeUserDataAccessObject implements ResubmitUserDataAccessInterface, SubmitUserDataAccessInterface {
-    LocalDateTime deadline;
+    Assignment assignment;
     boolean submitFailure;
+
 
     public FakeUserDataAccessObject(boolean deadlinePassed, boolean submitFails) {
         this.submitFailure = submitFails;
 
+        LocalDateTime deadline;
+
         if (deadlinePassed) {
-            this.deadline = LocalDateTime.MIN;
+            deadline = LocalDateTime.MIN;
         }
         else {
-            this.deadline = LocalDateTime.MAX;
+            deadline = LocalDateTime.MAX;
         }
+
+        assignment = Assignment.builder()
+                .name("CRYCHIC を止める")
+                .dueDate(deadline)
+                .gracePeriod(1) // 1 hour
+                .build();
     }
 
     @Override
@@ -30,7 +40,7 @@ public class FakeUserDataAccessObject implements ResubmitUserDataAccessInterface
     }
 
     @Override
-    public LocalDateTime getAssignmentDueDate() {
-        return this.deadline;
+    public Assignment getAssignment() {
+        return this.assignment;
     }
 }
