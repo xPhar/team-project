@@ -5,7 +5,6 @@ Storing runtime data that will be passed between interactor (maybe DAO)
 Can be implemented as pattern Singleton
  */
 public class Session {
-
     private User user;
     private Course course;
     private Assignment assignment;
@@ -55,23 +54,5 @@ public class Session {
 
     public Assignment getAssignment() {
         return assignment;
-    }
-
-    // -----------------------
-    // Utility (optional)
-    // -----------------------
-    public void resetCourseSelection() {
-        this.course = null;
-        this.assignment = null;
-    }
-
-    public void resetAssignment() {
-        this.assignment = null;
-    }
-
-    public void resetAll() {
-        this.user = null;
-        this.course = null;
-        this.assignment = null;
     }
 }
