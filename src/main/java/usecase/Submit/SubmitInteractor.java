@@ -21,25 +21,22 @@ public class SubmitInteractor implements SubmitInputBoundary {
         if (deadline.isBefore(LocalDateTime.now())) {
             SubmitOutputData outputData = new SubmitOutputData("Deadline is passed, you cannot submit");
             submitPresenter.prepareFailureView(outputData);
+
         }
+        else {
 
-        File studentWork = inputData.getSelectedFile();
+            File studentWork = inputData.getSelectedFile();
 
-        try {
-            submitUserDataAccess.submit(studentWork);
+            try {
+                submitUserDataAccess.submit(studentWork);
 
-            // This part might be useless because we do not need submission for student, we may only
-            // use it for instructor fetch data from dataAccessObject
-            //Student student = (Student) session.getUser();
-            //Submission thisSubmission = new Submission();
-            // TODO: add submission data, wait for submission implementation
-            //student.addSubmission(thisSubmission);
+                SubmitOutputData outputData = new SubmitOutputData("Successfully submitted!");
+                submitPresenter.prepareSuccessView(outputData);
 
-            SubmitOutputData outputData = new SubmitOutputData("Successfully submitted!");
-            submitPresenter.prepareSuccessView(outputData);
-        } catch (IOException e) {
-            SubmitOutputData outputData = new SubmitOutputData("Network Error! Please try again later.");
-            submitPresenter.prepareFailureView(outputData);
+            } catch (IOException e) { //Case network error
+                SubmitOutputData outputData = new SubmitOutputData("Network Error! Please try again later.");
+                submitPresenter.prepareFailureView(outputData);
+            }
         }
     }
 }
