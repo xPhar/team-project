@@ -25,7 +25,7 @@ public class EditAssignmentPresenter implements EditAssignmentOutputBoundary {
         state.setErrorMessage(null);
         editAssignmentViewModel.firePropertyChange();
 
-        // Navigate back to Assignments view
+
         viewManagerModel.setState(assignmentsViewModel.getViewName());
         viewManagerModel.firePropertyChange();
     }

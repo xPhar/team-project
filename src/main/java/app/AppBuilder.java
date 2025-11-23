@@ -123,8 +123,8 @@ public class AppBuilder {
 
         session.setCourse(course);
 
-        // Student student = new Student("John Doe", "password123");
-        // session.setUser(student);
+        //Student student = new Student("John Doe", "password123");
+        //session.setUser(student);
 
         Instructor instructor = new Instructor("Prof. Smith", "password456");
         session.setUser(instructor);
