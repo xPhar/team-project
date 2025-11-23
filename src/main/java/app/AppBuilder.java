@@ -24,6 +24,7 @@ public class AppBuilder {
 
     final ViewManagerModel viewManagerModel = new ViewManagerModel();
     ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
+    //If we need to switch View, just write viewManagerModel.setstate(viewName), where viewName is a String
 
     private LoginView loginView;
     private LoginViewModel loginViewModel;
