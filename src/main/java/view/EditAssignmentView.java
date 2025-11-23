@@ -1,9 +1,9 @@
 package view;
 
 import entity.Assignment;
-import interface_adapter.CreateAssignment.CreateAssignmentController;
-import interface_adapter.CreateAssignment.CreateAssignmentState;
-import interface_adapter.CreateAssignment.CreateAssignmentViewModel;
+import interface_adapter.EditAssignment.EditAssignmentController;
+import interface_adapter.EditAssignment.EditAssignmentState;
+import interface_adapter.EditAssignment.EditAssignmentViewModel;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -18,12 +18,11 @@ import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateAssignmentView extends JPanel implements PropertyChangeListener {
-    private final String viewName = "Create Assignment";
-    private final CreateAssignmentViewModel createAssignmentViewModel;
-    private CreateAssignmentController createAssignmentController;
+public class EditAssignmentView extends JPanel implements PropertyChangeListener {
+    private final String viewName = "Edit Assignment";
+    private final EditAssignmentViewModel editAssignmentViewModel;
+    private EditAssignmentController editAssignmentController;
     private final JLabel courseValue;
-    private final Assignment assignment = new Assignment();
 
     // Components
     private final JTextField nameField = new JTextField(20);
@@ -42,12 +41,7 @@ public class CreateAssignmentView extends JPanel implements PropertyChangeListen
     private final JTextField customExtField = new JTextField(8);
     private final JButton addTypeBtn = new JButton("Add");
 
-    private final DefaultListModel<File> starterModel = new DefaultListModel<>();
-    private final JList<File> starterList = new JList<>(starterModel);
-    private final JButton addStarterBtn = new JButton("Add Files...");
-    private final JButton removeStarterBtn = new JButton("Remove Selected");
-
-    private final JButton createButton = new JButton("Create Assignment");
+    private final JButton saveButton = new JButton("Save Changes");
     private final JButton cancelButton = new JButton("Cancel");
 
     // Styles
@@ -62,9 +56,9 @@ public class CreateAssignmentView extends JPanel implements PropertyChangeListen
     private final Font LABEL_FONT = new Font("Segoe UI", Font.BOLD, 13);
     private final Font INPUT_FONT = new Font("Segoe UI", Font.PLAIN, 14);
 
-    public CreateAssignmentView(CreateAssignmentViewModel createAssignmentViewModel) {
-        this.createAssignmentViewModel = createAssignmentViewModel;
-        this.createAssignmentViewModel.addPropertyChangeListener(this);
+    public EditAssignmentView(EditAssignmentViewModel editAssignmentViewModel) {
+        this.editAssignmentViewModel = editAssignmentViewModel;
+        this.editAssignmentViewModel.addPropertyChangeListener(this);
         this.courseValue = new JLabel("");
         this.courseValue.setFont(INPUT_FONT);
 
@@ -79,8 +73,6 @@ public class CreateAssignmentView extends JPanel implements PropertyChangeListen
         contentPanel.add(buildForm());
         contentPanel.add(Box.createVerticalStrut(20));
         contentPanel.add(buildTypesSection());
-        contentPanel.add(Box.createVerticalStrut(20));
-        contentPanel.add(buildStarterFilesSection());
 
         JScrollPane mainScroll = new JScrollPane(contentPanel);
         mainScroll.setBorder(null);
@@ -93,7 +85,6 @@ public class CreateAssignmentView extends JPanel implements PropertyChangeListen
 
         initDueDateSpinner();
         wireSupportedTypes();
-        wireStarterFiles();
         setupButtonListeners();
     }
 
@@ -104,7 +95,7 @@ public class CreateAssignmentView extends JPanel implements PropertyChangeListen
     }
 
     private void addHeader() {
-        JLabel title = new JLabel("Create New Assignment");
+        JLabel title = new JLabel("Edit Assignment");
         title.setFont(HEADER_FONT);
         title.setForeground(TEXT_PRIMARY);
 
@@ -230,47 +221,16 @@ public class CreateAssignmentView extends JPanel implements PropertyChangeListen
         cb.setForeground(TEXT_PRIMARY);
     }
 
-    private JPanel buildStarterFilesSection() {
-        JPanel panel = new JPanel(new BorderLayout(0, 10));
-        panel.setOpaque(false);
-
-        JLabel label = new JLabel("Starter Files (Optional)");
-        label.setFont(LABEL_FONT);
-        label.setForeground(TEXT_SECONDARY);
-        panel.add(label, BorderLayout.NORTH);
-
-        starterList.setFont(INPUT_FONT);
-        starterList.setFixedCellHeight(30);
-        JScrollPane listScroll = new JScrollPane(starterList);
-        listScroll.setBorder(new LineBorder(BORDER_COLOR));
-        listScroll.setPreferredSize(new Dimension(400, 120));
-
-        JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
-        btnPanel.setOpaque(false);
-        styleSecondaryButton(addStarterBtn);
-        styleSecondaryButton(removeStarterBtn);
-        btnPanel.add(addStarterBtn);
-        btnPanel.add(removeStarterBtn);
-
-        JPanel container = new JPanel(new BorderLayout(0, 10));
-        container.setOpaque(false);
-        container.add(listScroll, BorderLayout.CENTER);
-        container.add(btnPanel, BorderLayout.SOUTH);
-
-        panel.add(container, BorderLayout.CENTER);
-        return panel;
-    }
-
     private void addActions() {
         JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
         actions.setOpaque(false);
         actions.setBorder(new EmptyBorder(20, 0, 0, 0));
 
         styleSecondaryButton(cancelButton);
-        stylePrimaryButton(createButton);
+        stylePrimaryButton(saveButton);
 
         actions.add(cancelButton);
-        actions.add(createButton);
+        actions.add(saveButton);
         add(actions, BorderLayout.SOUTH);
     }
 
@@ -322,47 +282,19 @@ public class CreateAssignmentView extends JPanel implements PropertyChangeListen
         });
     }
 
-    private void wireStarterFiles() {
-        addStarterBtn.addActionListener(e -> {
-            JFileChooser chooser = new JFileChooser();
-            chooser.setDialogTitle("Choose starter files");
-            chooser.setMultiSelectionEnabled(true);
-            chooser.addChoosableFileFilter(
-                    new FileNameExtensionFilter(
-                            "Common (zip, pdf, py, java, txt)",
-                            "zip", "pdf", "py", "java", "txt"));
-            chooser.setAcceptAllFileFilterUsed(true);
-
-            int result = chooser.showOpenDialog(this);
-            if (result == JFileChooser.APPROVE_OPTION) {
-                File[] files = chooser.getSelectedFiles();
-                for (File f : files) {
-                    if (!containsFile(f)) {
-                        starterModel.addElement(f);
-                    }
-                }
-            }
-        });
-
-        removeStarterBtn.addActionListener(e -> {
-            for (File f : starterList.getSelectedValuesList()) {
-                starterModel.removeElement(f);
-            }
-        });
-    }
-
     private void setupButtonListeners() {
-        createButton.addActionListener(e -> {
-            if (createAssignmentController != null) {
-                Assignment newAssignment = getAssignment();
+        saveButton.addActionListener(e -> {
+            if (editAssignmentController != null) {
+                Assignment updatedAssignment = getAssignmentFromForm();
+                String originalName = editAssignmentViewModel.getState().getOriginalName();
                 String courseCode = "CSC207"; // Placeholder
-                createAssignmentController.execute(newAssignment, courseCode);
+                editAssignmentController.execute(originalName, updatedAssignment, courseCode);
             }
         });
 
         cancelButton.addActionListener(e -> {
-            if (createAssignmentController != null) {
-                createAssignmentController.switchToAssignmentView();
+            if (editAssignmentController != null) {
+                editAssignmentController.switchToAssignmentView();
             }
         });
     }
@@ -384,14 +316,6 @@ public class CreateAssignmentView extends JPanel implements PropertyChangeListen
         typesPanel.repaint();
     }
 
-    private boolean containsFile(File f) {
-        for (int i = 0; i < starterModel.size(); i++) {
-            if (starterModel.get(i).equals(f))
-                return true;
-        }
-        return false;
-    }
-
     private List<String> getSupportedFileTypes() {
         List<String> out = new ArrayList<>();
         for (Component c : typesPanel.getComponents()) {
@@ -402,10 +326,11 @@ public class CreateAssignmentView extends JPanel implements PropertyChangeListen
         return out;
     }
 
-    public Assignment getAssignment() {
+    public Assignment getAssignmentFromForm() {
+        Assignment assignment = new Assignment();
         assignment.setName(nameField.getText().trim());
         assignment.setDescription(descriptionArea.getText());
-        assignment.setCreationDate(LocalDateTime.now());
+        // Creation date is preserved in interactor, or we can pass it if we had it.
 
         java.util.Date d = (java.util.Date) dueDateTime.getValue();
         LocalDateTime dueAt = d.toInstant()
@@ -437,19 +362,8 @@ public class CreateAssignmentView extends JPanel implements PropertyChangeListen
         return assignment;
     }
 
-    public void clearForm() {
-        nameField.setText("");
-        descriptionArea.setText("");
-        totalPointsField.setText("");
-        gracePeriodDaysField.setText("");
-        latePenaltyField.setText("");
-        dueDateTime.setValue(new java.util.Date());
-        starterModel.clear();
-        descriptionArea.setCaretPosition(0);
-    }
-
-    public void setCreateAssignmentController(CreateAssignmentController controller) {
-        this.createAssignmentController = controller;
+    public void setEditAssignmentController(EditAssignmentController controller) {
+        this.editAssignmentController = controller;
     }
 
     public String getViewName() {
@@ -458,13 +372,66 @@ public class CreateAssignmentView extends JPanel implements PropertyChangeListen
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        CreateAssignmentState state = (CreateAssignmentState) evt.getNewValue();
+        EditAssignmentState state = (EditAssignmentState) evt.getNewValue();
         if (state.getErrorMessage() != null && !state.getErrorMessage().isEmpty()) {
             JOptionPane.showMessageDialog(this, state.getErrorMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } else if (state.isSuccess()) {
-            JOptionPane.showMessageDialog(this, "Assignment created successfully!", "Success",
-                    JOptionPane.INFORMATION_MESSAGE);
-            clearForm();
+        } else if (state.getAssignment() != null) {
+            populateForm(state.getAssignment());
         }
+    }
+
+    private void populateForm(Assignment assignment) {
+        nameField.setText(assignment.getName());
+        descriptionArea.setText(assignment.getDescription());
+
+        if (assignment.getDueDate() != null) {
+            java.util.Date date = java.util.Date.from(assignment.getDueDate()
+                    .atZone(ZoneId.systemDefault())
+                    .toInstant());
+            dueDateTime.setValue(date);
+        }
+
+        gracePeriodDaysField.setText(String.valueOf((int) assignment.getGracePeriod()));
+        latePenaltyField.setText(assignment.getLatePenalty());
+
+        // Reset checkboxes
+        cbPdf.setSelected(false);
+        cbZip.setSelected(false);
+        cbPy.setSelected(false);
+        cbJava.setSelected(false);
+        cbTxt.setSelected(false);
+
+        // Remove custom ones
+        List<Component> toRemove = new ArrayList<>();
+        for (Component c : typesPanel.getComponents()) {
+            if (c instanceof JCheckBox j) {
+                String txt = j.getText();
+                if (!txt.equals("PDF") && !txt.equals("ZIP") && !txt.equals("Python (.py)") &&
+                        !txt.equals("Java (.java)") && !txt.equals("Text (.txt)")) {
+                    toRemove.add(c);
+                }
+            }
+        }
+        for (Component c : toRemove)
+            typesPanel.remove(c);
+
+        if (assignment.getSupportedFileTypes() != null) {
+            for (String type : assignment.getSupportedFileTypes()) {
+                boolean found = false;
+                for (Component c : typesPanel.getComponents()) {
+                    if (c instanceof JCheckBox j && j.getText().equalsIgnoreCase(type)) {
+                        j.setSelected(true);
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    addTypeCheckbox(type);
+                }
+            }
+        }
+
+        typesPanel.revalidate();
+        typesPanel.repaint();
     }
 }

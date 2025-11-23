@@ -23,11 +23,15 @@ public class Student extends User {
 
     public Submission getSubmission(String assignment) {
         for (Submission submission : submissions) {
-           if (submission.getAssignment().equals(assignment)) {
-               return submission;
+            if (submission.getAssignment().equals(assignment)) {
+                return submission;
             }
         }
         return null;
+    }
+
+    public List<Submission> getSubmissions() {
+        return submissions;
     }
 
     public void addSubmission(Submission submission) {

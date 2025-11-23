@@ -3,6 +3,7 @@ package view;
 import interface_adapter.Submit.SubmitController;
 import interface_adapter.Submit.SubmitState;
 import interface_adapter.Submit.SubmitViewModel;
+import interface_adapter.ViewManagerModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,15 +17,26 @@ public class SubmitView extends JPanel implements PropertyChangeListener {
     private final String viewName = "Submit";
     private final SubmitViewModel submitViewModel;
 
-    private final JLabel messageField = new JLabel("Click the botton to submit");
+    private final JLabel messageField = new JLabel("Click the button to submit");
 
     private SubmitController submitController = null;
+    private ViewManagerModel viewManagerModel = null;
 
     public SubmitView(SubmitViewModel submitViewModel) {
 
         this.submitViewModel = submitViewModel;
         this.submitViewModel.addPropertyChangeListener(this);
 
+        this.setLayout(new BorderLayout(10, 10));
+        this.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+
+        // Top panel with message
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+        topPanel.add(messageField);
+
+        // Center panel with upload button
+        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton uploadButton = new JButton("Choose File");
         uploadButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
@@ -35,25 +47,44 @@ public class SubmitView extends JPanel implements PropertyChangeListener {
                 JOptionPane.showMessageDialog(this,
                         "File selected: " + selectedFile.getAbsolutePath());
                 // Then go to controller
-                submitController.submitExecute(LocalDateTime.now(), selectedFile);
+                if (submitController != null) {
+                    submitController.submitExecute(LocalDateTime.now(), selectedFile);
+                }
 
             } else {
                 JOptionPane.showMessageDialog(this, "No file selected");
             }
         });
+        centerPanel.add(uploadButton);
 
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.add(messageField);
-        this.add(uploadButton);
+        // Bottom panel with Back button
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JButton backButton = new JButton("← Back to Assignments");
+        backButton.addActionListener(e -> {
+            if (viewManagerModel != null) {
+                viewManagerModel.setState("Assignments");
+                viewManagerModel.firePropertyChange();
+            }
+        });
+        bottomPanel.add(backButton);
 
+        this.add(topPanel, BorderLayout.NORTH);
+        this.add(centerPanel, BorderLayout.CENTER);
+        this.add(bottomPanel, BorderLayout.SOUTH);
 
     }
+
     /**
-     * Staff below is copied from CA engine, a little modification is added to propertyChange so that
+     * Staff below is copied from CA engine, a little modification is added to
+     * propertyChange so that
      * User can see whether submit successfully or error msg
      */
     public void setSubmitController(SubmitController submitController) {
         this.submitController = submitController;
+    }
+
+    public void setViewManagerModel(ViewManagerModel viewManagerModel) {
+        this.viewManagerModel = viewManagerModel;
     }
 
     @Override
