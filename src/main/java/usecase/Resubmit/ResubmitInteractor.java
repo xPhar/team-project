@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 public class ResubmitInteractor implements ResubmitInputBoundary {
 
+    public static final String ERROR_MESSAGE = "DDL is passed, you cannot resubmit your assignment!";
     private final ResubmitUserDataAccessInterface resubmitUserDataAccess;
     private final ResubmitOutputBoundary resubmitOutputBoundary;
 
@@ -20,7 +21,7 @@ public class ResubmitInteractor implements ResubmitInputBoundary {
             switchToSubmitView();
         }
         else {
-            resubmitOutputBoundary.prepareFailView("DDL is passed, you cannot resubmit your assignment!");
+            resubmitOutputBoundary.prepareFailView(ERROR_MESSAGE);
         }
     }
     public void switchToSubmitView() {

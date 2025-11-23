@@ -11,6 +11,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 class SubmitInteractorTest {
 
+    public static final String FailMsg = "SubmitInteractor failed in test!";
+
     @Test
     void successCase() {
         @SuppressWarnings("ConstantConditions")
@@ -22,12 +24,12 @@ class SubmitInteractorTest {
         SubmitOutputBoundary presenter = new SubmitOutputBoundary() {
             @Override
             public void prepareSuccessView(SubmitOutputData pack) {
-                assertEquals("Successfully submitted!", pack.getOutputMsg());
+                assertEquals(SubmitInteractor.SUCCESS_MSG, pack.getOutputMsg());
             }
 
             @Override
             public void prepareFailureView(SubmitOutputData submitOutputData) {
-                fail("SubmitInteractor failed in success case!");
+                fail(FailMsg);
             }
 
         };
@@ -46,12 +48,12 @@ class SubmitInteractorTest {
         SubmitOutputBoundary presenter = new SubmitOutputBoundary() {
             @Override
             public void prepareSuccessView(SubmitOutputData pack) {
-                fail("SubmitInteractor failed in success case!");
+                fail(FailMsg);
             }
 
             @Override
             public void prepareFailureView(SubmitOutputData pack) {
-                assertEquals("Deadline is passed, you cannot submit", pack.getOutputMsg());
+                assertEquals(SubmitInteractor.DDL_PASSED_MSG, pack.getOutputMsg());
             }
 
         };
@@ -71,12 +73,36 @@ class SubmitInteractorTest {
         SubmitOutputBoundary presenter = new SubmitOutputBoundary() {
             @Override
             public void prepareSuccessView(SubmitOutputData pack) {
-                fail("SubmitInteractor failed in success case!");
+                fail(FailMsg);
             }
 
             @Override
             public void prepareFailureView(SubmitOutputData pack) {
-                assertEquals("Network Error! Please try again later.", pack.getOutputMsg());
+                assertEquals(SubmitInteractor.NETWORK_ERROR_MSG, pack.getOutputMsg());
+            }
+
+        };
+
+        SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, presenter);
+        interactor.execute(inputData);
+    }
+
+    @Test
+    void FileTypeFailCase() {
+        @SuppressWarnings("ConstantConditions")
+        File file = new File(getClass().getResource("/submitCaseTestFile2.abcdefg").getPath());
+        SubmitInputData inputData = new SubmitInputData(LocalDateTime.now(), file);
+        SubmitUserDataAccessInterface fakeDAO = new FakeUserDataAccessObject(false, true);
+
+        SubmitOutputBoundary presenter = new SubmitOutputBoundary() {
+            @Override
+            public void prepareSuccessView(SubmitOutputData pack) {
+                fail(FailMsg);
+            }
+
+            @Override
+            public void prepareFailureView(SubmitOutputData pack) {
+                assertEquals(SubmitInteractor.WRONG_FILE_MSG, pack.getOutputMsg());
             }
 
         };

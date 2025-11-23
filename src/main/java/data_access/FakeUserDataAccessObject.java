@@ -7,6 +7,7 @@ import usecase.Submit.SubmitUserDataAccessInterface;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class FakeUserDataAccessObject implements ResubmitUserDataAccessInterface, SubmitUserDataAccessInterface {
     Assignment assignment;
@@ -22,13 +23,14 @@ public class FakeUserDataAccessObject implements ResubmitUserDataAccessInterface
             deadline = LocalDateTime.MIN;
         }
         else {
-            deadline = LocalDateTime.MAX;
+            deadline = LocalDateTime.MAX.minusHours(10000);
         }
 
         assignment = Assignment.builder()
                 .name("CRYCHIC を止める")
                 .dueDate(deadline)
                 .gracePeriod(1) // 1 hour
+                .supportedFileTypes(List.of("txt","java"))
                 .build();
     }
 

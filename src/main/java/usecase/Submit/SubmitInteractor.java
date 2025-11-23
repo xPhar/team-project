@@ -25,10 +25,11 @@ public class SubmitInteractor implements SubmitInputBoundary {
     @Override
     public void execute(SubmitInputData inputData) {
 
-        Assignment assignment = submitUserDataAccess.getAssignment();
-        File studentWork = inputData.getSelectedFile();
+        final Assignment assignment = submitUserDataAccess.getAssignment();
+        final File studentWork = inputData.getSelectedFile();
+        final LocalDateTime curTime = inputData.getTime();
 
-        if (deadLinePassed(assignment)) return;
+        if (deadLinePassed(assignment, curTime)) return;
         if (wrongFileType(assignment, studentWork)) return;
         if (netWorkError(studentWork)) return;
 
@@ -48,25 +49,20 @@ public class SubmitInteractor implements SubmitInputBoundary {
     }
 
     private boolean wrongFileType(Assignment assignment, File studentWork) {
-        boolean matches = false;
         for (String suffix : assignment.getSupportedFileTypes()) {
             if (studentWork.getName().toLowerCase().endsWith("." + suffix.toLowerCase())) {
-                matches = true;
-                break;
+                return false;
             }
         }
-
-        if (!matches) {
-            goFailure(WRONG_FILE_MSG);
-            return true;
-        }
-        return false;
+        // Case no matching suffix
+        goFailure(WRONG_FILE_MSG);
+        return true;
     }
 
-    private boolean deadLinePassed(Assignment assignment) {
+    private boolean deadLinePassed(Assignment assignment, LocalDateTime curTime) {
         LocalDateTime deadline = assignment.getDueDate();
         LocalDateTime gracedDeadline = deadline.plusHours((int) assignment.getGracePeriod());
-        if (gracedDeadline.isBefore(LocalDateTime.now())) {
+        if (curTime.isAfter(gracedDeadline)) {
             goFailure(DDL_PASSED_MSG);
             return true;
         }
