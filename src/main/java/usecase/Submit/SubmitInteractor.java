@@ -8,6 +8,11 @@ import java.time.LocalDateTime;
 
 public class SubmitInteractor implements SubmitInputBoundary {
 
+    public static final String DDL_PASSED_MSG = "Deadline is passed, you cannot submit";
+    public static final String WRONG_FILE_MSG = "File type not supported";
+    public static final String SUCCESS_MSG = "Successfully submitted!";
+    public static final String NETWORK_ERROR_MSG = "Network Error! Please try again later.";
+
     private final SubmitUserDataAccessInterface submitUserDataAccess;
     private final SubmitOutputBoundary submitPresenter;
 
@@ -23,16 +28,26 @@ public class SubmitInteractor implements SubmitInputBoundary {
         Assignment assignment = submitUserDataAccess.getAssignment();
         File studentWork = inputData.getSelectedFile();
 
-        // check for deadline
-        LocalDateTime deadline = assignment.getDueDate();
-        LocalDateTime gracedDeadline = deadline.plusHours((int) assignment.getGracePeriod());
-        if (gracedDeadline.isBefore(LocalDateTime.now())) {
-            SubmitOutputData outputData = new SubmitOutputData("Deadline is passed, you cannot submit");
-            submitPresenter.prepareFailureView(outputData);
-            return;
-        }
+        if (deadLinePassed(assignment)) return;
+        if (wrongFileType(assignment, studentWork)) return;
+        if (netWorkError(studentWork)) return;
 
-        // check for supported file type
+        //go success
+        submitPresenter.prepareSuccessView(new SubmitOutputData(SUCCESS_MSG));
+    }
+
+
+    private boolean netWorkError(File studentWork) {
+        try {
+            submitUserDataAccess.submit(studentWork);
+        } catch (IOException e) {
+            goFailure(NETWORK_ERROR_MSG);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean wrongFileType(Assignment assignment, File studentWork) {
         boolean matches = false;
         for (String suffix : assignment.getSupportedFileTypes()) {
             if (studentWork.getName().toLowerCase().endsWith("." + suffix.toLowerCase())) {
@@ -42,21 +57,24 @@ public class SubmitInteractor implements SubmitInputBoundary {
         }
 
         if (!matches) {
-            SubmitOutputData outputData = new SubmitOutputData("File type not supported");
-            submitPresenter.prepareFailureView(outputData);
+            goFailure(WRONG_FILE_MSG);
+            return true;
         }
+        return false;
+    }
 
-
-        try {
-            submitUserDataAccess.submit(studentWork);
-
-            SubmitOutputData outputData = new SubmitOutputData("Successfully submitted!");
-            submitPresenter.prepareSuccessView(outputData);
-
-        } catch (IOException e) { //Case network error
-            SubmitOutputData outputData = new SubmitOutputData("Network Error! Please try again later.");
-            submitPresenter.prepareFailureView(outputData);
+    private boolean deadLinePassed(Assignment assignment) {
+        LocalDateTime deadline = assignment.getDueDate();
+        LocalDateTime gracedDeadline = deadline.plusHours((int) assignment.getGracePeriod());
+        if (gracedDeadline.isBefore(LocalDateTime.now())) {
+            goFailure(DDL_PASSED_MSG);
+            return true;
         }
+        return false;
+    }
 
+    private void goFailure(String errMsg) {
+        SubmitOutputData outputData = new SubmitOutputData(errMsg);
+        submitPresenter.prepareFailureView(outputData);
     }
 }
