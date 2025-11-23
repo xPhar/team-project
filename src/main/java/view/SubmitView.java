@@ -5,25 +5,26 @@ import interface_adapter.Submit.SubmitState;
 import interface_adapter.Submit.SubmitViewModel;
 
 import javax.swing.*;
-import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 public class SubmitView extends JPanel implements PropertyChangeListener {
 
-    private final String viewName = "Submit";
-    private final SubmitViewModel submitViewModel;
+    private static final String viewName = "Submit";
 
-    private final JLabel messageField = new JLabel("Are you sure you want to submit?");
+    private final JLabel messageField = new JLabel("Click the botton to submit");
 
     private SubmitController submitController = null;
 
+    /**
+     * Initialize SubmitView (Subclass of JPanel)
+     * @param submitViewModel Corresponding model storing its changing property
+     */
     public SubmitView(SubmitViewModel submitViewModel) {
 
-        this.submitViewModel = submitViewModel;
-        this.submitViewModel.addPropertyChangeListener(this);
+        submitViewModel.addPropertyChangeListener(this);
 
         JButton uploadButton = new JButton("Choose File");
         uploadButton.addActionListener(e -> {
@@ -35,15 +36,19 @@ public class SubmitView extends JPanel implements PropertyChangeListener {
                 JOptionPane.showMessageDialog(this,
                         "File selected: " + selectedFile.getAbsolutePath());
                 // Then go to controller
-                submitController.resubmitExecute(LocalTime.now(), selectedFile);
+                submitController.submitExecute(LocalDateTime.now(), selectedFile);
 
             } else {
                 JOptionPane.showMessageDialog(this, "No file selected");
             }
         });
 
-        this.add(uploadButton);
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        messageField.setAlignmentX(CENTER_ALIGNMENT);
+        uploadButton.setAlignmentX(CENTER_ALIGNMENT);
         this.add(messageField);
+        this.add(uploadButton);
+
 
     }
     /**
@@ -67,5 +72,19 @@ public class SubmitView extends JPanel implements PropertyChangeListener {
 
     public String getViewName() {
         return viewName;
+    }
+
+
+    /**
+     * Show the UI only
+     */
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("SubmitView Demo");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        SubmitView submitView = new SubmitView(new SubmitViewModel());
+        frame.setContentPane(submitView);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }
 }

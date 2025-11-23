@@ -1,32 +1,26 @@
 package app;
 
-import data_access.FileToStringDataAccessObject;
-import data_access.GradeAPIDataAccessObject;
-
 import javax.swing.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 public class Main {
     public static void main(String[] args) {
-        // TODO: Build app
-//        AppBuilder appBuilder = new AppBuilder();
-//        JFrame application = appBuilder
-//                .addSubmitView()
-//                .build();
-//        application.pack();
-//        application.setLocationRelativeTo(null);
-//        application.setVisible(true);
 
-        GradeAPIDataAccessObject gradeAPIDataAccessObject = new GradeAPIDataAccessObject();
+        AppBuilder appBuilder = new AppBuilder();
 
-        String username = "student";
-        String password = "password";
+        JFrame application = appBuilder
+                // TODO: Login,signup,loggedIn views
+                .addSubmitView()
+                .addResubmitView()
+                // TODO: other Views
+                // TODO: signUp,LogIn use cases
+                .addSubmitUseCase()
+                .addResubmitUseCase()
+                // TODO: other usecases
+                .build();
 
-        System.out.println(gradeAPIDataAccessObject.modifyUser(username, password));
-
-
+        application.pack();
+        application.setLocationRelativeTo(null);
+        application.setVisible(true);
         // Here's an example from the CA Lab:
         /*
         AppBuilder appBuilder = new AppBuilder();

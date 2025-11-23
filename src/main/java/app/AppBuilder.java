@@ -1,24 +1,23 @@
 package app;
 
-import data_access.TestDAO;
+import data_access.FakeUserDataAccessObject;
+
+import interface_adapter.Resubmit.ResubmitController;
+import interface_adapter.Resubmit.ResubmitPresenter;
+import interface_adapter.Resubmit.ResubmitViewModel;
+import interface_adapter.Submit.SubmitController;
+import interface_adapter.Submit.SubmitPresenter;
 import interface_adapter.Submit.SubmitViewModel;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.submission.SubmissionController;
-import interface_adapter.submission.SubmissionPresenter;
-import interface_adapter.submission.SubmissionViewModel;
-import interface_adapter.submission_list.SubmissionListController;
-import interface_adapter.submission_list.SubmissionListPresenter;
-import interface_adapter.submission_list.SubmissionListViewModel;
-import usecase.Grade.GradeInputBoundary;
-import usecase.Grade.GradeInteractor;
-import usecase.Submission.SubmissionInputBoundary;
-import usecase.Submission.SubmissionInteractor;
-import usecase.Submission.SubmissionOutputBoundary;
-import usecase.SubmissionList.SubmissionListInputBoundary;
-import usecase.SubmissionList.SubmissionListInteractor;
-import usecase.SubmissionList.SubmissionListOutputBoundary;
-import view.SubmissionListView;
-import view.SubmissionView;
+
+import usecase.Resubmit.ResubmitInputBoundary;
+import usecase.Resubmit.ResubmitInteractor;
+import usecase.Resubmit.ResubmitOutputBoundary;
+import usecase.Submit.SubmitInputBoundary;
+import usecase.Submit.SubmitInteractor;
+import usecase.Submit.SubmitOutputBoundary;
+
+import view.ResubmitView;
 import view.SubmitView;
 import view.ViewManager;
 
@@ -26,23 +25,23 @@ import javax.swing.*;
 import java.awt.*;
 
 public class AppBuilder {
+
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
     // TODO: UserFactory
+
     final ViewManagerModel viewManagerModel = new ViewManagerModel();
     ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
-
-    final TestDAO testDAO = new TestDAO();
+    //If we need to switch View, just write viewManagerModel.setstate(viewName), where viewName is a String
 
     // TODO: Add instance variables
 
     private SubmitView submitView;
+    private ResubmitView resubmitView;
     private SubmitViewModel submitViewModel;
+    private ResubmitViewModel resubmitViewModel;
 
-    private SubmissionListViewModel submissionListViewModel;
-    private SubmissionListView submissionListView;
-    private SubmissionViewModel submissionViewModel;
-    private SubmissionView submissionView;
+    private final FakeUserDataAccessObject userDataAccessObject =  new FakeUserDataAccessObject();
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -54,53 +53,37 @@ public class AppBuilder {
         cardPanel.add(submitView, submitView.getViewName());
         return this;
     }
+
+    public AppBuilder addResubmitView() {
+        resubmitViewModel = new ResubmitViewModel();
+        resubmitView = new ResubmitView(resubmitViewModel);
+        cardPanel.add(resubmitView, resubmitView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addSubmitUseCase() {
+        final SubmitOutputBoundary submitOutputBoundary = new SubmitPresenter(submitViewModel);
+        final SubmitInputBoundary submitInteractor = new SubmitInteractor(
+                userDataAccessObject, submitOutputBoundary);
+
+        SubmitController submitController = new SubmitController(submitInteractor);
+        submitView.setSubmitController(submitController);
+        return this;
+    }
+
+    public AppBuilder addResubmitUseCase() {
+        final ResubmitOutputBoundary resubmitOutputBoundary = new ResubmitPresenter(
+                viewManagerModel, resubmitViewModel, submitViewModel
+        );
+        final ResubmitInputBoundary resubmitInteractor = new ResubmitInteractor(resubmitOutputBoundary);
+        ResubmitController resubmitController = new ResubmitController(resubmitInteractor);
+        resubmitView.setResubmitController(resubmitController);
+        return this;
+    }
     // TODO: Implement builder methods
 
-    public AppBuilder addSubmissionListView() {
-        submissionListViewModel = new SubmissionListViewModel();
-        submissionListView = new SubmissionListView(submissionListViewModel);
-        cardPanel.add(submissionListView, submissionListView.getViewName());
-        return this;
-    }
-
-    public AppBuilder addSubmissionView() {
-        submissionViewModel = new SubmissionViewModel();
-        submissionView = new SubmissionView(submissionViewModel);
-        cardPanel.add(submissionView, submissionView.getViewName());
-        return this;
-    }
-
-    public AppBuilder addSubmissionListUseCase() {
-        final SubmissionListOutputBoundary submissionListOutputBoundary =
-                new SubmissionListPresenter(submissionListViewModel, viewManagerModel,
-                        submissionViewModel);
-        SubmissionListInputBoundary submissionListInputBoundary =
-                new SubmissionListInteractor(submissionListOutputBoundary, testDAO);
-
-        SubmissionListController submissionListController =
-                new SubmissionListController(submissionListInputBoundary);
-        submissionListView.setSubmissionListController(submissionListController);
-        return this;
-    }
-
-    public AppBuilder addSubmissionUseCase() {
-        final SubmissionPresenter presenter = new SubmissionPresenter(submissionViewModel,
-                viewManagerModel, submissionListViewModel);
-        final SubmissionInputBoundary submissionInputBoundary =
-                new SubmissionInteractor(presenter);
-        final GradeInputBoundary gradeInputBoundary = new GradeInteractor(
-                testDAO,
-                presenter
-        );
-
-        SubmissionController submissionController =
-                new SubmissionController(submissionInputBoundary, gradeInputBoundary);
-        submissionView.setSubmissionController(submissionController);
-        return this;
-    }
-
     public JFrame build() {
-        final JFrame application = new JFrame("User Login Example");
+        final JFrame application = new JFrame("This is a title");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         application.add(cardPanel);

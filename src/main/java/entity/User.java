@@ -1,41 +1,43 @@
 package entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public abstract class User {
+public class User {
     private String name;
     private String password;
-    private List<Course> courses;
+    private USER_TYPE userType;
+    private List<String> courses;
 
-    User(String name, String password) {
-        this.name = name;
-        this.password = password;
+    public enum USER_TYPE {
+        STUDENT,
+        INSTRUCTOR
     }
 
-    User(String name, String password, List<Course> courses) {
+    public User(String name, String password, USER_TYPE userType) {
+        this(name, password, userType, new ArrayList<>());
+    }
+
+    public User(String name, String password, USER_TYPE userType, List<String> courses) {
         this.name = name;
         this.password = password;
-        this.courses = List.copyOf(courses);
+        this.userType =  userType;
+        this.courses = new ArrayList<>(courses);
     }
 
     public String getName() {
         return this.name;
     }
 
-    public boolean validatePassword(String password) {
-        return this.password.equals(password);
+    public String getPassword() {
+        return this.password;
     }
 
-    public Course getCourse(String course) {
-        for (Course c : this.courses) {
-            if (c.getCourseCode().equals(course)) {
-                return c;
-            }
-        }
-        return null;
+    public USER_TYPE getUserType() {
+        return this.userType;
     }
 
-    public void addCourse(Course course) {
-        this.courses.add(course);
+    public List<String> getCourses() {
+        return this.courses;
     }
 }

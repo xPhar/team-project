@@ -4,7 +4,7 @@ import usecase.Submit.SubmitInputBoundary;
 import usecase.Submit.SubmitInputData;
 
 import java.io.File;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 
 public class SubmitController {
@@ -15,7 +15,7 @@ public class SubmitController {
         this.submitUsecaseInteractor = submitInputBoundary;
     }
 
-    public void resubmitExecute(LocalTime time, File selectedFile){
+    public void submitExecute(LocalDateTime time, File selectedFile){
         final SubmitInputData inputData = new SubmitInputData(time, selectedFile);
         submitUsecaseInteractor.execute(inputData);
     }

@@ -2,6 +2,7 @@ package data_access;
 
 import javax.swing.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Represents a DAO to read a file on the computer and turn it into a string
@@ -17,10 +18,10 @@ public class FileToStringDataAccessObject {
      * @throws FileNotFoundException if the program can't find the file or the
      *                               user have no read permission for the file
      */
-    public String readFileToString(File file) throws IOException, FileNotFoundException {
+    public static String readFileToString(File file) throws IOException, FileNotFoundException {
 //        final JFileChooser fc = new JFileChooser();
 //        int returnVal = fc.showOpenDialog(null);
-
+//
 //        if (returnVal == JFileChooser.APPROVE_OPTION) {
 //            File file = fc.getSelectedFile();
 //        }
@@ -30,7 +31,7 @@ public class FileToStringDataAccessObject {
         fis.read(bytes);
         fis.close();
 
-        return new String(bytes, "UTF-8");
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
     /**
@@ -41,7 +42,7 @@ public class FileToStringDataAccessObject {
      * @throws FileNotFoundException if the file is a directory or if the user has no write access
      *                               to the file
      */
-    public void saveFileFromString(String fileContent, File file) throws IOException, FileNotFoundException {
+    public static void saveFileFromString(String fileContent, File file) throws IOException, FileNotFoundException {
 //        final JFileChooser fc = new JFileChooser();
 //        int returnVal = fc.showSaveDialog(null);
 
