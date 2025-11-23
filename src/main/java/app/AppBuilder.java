@@ -41,7 +41,7 @@ public class AppBuilder {
     private SubmitViewModel submitViewModel;
     private ResubmitViewModel resubmitViewModel;
 
-    private final FakeUserDataAccessObject userDataAccessObject =  new FakeUserDataAccessObject();
+    private final FakeUserDataAccessObject userDataAccessObject =  new FakeUserDataAccessObject(false, false);
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -75,7 +75,8 @@ public class AppBuilder {
         final ResubmitOutputBoundary resubmitOutputBoundary = new ResubmitPresenter(
                 viewManagerModel, resubmitViewModel, submitViewModel
         );
-        final ResubmitInputBoundary resubmitInteractor = new ResubmitInteractor(resubmitOutputBoundary);
+        final ResubmitInputBoundary resubmitInteractor = new ResubmitInteractor(resubmitOutputBoundary,
+                                                                                userDataAccessObject);
         ResubmitController resubmitController = new ResubmitController(resubmitInteractor);
         resubmitView.setResubmitController(resubmitController);
         return this;

@@ -1,11 +1,6 @@
 package usecase.Submit;
 
-import entity.Session;
 import data_access.FakeUserDataAccessObject;
-import data_access.ImposibleUserDataAccessObject;
-import entity.AssignmentBuilder;
-import entity.Course;
-import entity.Student;
 
 import org.junit.jupiter.api.Test;
 import java.io.File;
@@ -16,26 +11,13 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 class SubmitInteractorTest {
 
-    private void generateDummySession(boolean ddlPassed) {
-        LocalDateTime due = ddlPassed ? LocalDateTime.MIN:LocalDateTime.MAX;
-        Session session = Session.getInstance();
-        session.setUser(new Student("This is a test Name", "This is a test pwd"));
-        session.setCourse(new Course("Course Name", "TEST101"));
-        session.setAssignment(
-                new AssignmentBuilder()
-                .dueDate(due)
-                .name("This is a test Name")
-                .build()
-        );
-    }
-
     @Test
     void successCase() {
         @SuppressWarnings("ConstantConditions")
         File file = new File(getClass().getResource("/submitCaseTestFile1.txt").getPath());
 
         SubmitInputData inputData = new SubmitInputData(LocalDateTime.now(), file);
-        SubmitUserDataAccessInterface fakeDAO = new FakeUserDataAccessObject();
+        SubmitUserDataAccessInterface fakeDAO = new FakeUserDataAccessObject(false, false);
 
         SubmitOutputBoundary presenter = new SubmitOutputBoundary() {
             @Override
@@ -50,7 +32,6 @@ class SubmitInteractorTest {
 
         };
 
-        generateDummySession(false);
         SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, presenter);
         interactor.execute(inputData);
     }
@@ -60,7 +41,7 @@ class SubmitInteractorTest {
         File file = new File(getClass().getResource("/submitCaseTestFile1.txt").getPath());
 
         SubmitInputData inputData = new SubmitInputData(LocalDateTime.now(), file);
-        SubmitUserDataAccessInterface fakeDAO = new FakeUserDataAccessObject();
+        SubmitUserDataAccessInterface fakeDAO = new FakeUserDataAccessObject(true, false);
 
         SubmitOutputBoundary presenter = new SubmitOutputBoundary() {
             @Override
@@ -75,7 +56,6 @@ class SubmitInteractorTest {
 
         };
 
-        generateDummySession(true);
         SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, presenter);
         interactor.execute(inputData);
     }
@@ -86,7 +66,7 @@ class SubmitInteractorTest {
         File file = new File(getClass().getResource("/submitCaseTestFile1.txt").getPath());
 
         SubmitInputData inputData = new SubmitInputData(LocalDateTime.now(), file);
-        SubmitUserDataAccessInterface fakeDAO = new ImposibleUserDataAccessObject();
+        SubmitUserDataAccessInterface fakeDAO = new FakeUserDataAccessObject(false, true);
 
         SubmitOutputBoundary presenter = new SubmitOutputBoundary() {
             @Override
@@ -101,9 +81,7 @@ class SubmitInteractorTest {
 
         };
 
-        generateDummySession(false);
         SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, presenter);
         interactor.execute(inputData);
     }
 }
-
