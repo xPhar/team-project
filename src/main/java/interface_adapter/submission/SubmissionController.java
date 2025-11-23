@@ -4,6 +4,8 @@ import usecase.Grade.GradeInputBoundary;
 import usecase.Grade.GradeInputData;
 import usecase.Submission.SubmissionInputBoundary;
 
+import java.io.File;
+
 /**
  * Submission related use case.
  */
@@ -28,7 +30,7 @@ public class SubmissionController {
         submissionInputBoundary.backToSubmissionList();
     }
 
-    public void executeDownload() {
-
+    public void executeDownload(File saveFile) {
+        submissionInputBoundary.downloadFile(saveFile);
     }
 }

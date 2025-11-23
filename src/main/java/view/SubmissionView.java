@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.time.LocalTime;
 
 /**
  * Submission detail view.
@@ -82,6 +84,14 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
                     }
                 }
         );
+        downloadButton.addActionListener(
+                new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        chooseFilePathToSave();
+                    }
+                }
+        );
     }
 
     @Override
@@ -94,27 +104,45 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
             gradeTextField.setText(submissionState.getGrade());
             feedbackTextArea.setText(submissionState.getFeedback());
         }
-        else if (evt.getPropertyName().equals("success")) {
-            showSuccessDialog();
+        else if (evt.getPropertyName().equals("gradSuccess")) {
+            showSuccessDialog("Graded submission successfully", "Success");
         }
-        else if  (evt.getPropertyName().equals("failure")) {
+        else if (evt.getPropertyName().equals("gradeFailure")) {
             SubmissionState submissionState = (SubmissionState) evt.getNewValue();
-            showFailureDialog(submissionState.getGradeFailureMessage());
+            showFailureDialog(submissionState.getGradeFailureMessage(), "Failure");
+        }
+        else if (evt.getPropertyName().equals("downloadSuccess")) {
+            SubmissionState submissionState = (SubmissionState) evt.getNewValue();
+            showSuccessDialog(submissionState.getDownloadSuccessMessage(), "Success");
+        }
+        else if (evt.getPropertyName().equals("downloadFailure")) {
+            SubmissionState submissionState = (SubmissionState) evt.getNewValue();
+            showSuccessDialog(submissionState.getDownloadFailureMessage(), "Failure");
         }
     }
 
-    private void showSuccessDialog() {
+    private void showSuccessDialog(String msg, String title) {
         JOptionPane.showMessageDialog(this,
-                "Graded submission successfully",
-                "Success",
+                msg,
+                title,
                 JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private void showFailureDialog(String msg) {
+    private void showFailureDialog(String msg, String title) {
         JOptionPane.showMessageDialog(this,
                 msg,
-                "Failure",
+                title,
                 JOptionPane.ERROR_MESSAGE);
+    }
+
+    private void chooseFilePathToSave() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Download file");
+        int result = fileChooser.showSaveDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            submissionController.executeDownload(selectedFile);
+        }
     }
 
     public String getViewName() {

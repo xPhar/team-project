@@ -37,12 +37,24 @@ public class SubmissionPresenter implements
 
     @Override
     public void prepareGradeSuccessView() {
-        viewModel.firePropertyChange("success");
+        viewModel.firePropertyChange("gradeSuccess");
     }
 
     @Override
     public void prepareGradeFailureView(String msg) {
         viewModel.getState().setGradeFailureMessage(msg);
-        viewModel.firePropertyChange("failure");
+        viewModel.firePropertyChange("gradeFailure");
+    }
+
+    @Override
+    public void prepareDownloadSuccessView(String msg) {
+        viewModel.getState().setDownloadSuccessMessage(msg);
+        viewModel.firePropertyChange("downloadSuccess");
+    }
+
+    @Override
+    public void prepareDownloadFailureView(String msg) {
+        viewModel.getState().setDownloadFailureMessage(msg);
+        viewModel.firePropertyChange("downloadFailure");
     }
 }

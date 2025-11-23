@@ -13,6 +13,8 @@ public class SubmissionState {
     private String feedback;
 
     private String gradeFailureMessage;
+    private String downloadSuccessMessage;
+    private String downloadFailureMessage;
 
     public SubmissionState() {}
 
@@ -62,5 +64,21 @@ public class SubmissionState {
 
     public void setGradeFailureMessage(String gradeFailureMessage) {
         this.gradeFailureMessage = gradeFailureMessage;
+    }
+
+    public String getDownloadSuccessMessage() {
+        return downloadSuccessMessage;
+    }
+
+    public void setDownloadSuccessMessage(String downloadSuccessMessage) {
+        this.downloadSuccessMessage = downloadSuccessMessage;
+    }
+
+    public String getDownloadFailureMessage() {
+        return downloadFailureMessage;
+    }
+
+    public void setDownloadFailureMessage(String downloadFailureMessage) {
+        this.downloadFailureMessage = downloadFailureMessage;
     }
 }

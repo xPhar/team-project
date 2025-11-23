@@ -4,14 +4,17 @@ import entity.Submission;
 import entity.SubmissionBuilder;
 import usecase.Grade.GradeDataAccessInterface;
 import usecase.SubmissionList.SubmissionListDataAccessInterface;
+import usecase.Submission.SubmissionDataAccessInterface;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestDAO implements
         SubmissionListDataAccessInterface,
-        GradeDataAccessInterface
+        GradeDataAccessInterface,
+        SubmissionDataAccessInterface
 {
 
     @Override
@@ -46,5 +49,11 @@ public class TestDAO implements
     @Override
     public void grade(String assignment, String submitter, double grade, String feedback) {
         
+    }
+
+
+    @Override
+    public void saveFile(File saveFile) {
+
     }
 }
