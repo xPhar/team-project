@@ -11,6 +11,7 @@ public class Assignment {
     private double gracePeriod;
     private String latePenalty;
     private List<String> supportedFileTypes;
+    private List<String> starterFilePaths;
 
      public String getName() {
          return name;
@@ -67,4 +68,10 @@ public class Assignment {
      public void setSupportedFileTypes(List<String> supportedFileTypes) {
          this.supportedFileTypes = supportedFileTypes;
      }
+    public List<String> getStarterFilePaths() {
+        return starterFilePaths;
+    }
+    public void setStarterFilePaths(List<String> starterFilePaths) {
+        this.starterFilePaths = starterFilePaths;
+    }
 }
