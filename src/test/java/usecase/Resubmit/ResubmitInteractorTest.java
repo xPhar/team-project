@@ -1,9 +1,6 @@
 package usecase.Resubmit;
 
-import entity.Session;
-import entity.AssignmentBuilder;
-import entity.Course;
-import entity.Student;
+import data_access.FakeUserDataAccessObject;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -11,18 +8,6 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ResubmitInteractorTest {
-    private void generateDummySession(boolean ddlPassed) {
-        LocalDateTime due = ddlPassed ? LocalDateTime.MIN:LocalDateTime.MAX;
-        Session session = Session.getInstance();
-        session.setUser(new Student("This is a test Name", "This is a test pwd"));
-        session.setCourse(new Course("Course Name", "TEST101"));
-        session.setAssignment(
-                new AssignmentBuilder()
-                        .dueDate(due)
-                        .name("This is a test Name")
-                        .build()
-        );
-    }
 
     @Test
     void successCase(){
@@ -57,8 +42,8 @@ public class ResubmitInteractorTest {
             }
         };
 
-        generateDummySession(false);
-        ResubmitInputBoundary interactor = new ResubmitInteractor(presenter);
+        FakeUserDataAccessObject dummyDAO = new FakeUserDataAccessObject(false, false);
+        ResubmitInputBoundary interactor = new ResubmitInteractor(presenter, dummyDAO);
         interactor.execute(inputData);
     }
 
@@ -95,8 +80,8 @@ public class ResubmitInteractorTest {
             }
         };
 
-        generateDummySession(true);
-        ResubmitInputBoundary interactor = new ResubmitInteractor(presenter);
+        FakeUserDataAccessObject dummyDAO = new FakeUserDataAccessObject(true, false);
+        ResubmitInputBoundary interactor = new ResubmitInteractor(presenter, dummyDAO);
         interactor.execute(inputData);
     }
 }

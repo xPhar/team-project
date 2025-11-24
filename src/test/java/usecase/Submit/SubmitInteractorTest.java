@@ -1,11 +1,6 @@
 package usecase.Submit;
 
-import entity.Session;
 import data_access.FakeUserDataAccessObject;
-import data_access.ImposibleUserDataAccessObject;
-import entity.AssignmentBuilder;
-import entity.Course;
-import entity.Student;
 
 import org.junit.jupiter.api.Test;
 import java.io.File;
@@ -16,18 +11,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 class SubmitInteractorTest {
 
-    private void generateDummySession(boolean ddlPassed) {
-        LocalDateTime due = ddlPassed ? LocalDateTime.MIN:LocalDateTime.MAX;
-        Session session = Session.getInstance();
-        session.setUser(new Student("This is a test Name", "This is a test pwd"));
-        session.setCourse(new Course("Course Name", "TEST101"));
-        session.setAssignment(
-                new AssignmentBuilder()
-                .dueDate(due)
-                .name("This is a test Name")
-                .build()
-        );
-    }
+    public static final String FailMsg = "SubmitInteractor failed in test!";
 
     @Test
     void successCase() {
@@ -35,22 +19,21 @@ class SubmitInteractorTest {
         File file = new File(getClass().getResource("/submitCaseTestFile1.txt").getPath());
 
         SubmitInputData inputData = new SubmitInputData(LocalDateTime.now(), file);
-        SubmitUserDataAccessInterface fakeDAO = new FakeUserDataAccessObject();
+        SubmitUserDataAccessInterface fakeDAO = new FakeUserDataAccessObject(false, false);
 
         SubmitOutputBoundary presenter = new SubmitOutputBoundary() {
             @Override
             public void prepareSuccessView(SubmitOutputData pack) {
-                assertEquals("Successfully submitted!", pack.getOutputMsg());
+                assertEquals(SubmitInteractor.SUCCESS_MSG, pack.getOutputMsg());
             }
 
             @Override
             public void prepareFailureView(SubmitOutputData submitOutputData) {
-                fail("SubmitInteractor failed in success case!");
+                fail(FailMsg);
             }
 
         };
 
-        generateDummySession(false);
         SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, presenter);
         interactor.execute(inputData);
     }
@@ -60,22 +43,21 @@ class SubmitInteractorTest {
         File file = new File(getClass().getResource("/submitCaseTestFile1.txt").getPath());
 
         SubmitInputData inputData = new SubmitInputData(LocalDateTime.now(), file);
-        SubmitUserDataAccessInterface fakeDAO = new FakeUserDataAccessObject();
+        SubmitUserDataAccessInterface fakeDAO = new FakeUserDataAccessObject(true, false);
 
         SubmitOutputBoundary presenter = new SubmitOutputBoundary() {
             @Override
             public void prepareSuccessView(SubmitOutputData pack) {
-                fail("SubmitInteractor failed in success case!");
+                fail(FailMsg);
             }
 
             @Override
             public void prepareFailureView(SubmitOutputData pack) {
-                assertEquals("Deadline is passed, you cannot submit", pack.getOutputMsg());
+                assertEquals(SubmitInteractor.DDL_PASSED_MSG, pack.getOutputMsg());
             }
 
         };
 
-        generateDummySession(true);
         SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, presenter);
         interactor.execute(inputData);
     }
@@ -86,24 +68,46 @@ class SubmitInteractorTest {
         File file = new File(getClass().getResource("/submitCaseTestFile1.txt").getPath());
 
         SubmitInputData inputData = new SubmitInputData(LocalDateTime.now(), file);
-        SubmitUserDataAccessInterface fakeDAO = new ImposibleUserDataAccessObject();
+        SubmitUserDataAccessInterface fakeDAO = new FakeUserDataAccessObject(false, true);
 
         SubmitOutputBoundary presenter = new SubmitOutputBoundary() {
             @Override
             public void prepareSuccessView(SubmitOutputData pack) {
-                fail("SubmitInteractor failed in success case!");
+                fail(FailMsg);
             }
 
             @Override
             public void prepareFailureView(SubmitOutputData pack) {
-                assertEquals("Network Error! Please try again later.", pack.getOutputMsg());
+                assertEquals(SubmitInteractor.NETWORK_ERROR_MSG, pack.getOutputMsg());
             }
 
         };
 
-        generateDummySession(false);
+        SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, presenter);
+        interactor.execute(inputData);
+    }
+
+    @Test
+    void FileTypeFailCase() {
+        @SuppressWarnings("ConstantConditions")
+        File file = new File(getClass().getResource("/submitCaseTestFile2.abcdefg").getPath());
+        SubmitInputData inputData = new SubmitInputData(LocalDateTime.now(), file);
+        SubmitUserDataAccessInterface fakeDAO = new FakeUserDataAccessObject(false, true);
+
+        SubmitOutputBoundary presenter = new SubmitOutputBoundary() {
+            @Override
+            public void prepareSuccessView(SubmitOutputData pack) {
+                fail(FailMsg);
+            }
+
+            @Override
+            public void prepareFailureView(SubmitOutputData pack) {
+                assertEquals(SubmitInteractor.WRONG_FILE_MSG, pack.getOutputMsg());
+            }
+
+        };
+
         SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, presenter);
         interactor.execute(inputData);
     }
 }
-
