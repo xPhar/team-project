@@ -201,7 +201,12 @@ public class GradeAPIDataAccessObject {
         }
     }
 
-    public JSONObject getUserInfo(String username) throws DataAccessException {
+    private JSONObject getUserInfo(String username) throws DataAccessException {
+        final JSONObject userJSONObject = getUserObject(username);
+        return userJSONObject.getJSONObject("info");
+    }
+
+    private JSONObject getUserObject(String username) throws DataAccessException {
         // Make an API call to get the user object.
         final OkHttpClient client = new OkHttpClient().newBuilder().build();
         final Request request = new Request.Builder()
@@ -214,8 +219,7 @@ public class GradeAPIDataAccessObject {
             final JSONObject responseBody = new JSONObject(response.body().string());
 
             if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
-                final JSONObject userJSONObject = responseBody.getJSONObject("user");
-                return userJSONObject.getJSONObject("info");
+                return responseBody.getJSONObject("user");
             }
             else {
                 throw new DataAccessException(responseBody.getString(MESSAGE));
