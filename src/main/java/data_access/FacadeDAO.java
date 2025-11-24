@@ -155,4 +155,38 @@ public class FacadeDAO {
     public String getCurrentUsername() {
         return sessionDA.getUser().getName();
     }
+
+    // Mark Assignment
+    public List<Submission> getSubmissionList(String assignmentName) {
+        return getSubmissionsFor(assignmentName);
+    }
+
+    public Submission getSubmission(String assignmentName, String submitter) throws DataAccessException {
+        List<Submission> submissionList = getSubmissionList(assignmentName);
+        for (Submission submission : submissionList) {
+            if (submission.getSubmitter().equals(submitter)) {
+                return submission;
+            }
+        }
+        throw new DataAccessException("No submission found for " + submitter);
+    }
+
+    public void saveFile(File saveFile) {
+        // TODO if we store submission in session then we can just save the file from there
+    }
+
+    public void grade(String assignment, String submitter, double grade, String feedback) {
+        JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName());
+        JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
+        JSONObject assignmentObject = assignmentDictionary.getJSONObject(assignment);
+        JSONObject submissionArray = assignmentObject.getJSONObject("submissions");
+        JSONObject submissionObj = submissionArray.getJSONObject(submitter);
+        submissionObj.put("grade", grade);
+        submissionObj.put("feedback", feedback);
+        submissionObj.put("status", Submission.Status.GRADED.toString());
+
+        Course course = sessionDA.getCourse();
+
+        gradeDA.modifyUserInfoEndpoint(getCourseUserName(course), COURSE_PASSWORD, courseObject);
+    }
 }

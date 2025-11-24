@@ -18,7 +18,7 @@ public class FileToStringDataAccessObject {
      * @throws FileNotFoundException if the program can't find the file or the
      *                               user have no read permission for the file
      */
-    public static String readFileToString(File file) throws IOException, FileNotFoundException {
+    public String readFileToString(File file) throws IOException, FileNotFoundException {
 //        final JFileChooser fc = new JFileChooser();
 //        int returnVal = fc.showOpenDialog(null);
 //
@@ -42,7 +42,7 @@ public class FileToStringDataAccessObject {
      * @throws FileNotFoundException if the file is a directory or if the user has no write access
      *                               to the file
      */
-    public static void saveFileFromString(String fileContent, File file) throws IOException, FileNotFoundException {
+    public void saveFileFromString(String fileContent, File file) throws IOException, FileNotFoundException {
 //        final JFileChooser fc = new JFileChooser();
 //        int returnVal = fc.showSaveDialog(null);
 
