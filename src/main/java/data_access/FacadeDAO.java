@@ -156,6 +156,14 @@ public class FacadeDAO {
         return sessionDA.getUser().getName();
     }
 
+    public User getUser(String username) {
+        return get(username);
+    }
+
+    public void setActiveUser(User user) {
+        sessionDA.setUser(user);
+    }
+
     // Mark Assignment
     public List<Submission> getSubmissionList(String assignmentName) {
         return getSubmissionsFor(assignmentName);
