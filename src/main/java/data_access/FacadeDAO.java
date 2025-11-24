@@ -3,6 +3,13 @@ package data_access;
 import entity.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import usecase.Grade.GradeDataAccessInterface;
+import usecase.Resubmit.ResubmitUserDataAccessInterface;
+import usecase.Submission.SubmissionDataAccessInterface;
+import usecase.SubmissionList.SubmissionListDataAccessInterface;
+import usecase.Submit.SubmitUserDataAccessInterface;
+import usecase.class_average.ClassAverageUserDataAccessInterface;
+import usecase.login.LoginDataAccessInterface;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +18,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class FacadeDAO {
+public class FacadeDAO implements
+        LoginDataAccessInterface,
+        SubmitUserDataAccessInterface,
+        ResubmitUserDataAccessInterface,
+        SubmissionDataAccessInterface,
+        SubmissionListDataAccessInterface,
+        GradeDataAccessInterface,
+        ClassAverageUserDataAccessInterface {
     private final FileToStringDataAccessObject fsDA;
     private final GradeAPIDataAccessObject gradeDA;
     private final SessionDataAccessObject sessionDA;
@@ -34,12 +48,17 @@ public class FacadeDAO {
         return "course-CSC207";
     }
 
-
     // Submit
-    public void submit(File studentFile, User student, Course course, Assignment assignment)
+    @Override
+    public void submit(File studentFile)
             throws IOException
     {
+        User student = sessionDA.getUser();
+        Assignment assignment = sessionDA.getAssignment();
+        Course course = sessionDA.getCourse();
+
         Submission.SubmissionBuilder builder = Submission.getBuilder();
+
         builder.submitter(student.getName())
                 .submissionTime(LocalDateTime.now())
                 .submissionName(studentFile.getName())
@@ -62,6 +81,11 @@ public class FacadeDAO {
         submissionArray.put(submission.getSubmitter(), submissionJSON);
 
         gradeDA.modifyUserInfoEndpoint(getCourseUserName(course), COURSE_PASSWORD, courseObject);
+    }
+
+    @Override
+    public Assignment getAssignment() {
+        return sessionDA.getAssignment();
     }
 
     private JSONObject submissionToJSON(Submission submission) {
