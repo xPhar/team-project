@@ -6,7 +6,7 @@ public class SessionDataAccessObject {
     final Session session;
 
     public SessionDataAccessObject() {
-        this.session = new Session();
+        this.session = Session.getInstance();
     }
 
     public User getUser() {
