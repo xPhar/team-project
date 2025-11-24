@@ -21,27 +21,27 @@ public class LoggedInController {
         } else {
             viewManagerModel.setState("Submit");
         }
-        viewManagerModel.firePropertyChanged();
+        viewManagerModel.firePropertyChange();
     }
 
     public void showDistribution() {
         viewManagerModel.setState("average");
-        viewManagerModel.firePropertyChanged();
+        viewManagerModel.firePropertyChange();
     }
 
     public void createAssignment() {
         viewManagerModel.setState("Assignments");
-        viewManagerModel.firePropertyChanged();
+        viewManagerModel.firePropertyChange();
     }
 
     public void logout() {
         viewManagerModel.setState("login");
-        viewManagerModel.firePropertyChanged();
+        viewManagerModel.firePropertyChange();
     }
 
     public void goBack() {
         viewManagerModel.setState(loggedInViewModel.getViewName());
-        viewManagerModel.firePropertyChanged();
+        viewManagerModel.firePropertyChange();
     }
 }
 
