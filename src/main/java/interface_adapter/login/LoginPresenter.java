@@ -22,7 +22,7 @@ public class LoginPresenter implements LoginOutputBoundary {
     }
 
     @Override
-    public void prepareSuccessView(LoginOutputData response) {
+    public void switchToLoggedInView() {
 
 //        // On success, update the loggedInViewModel's state
 //        final LoggedInState loggedInState = loggedInViewModel.getState();
