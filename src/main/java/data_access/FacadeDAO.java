@@ -1,6 +1,7 @@
 package data_access;
 
 import entity.*;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -13,6 +14,7 @@ import java.util.List;
 public class FacadeDAO {
     private final FileToStringDataAccessObject fsDA;
     private final GradeAPIDataAccessObject gradeDA;
+    private final SessionDataAccessObject sessionDA;
 
     // TODO course password?
     private final String COURSE_PASSWORD = "";
@@ -20,6 +22,7 @@ public class FacadeDAO {
     public FacadeDAO() {
         this.fsDA = new FileToStringDataAccessObject();
         this.gradeDA = new GradeAPIDataAccessObject();
+        this.sessionDA = new SessionDataAccessObject();
     }
 
     private String getCourseUserName(Course course) {
@@ -36,7 +39,7 @@ public class FacadeDAO {
     public void submit(File studentFile, User student, Course course, Assignment assignment)
             throws IOException
     {
-        SubmissionBuilder builder = new SubmissionBuilder();
+        Submission.SubmissionBuilder builder = Submission.getBuilder();
         builder.submitter(student.getName())
                 .submissionTime(LocalDateTime.now())
                 .submissionName(studentFile.getName())
@@ -82,7 +85,7 @@ public class FacadeDAO {
         JSONObject submissionArray = assignmentObject.getJSONObject("submissions");
         Iterator<String> keys = submissionArray.keys();
         while (keys.hasNext()) {
-            SubmissionBuilder builder = new SubmissionBuilder();
+            Submission.SubmissionBuilder builder = Submission.getBuilder();
             String submitter = keys.next();
             JSONObject submissionObj = submissionArray.getJSONObject(submitter);
             builder.submitter(submitter)
@@ -120,25 +123,36 @@ public class FacadeDAO {
         return submissionObj.getDouble("grade");
     }
 
-    // Login
+    // Login / Register
     public boolean existsByName(String username) {
         return gradeDA.checkUserExists(username);
     }
 
     public void save(User user) {
-
+        gradeDA.createUser(user.getName(), user.getPassword());
     }
 
-    public User get(String username) {
+    public User get(String username) throws DataAccessException {
         JSONObject userObj = gradeDA.getUserInfo(username);
-        User user;
-        if (userObj.getString("type").equals("student")) {
-            user = new Student(username, "");
-        } else {
-            user = new Instructor(username, "");
-        }
-        // TODO add course list to user java object
+        String userType = userObj.getString("type").toUpperCase();
+        JSONArray courseList = userObj.getJSONArray("courses");
 
-        return user;
+        ArrayList<String> courses = new ArrayList<>();
+        for (int i = 0; i < courseList.length(); i++) {
+            courses.add(courseList.getString(i));
+        }
+
+        return new User(username, "",
+                User.USER_TYPE.valueOf(userType),
+                courses
+        );
+    }
+
+    public void setCurrentUsername(String name) {
+        // TODO what to do here?
+    }
+
+    public String getCurrentUsername() {
+        return sessionDA.getUser().getName();
     }
 }
