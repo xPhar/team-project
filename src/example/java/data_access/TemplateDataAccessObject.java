@@ -1,14 +1,15 @@
+/*
 package data_access;
 
 import entity.User;
 import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
-import use_case.note.DataAccessException;
-import use_case.note.NoteDataAccessInterface;
+import usecase.login.DataAccessException;
+import usecase.login.LoginDataAccessInterface;
 
 import java.io.IOException;
-
+*/
 /**
  * The DAO for accessing notes stored in the database.
  *
@@ -25,6 +26,7 @@ import java.io.IOException;
  *     the documentation</a>
  * of the API for more details.
  */
+/*
 public class TemplateDataAccessObject implements NoteDataAccessInterface {
     private static final int SUCCESS_CODE = 200;
     private static final int CREDENTIAL_ERROR = 401;
@@ -102,3 +104,4 @@ public class TemplateDataAccessObject implements NoteDataAccessInterface {
         }
     }
 }
+*/

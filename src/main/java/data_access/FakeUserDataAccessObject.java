@@ -1,15 +1,19 @@
 package data_access;
 
 import entity.Assignment;
+import entity.User;
+
 import usecase.Resubmit.ResubmitUserDataAccessInterface;
 import usecase.Submit.SubmitUserDataAccessInterface;
+import usecase.login.LoginDataAccessInterface;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class FakeUserDataAccessObject implements ResubmitUserDataAccessInterface, SubmitUserDataAccessInterface {
+public class FakeUserDataAccessObject implements SubmitUserDataAccessInterface, ResubmitUserDataAccessInterface,
+                                                 LoginDataAccessInterface {
     Assignment assignment;
     boolean submitFailure;
 
@@ -21,16 +25,15 @@ public class FakeUserDataAccessObject implements ResubmitUserDataAccessInterface
 
         if (deadlinePassed) {
             deadline = LocalDateTime.MIN;
-        }
-        else {
+        } else {
             deadline = LocalDateTime.MAX.minusHours(10000);
         }
 
         assignment = Assignment.builder()
-                .name("CRYCHIC を止める")
+                .name("dummyAssignment")
                 .dueDate(deadline)
                 .gracePeriod(1) // 1 hour
-                .supportedFileTypes(List.of("txt","java"))
+                .supportedFileTypes(List.of("txt", "java"))
                 .build();
     }
 
@@ -44,5 +47,20 @@ public class FakeUserDataAccessObject implements ResubmitUserDataAccessInterface
     @Override
     public Assignment getAssignment() {
         return this.assignment;
+    }
+
+    @Override
+    public boolean existsByName(String username) {
+        return false;
+    }
+
+    @Override
+    public User getUser(String username) {
+        return null;
+    }
+
+    @Override
+    public void setActiveUser(User user) {
+        // Does nothing :D
     }
 }

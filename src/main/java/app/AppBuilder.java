@@ -1,25 +1,23 @@
 package app;
 
 import data_access.FakeUserDataAccessObject;
+import data_access.TestDAO;
 
-import interface_adapter.Resubmit.ResubmitController;
-import interface_adapter.Resubmit.ResubmitPresenter;
-import interface_adapter.Resubmit.ResubmitViewModel;
-import interface_adapter.Submit.SubmitController;
-import interface_adapter.Submit.SubmitPresenter;
-import interface_adapter.Submit.SubmitViewModel;
+import interface_adapter.Resubmit.*;
+import interface_adapter.Submit.*;
+import interface_adapter.login.*;
+import interface_adapter.submission.*;
+import interface_adapter.submission_list.*;
 import interface_adapter.ViewManagerModel;
 
-import usecase.Resubmit.ResubmitInputBoundary;
-import usecase.Resubmit.ResubmitInteractor;
-import usecase.Resubmit.ResubmitOutputBoundary;
-import usecase.Submit.SubmitInputBoundary;
-import usecase.Submit.SubmitInteractor;
-import usecase.Submit.SubmitOutputBoundary;
+import usecase.Resubmit.*;
+import usecase.Submit.*;
+import usecase.login.*;
+import usecase.Grade.*;
+import usecase.Submission.*;
+import usecase.SubmissionList.*;
 
-import view.ResubmitView;
-import view.SubmitView;
-import view.ViewManager;
+import view.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,8 +32,8 @@ public class AppBuilder {
     ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
     //If we need to switch View, just write viewManagerModel.setstate(viewName), where viewName is a String
 
-    // TODO: Add instance variables
-
+    private LoginView loginView;
+    private LoginViewModel loginViewModel;
     private SubmitView submitView;
     private ResubmitView resubmitView;
     private SubmitViewModel submitViewModel;
@@ -45,6 +43,13 @@ public class AppBuilder {
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
+    }
+
+    public AppBuilder addLoginView() {
+        loginViewModel = new LoginViewModel();
+        loginView = new LoginView(loginViewModel);
+        cardPanel.add(loginView, loginView.getViewName());
+        return this;
     }
 
     public AppBuilder addSubmitView() {
@@ -58,6 +63,15 @@ public class AppBuilder {
         resubmitViewModel = new ResubmitViewModel();
         resubmitView = new ResubmitView(resubmitViewModel);
         cardPanel.add(resubmitView, resubmitView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addLoginUseCase() {
+        final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel, loginViewModel);
+        final LoginInputBoundary loginInteractor = new LoginInteractor(
+                userDataAccessObject, loginOutputBoundary);
+        LoginController loginController = new LoginController(loginInteractor);
+        loginView.setLoginController(loginController);
         return this;
     }
 
@@ -81,6 +95,54 @@ public class AppBuilder {
         resubmitView.setResubmitController(resubmitController);
         return this;
     }
+
+    // Mark Assignment use case
+    private SubmissionListView submissionListView;
+    private SubmissionListViewModel submissionListViewModel;
+    private SubmissionView submissionView;
+    private SubmissionViewModel submissionViewModel;
+    private final TestDAO testDAO = new TestDAO();
+
+    public AppBuilder addSubmissionListView() {
+        submissionListViewModel = new SubmissionListViewModel();
+        submissionListView = new SubmissionListView(submissionListViewModel);
+        cardPanel.add(submissionListView, submissionListView.getViewName());
+        return this;
+    }
+    public AppBuilder addSubmissionView() {
+        submissionViewModel = new  SubmissionViewModel();
+        submissionView = new SubmissionView(submissionViewModel);
+        cardPanel.add(submissionView, submissionView.getViewName());
+        return this;
+    }
+    public AppBuilder addSubmissionListUseCase() {
+        final SubmissionListOutputBoundary submissionListOutputBoundary =
+                new SubmissionListPresenter(submissionListViewModel, viewManagerModel,
+                        submissionViewModel);
+        SubmissionListInputBoundary submissionListInputBoundary =
+                new SubmissionListInteractor(submissionListOutputBoundary, testDAO);
+
+        SubmissionListController submissionListController =
+                new SubmissionListController(submissionListInputBoundary);
+        submissionListView.setSubmissionListController(submissionListController);
+        return this;
+    }
+    public AppBuilder addSubmissionUseCase() {
+        final SubmissionPresenter presenter = new SubmissionPresenter(submissionViewModel,
+                viewManagerModel, submissionListViewModel);
+        final SubmissionInputBoundary submissionInputBoundary =
+                new SubmissionInteractor(presenter, testDAO);
+        final GradeInputBoundary gradeInputBoundary = new GradeInteractor(
+                testDAO,
+                presenter
+        );
+
+        SubmissionController submissionController =
+                new SubmissionController(submissionInputBoundary, gradeInputBoundary);
+        submissionView.setSubmissionController(submissionController);
+        return this;
+    }
+
     // TODO: Implement builder methods
 
     public JFrame build() {
@@ -101,6 +163,19 @@ public class AppBuilder {
         loginView = new LoginView(loginViewModel);
         cardPanel.add(loginView, loginView.getViewName());
         return this;
+    }
+
+    // TODO: Update builder once full login flow is complete
+    public JFrame build() {
+        final JFrame application = new JFrame("User Login Example");
+        application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        application.add(cardPanel);
+
+        viewManagerModel.setState(loginView.getViewName());
+        viewManagerModel.firePropertyChange();
+
+        return application;
     }
      */
 }

@@ -3,7 +3,6 @@ package entity;
 import java.time.LocalDateTime;
 
 public class Submission {
-    private String assignment;
     private String submitter;
     private LocalDateTime submissionTime;
     private String submissionName;
@@ -19,9 +18,8 @@ public class Submission {
         UNDER_REVIEW
     }
 
-    public Submission(String assignment, String submitter, LocalDateTime submissionTime,
-                    String submissionName, String submissionData, double grade, Status status, String feedback) {
-        this.assignment = assignment;
+    public Submission(String submitter, LocalDateTime submissionTime, String submissionName,
+                    String submissionData, double grade, Status status, String feedback) {
         this.submitter = submitter;
         this.submissionTime = submissionTime;
         this.submissionName = submissionName;
@@ -29,10 +27,6 @@ public class Submission {
         this.grade = grade;
         this.status = status;
         this.feedback = feedback;
-    }
-
-    public String getAssignment() {
-        return assignment;
     }
 
     public String getSubmitter() {
@@ -68,7 +62,6 @@ public class Submission {
     }
 
     public static class SubmissionBuilder {
-        private String assignment;
         private String submitter;
         private LocalDateTime submissionTime;
         private String submissionName;
@@ -78,11 +71,6 @@ public class Submission {
         private String feedback;
 
         SubmissionBuilder() {}
-
-        public SubmissionBuilder assignment(String assignment) {
-            this.assignment = assignment;
-            return this;
-        }
 
         public SubmissionBuilder submitter(String submitter) {
             this.submitter = submitter;
@@ -120,8 +108,8 @@ public class Submission {
         }
 
         public Submission build() {
-            return new Submission(this.assignment, this.submitter, this.submissionTime,
-                    this.submissionData, this.submissionName, this.grade, this.status, this.feedback);
+            return new Submission(this.submitter, this.submissionTime, this.submissionName,
+                    this.submissionData, this.grade, this.status, this.feedback);
         }
     }
 }

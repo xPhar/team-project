@@ -9,13 +9,19 @@ public class Main {
 
         JFrame application = appBuilder
                 // TODO: Login,signup,loggedIn views
+                .addLoginView()
                 .addSubmitView()
                 .addResubmitView()
                 // TODO: other Views
                 // TODO: signUp,LogIn use cases
+                .addLoginUseCase()
                 .addSubmitUseCase()
                 .addResubmitUseCase()
                 // TODO: other usecases
+                .addSubmissionListView()
+                .addSubmissionView()
+                .addSubmissionListUseCase()
+                .addSubmissionUseCase()
                 .build();
 
         application.pack();
