@@ -6,10 +6,8 @@ public class Submission {
     private String assignment;
     private String submitter;
     private LocalDateTime submissionTime;
-    private String submissionName;
     private String submissionData;
     private double grade;
-    private String feedback;
     private Status status;
 
     public enum Status {
@@ -19,67 +17,87 @@ public class Submission {
         UNDER_REVIEW
     }
 
-    public String getAssignment() {
-        return assignment;
+    public Submission(String assignment, String submitter, LocalDateTime submissionTime,
+                    String submissionData, double grade, Status status) {
+        this.assignment = assignment;
+        this.submitter = submitter;
+        this.submissionTime = submissionTime;
+        this.submissionData = submissionData;
+        this.grade = grade;
+        this.status = status;
     }
 
-    public void setAssignment(String assignment) {
-        this.assignment = assignment;
+    public String getAssignment() {
+        return assignment;
     }
 
     public String getSubmitter() {
         return submitter;
     }
 
-    public void setSubmitter(String submitter) {
-        this.submitter = submitter;
-    }
-
     public LocalDateTime getSubmissionTime() {
         return submissionTime;
-    }
-
-    public void setSubmissionTime(LocalDateTime submissionTime) {
-        this.submissionTime = submissionTime;
-    }
-
-    public String getSubmissionName() {
-        return submissionName;
-    }
-
-    public void setSubmissionName(String submissionName) {
-        this.submissionName = submissionName;
     }
 
     public String getSubmissionData() {
         return submissionData;
     }
 
-    public void setSubmissionData(String submissionData) {
-        this.submissionData = submissionData;
-    }
-
     public double getGrade() {
         return grade;
-    }
-
-    public void setGrade(double grade) {
-        this.grade = grade;
-    }
-
-    public String getFeedback() {
-        return feedback;
-    }
-
-    public void setFeedback(String feedback) {
-        this.feedback = feedback;
     }
 
     public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public static SubmissionBuilder getBuilder() {
+        return new SubmissionBuilder();
+    }
+
+    public static class SubmissionBuilder {
+        private String assignment;
+        private String submitter;
+        private LocalDateTime submissionTime;
+        private String submissionData;
+        private double grade;
+        private Status status;
+
+        SubmissionBuilder() {}
+
+        public SubmissionBuilder assignment(String assignment) {
+            this.assignment = assignment;
+            return this;
+        }
+
+        public SubmissionBuilder submitter(String submitter) {
+            this.submitter = submitter;
+            return this;
+        }
+
+        public SubmissionBuilder submissionTime(LocalDateTime submissionTime) {
+            this.submissionTime = submissionTime;
+            return this;
+        }
+
+        public SubmissionBuilder submissionData(String submissionData) {
+            this.submissionData = submissionData;
+            return this;
+        }
+
+        public SubmissionBuilder grade(double grade) {
+            this.grade = grade;
+            return this;
+        }
+
+        public SubmissionBuilder status(Status status) {
+            this.status = status;
+            return this;
+        }
+
+        public Submission build() {
+            return new Submission(this.assignment, this.submitter, this.submissionTime,
+                    this.submissionData, this.grade, this.status);
+        }
     }
 }
