@@ -1,35 +1,21 @@
 package app;
 
 import data_access.FakeUserDataAccessObject;
-
 import data_access.TestDAO;
-import interface_adapter.Resubmit.ResubmitController;
-import interface_adapter.Resubmit.ResubmitPresenter;
-import interface_adapter.Resubmit.ResubmitViewModel;
-import interface_adapter.Submit.SubmitController;
-import interface_adapter.Submit.SubmitPresenter;
-import interface_adapter.Submit.SubmitViewModel;
+
+import interface_adapter.Resubmit.*;
+import interface_adapter.Submit.*;
+import interface_adapter.login.*;
+import interface_adapter.submission.*;
+import interface_adapter.submission_list.*;
 import interface_adapter.ViewManagerModel;
 
-import interface_adapter.submission.SubmissionController;
-import interface_adapter.submission.SubmissionPresenter;
-import interface_adapter.submission.SubmissionViewModel;
-import interface_adapter.submission_list.SubmissionListController;
-import interface_adapter.submission_list.SubmissionListPresenter;
-import interface_adapter.submission_list.SubmissionListViewModel;
-import usecase.Grade.GradeInputBoundary;
-import usecase.Grade.GradeInteractor;
-import usecase.Resubmit.ResubmitInputBoundary;
-import usecase.Resubmit.ResubmitInteractor;
-import usecase.Resubmit.ResubmitOutputBoundary;
-import usecase.Submission.SubmissionInputBoundary;
-import usecase.Submission.SubmissionInteractor;
-import usecase.SubmissionList.SubmissionListInputBoundary;
-import usecase.SubmissionList.SubmissionListInteractor;
-import usecase.SubmissionList.SubmissionListOutputBoundary;
-import usecase.Submit.SubmitInputBoundary;
-import usecase.Submit.SubmitInteractor;
-import usecase.Submit.SubmitOutputBoundary;
+import usecase.Resubmit.*;
+import usecase.Submit.*;
+import usecase.login.*;
+import usecase.Grade.*;
+import usecase.Submission.*;
+import usecase.SubmissionList.*;
 
 import view.*;
 
@@ -46,8 +32,8 @@ public class AppBuilder {
     ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
     //If we need to switch View, just write viewManagerModel.setstate(viewName), where viewName is a String
 
-    // TODO: Add instance variables
-
+    private LoginView loginView;
+    private LoginViewModel loginViewModel;
     private SubmitView submitView;
     private ResubmitView resubmitView;
     private SubmitViewModel submitViewModel;
@@ -57,6 +43,13 @@ public class AppBuilder {
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
+    }
+
+    public AppBuilder addLoginView() {
+        loginViewModel = new LoginViewModel();
+        loginView = new LoginView(loginViewModel);
+        cardPanel.add(loginView, loginView.getViewName());
+        return this;
     }
 
     public AppBuilder addSubmitView() {
@@ -70,6 +63,15 @@ public class AppBuilder {
         resubmitViewModel = new ResubmitViewModel();
         resubmitView = new ResubmitView(resubmitViewModel);
         cardPanel.add(resubmitView, resubmitView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addLoginUseCase() {
+        final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel, loginViewModel);
+        final LoginInputBoundary loginInteractor = new LoginInteractor(
+                userDataAccessObject, loginOutputBoundary);
+        LoginController loginController = new LoginController(loginInteractor);
+        loginView.setLoginController(loginController);
         return this;
     }
 
@@ -161,6 +163,19 @@ public class AppBuilder {
         loginView = new LoginView(loginViewModel);
         cardPanel.add(loginView, loginView.getViewName());
         return this;
+    }
+
+    // TODO: Update builder once full login flow is complete
+    public JFrame build() {
+        final JFrame application = new JFrame("User Login Example");
+        application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        application.add(cardPanel);
+
+        viewManagerModel.setState(loginView.getViewName());
+        viewManagerModel.firePropertyChange();
+
+        return application;
     }
      */
 }
