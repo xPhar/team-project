@@ -95,7 +95,7 @@ public class ClassAverageView extends JPanel implements ActionListener, Property
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(backButton) && loggedInController != null) {
-            loggedInController.execute();
+            loggedInController.goBack();
         }
     }
 
