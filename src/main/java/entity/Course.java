@@ -6,14 +6,16 @@ import java.util.List;
 public class Course {
     private String courseName;
     private String courseCode;
-    private List<String> instructors;
-    private List<String> students;
-    private List<String> assignments;
+    private String latePenalty;
+    private List<User> instructors;
+    private List<User> students;
+    private List<Assignment> assignments;
 
-    public Course(String courseName, String courseCode,  List<String> instructors,
-                  List<String> students, List<String> assignments) {
+    public Course(String courseName, String courseCode, String latePenalty,
+                  List<User> instructors, List<User> students, List<Assignment> assignments) {
         this.courseName = courseName;
         this.courseCode = courseCode;
+        this.latePenalty = latePenalty;
         this.instructors = instructors;
         this.students = students;
         this.assignments = assignments;
@@ -27,15 +29,19 @@ public class Course {
         return courseCode;
     }
 
-    public List<String> getInstructors() {
+    public String getLatePenalty() {
+        return latePenalty;
+    }
+
+    public List<User> getInstructors() {
         return instructors;
     }
 
-    public List<String> getStudents() {
+    public List<User> getStudents() {
         return students;
     }
 
-    public List<String> getAssignments() {
+    public List<Assignment> getAssignments() {
         return assignments;
     }
 
@@ -46,9 +52,10 @@ public class Course {
     public static class CourseBuilder {
         private String courseName;
         private String courseCode;
-        private List<String> instructors;
-        private List<String> students;
-        private List<String> assignments;
+        private String latePenalty;
+        private List<User> instructors;
+        private List<User> students;
+        private List<Assignment> assignments;
 
         CourseBuilder() {
             this.instructors = new ArrayList<>();
@@ -66,23 +73,28 @@ public class Course {
             return this;
         }
 
-        public CourseBuilder addInstructor(String instructor) {
+        public CourseBuilder latePenalty(String latePenalty) {
+            this.latePenalty = latePenalty;
+            return this;
+        }
+
+        public CourseBuilder addInstructor(User instructor) {
             this.instructors.add(instructor);
             return this;
         }
 
-        public CourseBuilder addStudent(String student) {
+        public CourseBuilder addStudent(User student) {
             this.students.add(student);
             return this;
         }
 
-        public CourseBuilder addAssignment(String assignment) {
+        public CourseBuilder addAssignment(Assignment assignment) {
             this.assignments.add(assignment);
             return this;
         }
 
         public Course build() {
-            return new  Course(courseName, courseCode, instructors, students, assignments);
+            return new  Course(courseName, courseCode, latePenalty, instructors, students, assignments);
         }
     }
 }

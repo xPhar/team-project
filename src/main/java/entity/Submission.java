@@ -49,16 +49,12 @@ public class Submission {
         return grade;
     }
 
-    public void setGrade(double grade) {
-        this.grade = grade;
+    public Status getStatus() {
+        return status;
     }
 
     public String getFeedback() {
         return feedback;
-    }
-
-    public Status getStatus() {
-        return status;
     }
 
     public static SubmissionBuilder getBuilder() {
@@ -113,7 +109,7 @@ public class Submission {
 
         public Submission build() {
             return new Submission(this.submitter, this.submissionTime, this.submissionName,
-                    this.submissionData, this.grade, this.status,  this.feedback);
+                    this.submissionData, this.grade, this.status, this.feedback);
         }
     }
 }
