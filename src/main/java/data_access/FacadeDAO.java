@@ -138,7 +138,7 @@ public class FacadeDAO implements
         return assignmentNames;
     }
 
-    double getMyScore(String assignmentName, String username) {
+    public double getMyScore(String assignmentName, String username) {
         JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName());
         JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
         JSONObject assignmentObject = assignmentDictionary.getJSONObject(assignmentName);
