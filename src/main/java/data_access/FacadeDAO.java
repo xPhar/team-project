@@ -176,7 +176,9 @@ public class FacadeDAO {
     }
 
     public void grade(String assignment, String submitter, double grade, String feedback) {
-        JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName());
+        Course course = sessionDA.getCourse();
+
+        JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
         JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
         JSONObject assignmentObject = assignmentDictionary.getJSONObject(assignment);
         JSONObject submissionArray = assignmentObject.getJSONObject("submissions");
@@ -185,8 +187,47 @@ public class FacadeDAO {
         submissionObj.put("feedback", feedback);
         submissionObj.put("status", Submission.Status.GRADED.toString());
 
-        Course course = sessionDA.getCourse();
-
         gradeDA.modifyUserInfoEndpoint(getCourseUserName(course), COURSE_PASSWORD, courseObject);
+    }
+
+    // Some method I think we need (Indy)
+
+    public List<Assignment> getAssignments() {
+        Course course = sessionDA.getCourse();
+        List<Assignment> assignments = new ArrayList<>();
+
+        JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
+        JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
+        Iterator<String> keyIt = assignmentDictionary.keys();
+        while (keyIt.hasNext()) {
+            String assignmentName = keyIt.next();
+            JSONObject assignmentObj = assignmentDictionary.getJSONObject(assignmentName);
+            Assignment.AssignmentBuilder builder = Assignment.builder();
+            builder.name(assignmentName)
+                    .description(assignmentObj.getString("description"))
+                    .creationDate(LocalDateTime.parse(assignmentObj.getString("creationDate")))
+                    .dueDate(LocalDateTime.parse(assignmentObj.getString("dueDate")))
+                    .gracePeriod(assignmentObj.getDouble("gracePeriod"));
+                    // TODO add supported file types
+            assignments.add(builder.build());
+        }
+
+        return assignments;
+    }
+
+    public Assignment getAssignment(String assignmentName) {
+        Course course = sessionDA.getCourse();
+        JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
+        JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
+        JSONObject assignmentObj =  assignmentDictionary.getJSONObject(assignmentName);
+
+        Assignment.AssignmentBuilder builder = Assignment.builder();
+        return builder.name(assignmentName)
+                .description(assignmentObj.getString("description"))
+                .creationDate(LocalDateTime.parse(assignmentObj.getString("creationDate")))
+                .dueDate(LocalDateTime.parse(assignmentObj.getString("dueDate")))
+                .gracePeriod(assignmentObj.getDouble("gracePeriod"))
+                // TODO add supported file types
+                .build();
     }
 }
