@@ -35,7 +35,7 @@ public class ClassAveragePresenter implements ClassAverageOutputBoundary {
         JPanel chartPanel = buildHistogramChart(data);
         state.setChartPanel(chartPanel);
         viewModel.setState(state);
-        viewModel.firePropertyChanged();
+        viewModel.firePropertyChange();
     }
 
     @Override
