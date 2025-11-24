@@ -201,12 +201,12 @@ public class GradeAPIDataAccessObject {
         }
     }
 
-    private JSONObject getUserInfo(String username) throws DataAccessException {
+    public JSONObject getUserInfo(String username) throws DataAccessException {
         final JSONObject userJSONObject = getUserObject(username);
         return userJSONObject.getJSONObject("info");
     }
 
-    private JSONObject getUserObject(String username) throws DataAccessException {
+    public JSONObject getUserObject(String username) throws DataAccessException {
         // Make an API call to get the user object.
         final OkHttpClient client = new OkHttpClient().newBuilder().build();
         final Request request = new Request.Builder()
