@@ -9,6 +9,7 @@ public class Submission {
     private String submissionData;
     private double grade;
     private Status status;
+    private String feedback;
 
     public enum Status {
         ON_TIME,
@@ -18,13 +19,14 @@ public class Submission {
     }
 
     public Submission(String assignment, String submitter, LocalDateTime submissionTime,
-                    String submissionData, double grade, Status status) {
+                    String submissionData, double grade, Status status, String feedback) {
         this.assignment = assignment;
         this.submitter = submitter;
         this.submissionTime = submissionTime;
         this.submissionData = submissionData;
         this.grade = grade;
         this.status = status;
+        this.feedback = feedback;
     }
 
     public String getAssignment() {
@@ -51,6 +53,10 @@ public class Submission {
         return status;
     }
 
+    public String getFeedback() {
+        return feedback;
+    }
+
     public static SubmissionBuilder getBuilder() {
         return new SubmissionBuilder();
     }
@@ -62,6 +68,7 @@ public class Submission {
         private String submissionData;
         private double grade;
         private Status status;
+        private String feedback;
 
         SubmissionBuilder() {}
 
@@ -95,9 +102,14 @@ public class Submission {
             return this;
         }
 
+        public SubmissionBuilder feedback(String feedback) {
+            this.feedback = feedback;
+            return this;
+        }
+
         public Submission build() {
             return new Submission(this.assignment, this.submitter, this.submissionTime,
-                    this.submissionData, this.grade, this.status);
+                    this.submissionData, this.grade, this.status, this.feedback);
         }
     }
 }
