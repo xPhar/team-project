@@ -17,10 +17,9 @@ public class LoggedInController {
         String role = loggedInViewModel.getState().getRole();
 
         if ("instructor".equals(role)) {
-            viewManagerModel.setState(// TODO: mark assignment state name.);
+            viewManagerModel.setState("SubmissionList");
         } else {
             viewManagerModel.setState("Submit");
-            // TODO: resubmit depends on whether submitted?
         }
         viewManagerModel.firePropertyChanged();
     }
@@ -31,7 +30,18 @@ public class LoggedInController {
     }
 
     public void createAssignment() {
-        viewManagerModel.setState(// TODO: create assignment state name);
+        viewManagerModel.setState("Assignments");
+        viewManagerModel.firePropertyChanged();
+    }
+
+    public void logout() {
+        viewManagerModel.setState("login");
+        viewManagerModel.firePropertyChanged();
+    }
+
+    public void goBack() {
+        viewManagerModel.setState(loggedInViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
 }
+

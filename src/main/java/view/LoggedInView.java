@@ -3,7 +3,6 @@ package view;
 import interface_adapter.logged_in.LoggedInState;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.logged_in.LoggedInController;
-import interface_adapter.logout.LogoutController;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -18,7 +17,6 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
 
     private final LoggedInViewModel loggedInViewModel;
     private LoggedInController loggedInController;
-    private LogoutController logoutController;
 
     private JLabel nameLabel = new JLabel();
     private JTable assignmentTable;
@@ -94,7 +92,7 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
     @Override
     public void actionPerformed(ActionEvent evt) {
         if (evt.getSource() == logOutButton) {
-            logoutController.execute();
+            loggedInController.logout();
         }
 
         if (evt.getSource() == bottomRightButton) {
@@ -113,17 +111,14 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
         if ("state".equals(evt.getPropertyName())) {
             LoggedInState state = (LoggedInState) evt.getNewValue();
 
-            // set name
             nameLabel.setText(state.getName());
 
-            // bottom button text
             if ("instructor".equals(state.getRole())) {
                 bottomRightButton.setText("Create Assignment");
             } else {
                 bottomRightButton.setText("Show Distribution");
             }
 
-            // update table data
             if (state.getAssignments() != null) {
                 assignmentTable.setModel(
                         new DefaultTableModel(
@@ -148,7 +143,4 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
         this.loggedInController = loggedInController;
     }
 
-    public void setLogoutController(LogoutController logoutController) {
-        this.logoutController = logoutController;
-    }
 }
