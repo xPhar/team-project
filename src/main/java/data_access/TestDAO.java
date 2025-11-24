@@ -1,7 +1,6 @@
 package data_access;
 
 import entity.Submission;
-import entity.SubmissionBuilder;
 import usecase.Grade.GradeDataAccessInterface;
 import usecase.SubmissionList.SubmissionListDataAccessInterface;
 import usecase.Submission.SubmissionDataAccessInterface;
@@ -19,7 +18,7 @@ public class TestDAO implements
 
     @Override
     public Submission getSubmission(String assignmentName, String submitter) {
-        SubmissionBuilder builder = new SubmissionBuilder();
+        Submission.SubmissionBuilder builder = Submission.getBuilder();
         builder.submitter("Indy");
         builder.submissionTime(LocalDateTime.now());
         builder.grade(20f);
@@ -32,7 +31,7 @@ public class TestDAO implements
     public List<Submission> getSubmissionList(String assignmentName) {
         List<Submission> list = new ArrayList<>();
         for(int i = 0; i < 50; i++) {
-            SubmissionBuilder builder = new SubmissionBuilder();
+            Submission.SubmissionBuilder builder = Submission.getBuilder();
             builder.submitter("Indy");
             builder.submissionTime(LocalDateTime.now().plusSeconds(i));
             builder.status(Submission.Status.ON_TIME);

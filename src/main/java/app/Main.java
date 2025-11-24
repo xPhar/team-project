@@ -16,6 +16,10 @@ public class Main {
                 .addSubmitUseCase()
                 .addResubmitUseCase()
                 // TODO: other usecases
+                .addSubmissionListView()
+                .addSubmissionView()
+                .addSubmissionListUseCase()
+                .addSubmissionUseCase()
                 .build();
 
         application.pack();

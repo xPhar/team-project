@@ -2,6 +2,7 @@ package app;
 
 import data_access.FakeUserDataAccessObject;
 
+import data_access.TestDAO;
 import interface_adapter.Resubmit.ResubmitController;
 import interface_adapter.Resubmit.ResubmitPresenter;
 import interface_adapter.Resubmit.ResubmitViewModel;
@@ -10,16 +11,27 @@ import interface_adapter.Submit.SubmitPresenter;
 import interface_adapter.Submit.SubmitViewModel;
 import interface_adapter.ViewManagerModel;
 
+import interface_adapter.submission.SubmissionController;
+import interface_adapter.submission.SubmissionPresenter;
+import interface_adapter.submission.SubmissionViewModel;
+import interface_adapter.submission_list.SubmissionListController;
+import interface_adapter.submission_list.SubmissionListPresenter;
+import interface_adapter.submission_list.SubmissionListViewModel;
+import usecase.Grade.GradeInputBoundary;
+import usecase.Grade.GradeInteractor;
 import usecase.Resubmit.ResubmitInputBoundary;
 import usecase.Resubmit.ResubmitInteractor;
 import usecase.Resubmit.ResubmitOutputBoundary;
+import usecase.Submission.SubmissionInputBoundary;
+import usecase.Submission.SubmissionInteractor;
+import usecase.SubmissionList.SubmissionListInputBoundary;
+import usecase.SubmissionList.SubmissionListInteractor;
+import usecase.SubmissionList.SubmissionListOutputBoundary;
 import usecase.Submit.SubmitInputBoundary;
 import usecase.Submit.SubmitInteractor;
 import usecase.Submit.SubmitOutputBoundary;
 
-import view.ResubmitView;
-import view.SubmitView;
-import view.ViewManager;
+import view.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -80,6 +92,54 @@ public class AppBuilder {
         resubmitView.setResubmitController(resubmitController);
         return this;
     }
+
+    // Mark Assignment use case
+    private SubmissionListView submissionListView;
+    private SubmissionListViewModel submissionListViewModel;
+    private SubmissionView submissionView;
+    private SubmissionViewModel submissionViewModel;
+    private final TestDAO testDAO = new TestDAO();
+
+    public AppBuilder addSubmissionListView() {
+        submissionListViewModel = new SubmissionListViewModel();
+        submissionListView = new SubmissionListView(submissionListViewModel);
+        cardPanel.add(submissionListView, submissionListView.getViewName());
+        return this;
+    }
+    public AppBuilder addSubmissionView() {
+        submissionViewModel = new  SubmissionViewModel();
+        submissionView = new SubmissionView(submissionViewModel);
+        cardPanel.add(submissionView, submissionView.getViewName());
+        return this;
+    }
+    public AppBuilder addSubmissionListUseCase() {
+        final SubmissionListOutputBoundary submissionListOutputBoundary =
+                new SubmissionListPresenter(submissionListViewModel, viewManagerModel,
+                        submissionViewModel);
+        SubmissionListInputBoundary submissionListInputBoundary =
+                new SubmissionListInteractor(submissionListOutputBoundary, testDAO);
+
+        SubmissionListController submissionListController =
+                new SubmissionListController(submissionListInputBoundary);
+        submissionListView.setSubmissionListController(submissionListController);
+        return this;
+    }
+    public AppBuilder addSubmissionUseCase() {
+        final SubmissionPresenter presenter = new SubmissionPresenter(submissionViewModel,
+                viewManagerModel, submissionListViewModel);
+        final SubmissionInputBoundary submissionInputBoundary =
+                new SubmissionInteractor(presenter, testDAO);
+        final GradeInputBoundary gradeInputBoundary = new GradeInteractor(
+                testDAO,
+                presenter
+        );
+
+        SubmissionController submissionController =
+                new SubmissionController(submissionInputBoundary, gradeInputBoundary);
+        submissionView.setSubmissionController(submissionController);
+        return this;
+    }
+
     // TODO: Implement builder methods
 
     public JFrame build() {
