@@ -3,10 +3,16 @@ package data_access;
 import entity.*;
 
 public class SessionDataAccessObject {
-    final Session session;
+    private final Session session;
 
     public SessionDataAccessObject() {
         this.session = Session.getInstance();
+    }
+
+    public void resetSession() {
+        setUser(null);
+        setCourse(null);
+        setAssignment(null);
     }
 
     public User getUser() {

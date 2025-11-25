@@ -21,7 +21,7 @@ public class LoggedInInteractor implements LoggedInInputBoundary {
         if (loggedInInputData.getLogout()) {
             userDataAccessObject.resetSession();
 
-            LoggedInOutputData outputData = new LoggedInOutputData(userDataAccessObject.getUsername(), null, null);
+            LoggedInOutputData outputData = new LoggedInOutputData(userDataAccessObject.getCurrentUsername(), null, null);
 
             loginPresenter.switchToLoginView(outputData);
         }
@@ -42,7 +42,7 @@ public class LoggedInInteractor implements LoggedInInputBoundary {
             }
             else if (userDataAccessObject.getUserType() == User.INSTRUCTOR) {
                 LoggedInOutputData outputData = new LoggedInOutputData(
-                        userDataAccessObject.getUsername(),
+                        userDataAccessObject.getCurrentUsername(),
                         assignment.getName(),
                         userDataAccessObject.getSubmissionTableModel(assignment));
                 loginPresenter.switchToSubmissionListView(outputData);

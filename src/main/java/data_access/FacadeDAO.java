@@ -1,6 +1,7 @@
 package data_access;
 
 import entity.*;
+import interface_adapter.submission_list.SubmissionTableModel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import usecase.Grade.GradeDataAccessInterface;
@@ -9,6 +10,7 @@ import usecase.Submission.SubmissionDataAccessInterface;
 import usecase.SubmissionList.SubmissionListDataAccessInterface;
 import usecase.Submit.SubmitUserDataAccessInterface;
 import usecase.class_average.ClassAverageUserDataAccessInterface;
+import usecase.logged_in.LoggedInDataAccessInterface;
 import usecase.login.LoginDataAccessInterface;
 
 import java.io.File;
@@ -20,6 +22,7 @@ import java.util.List;
 
 public class FacadeDAO implements
         LoginDataAccessInterface,
+        LoggedInDataAccessInterface,
         SubmitUserDataAccessInterface,
         ResubmitUserDataAccessInterface,
         SubmissionDataAccessInterface,
@@ -348,9 +351,39 @@ public class FacadeDAO implements
         return assignments;
     }
 
+    @Override
+    public void resetSession() {
+        this.sessionDA.resetSession();
+    }
+
+    @Override
+    public User.USER_TYPE getUserType() {
+        return sessionDA.getUser().getUserType();
+    }
+
+    @Override
+    public SubmissionTableModel getSubmissionTableModel(Assignment assignment) {
+        List<Submission> submissionList = getSubmissionList(assignment.getName());
+
+        return new SubmissionTableModel(submissionList);
+    }
+
+    @Override
+    public boolean userHasSubmitted(Assignment assignment) {
+        Submission submission = getSubmission(assignment);
+
+        return submission != null;
+    }
+
+    @Override
+    public void setActiveAssignment(Assignment assignment) {
+        sessionDA.setAssignment(assignment);
+    }
+
     public Assignment getAssignment(String assignmentName) {
         Course course = sessionDA.getCourse();
         JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
+        courseObject = courseObject.getJSONObject("courseData");
         JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
         JSONObject assignmentObj =  assignmentDictionary.getJSONObject(assignmentName);
 

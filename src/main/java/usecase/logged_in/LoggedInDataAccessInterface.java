@@ -18,7 +18,7 @@ public interface LoggedInDataAccessInterface {
      * Gets the username of the current user.
      * @return the username for the current user
      */
-    String getUsername();
+    String getCurrentUsername();
 
     /**
      * Gets the user type of the current user.
