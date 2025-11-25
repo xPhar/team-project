@@ -2,30 +2,30 @@ package interface_adapter.logged_in;
 
 public class LoggedInState {
 
-    private String name;
-    private String role;
+    private String username;
+    private String userType;
     private Object[][] assignments;
 
     public LoggedInState() {
-        this.name = "";
-        this.role = "";
+        this.username = "";
+        this.userType = "";
         this.assignments = new Object[0][0];
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String name) {
+        this.username = name;
     }
 
-    public String getRole() {
-        return role;
+    public String getUserType() {
+        return userType;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 
     public Object[][] getAssignments() {

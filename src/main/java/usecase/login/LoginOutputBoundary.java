@@ -7,7 +7,7 @@ public interface LoginOutputBoundary {
     /**
      * Switches to logged in view after successful login.
      */
-    void switchToLoggedInView();
+    void switchToLoggedInView(LoginOutputData response);
 
     /**
      * Prepares the failure view for the Login Use Case.

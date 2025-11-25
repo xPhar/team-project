@@ -7,12 +7,12 @@ public class Course {
     private String courseName;
     private String courseCode;
     private String latePenalty;
-    private List<User> instructors;
-    private List<User> students;
+    private List<String> instructors;
+    private List<String> students;
     private List<Assignment> assignments;
 
     public Course(String courseName, String courseCode, String latePenalty,
-                  List<User> instructors, List<User> students, List<Assignment> assignments) {
+                  List<String> instructors, List<String> students, List<Assignment> assignments) {
         this.courseName = courseName;
         this.courseCode = courseCode;
         this.latePenalty = latePenalty;
@@ -33,11 +33,11 @@ public class Course {
         return latePenalty;
     }
 
-    public List<User> getInstructors() {
+    public List<String> getInstructors() {
         return instructors;
     }
 
-    public List<User> getStudents() {
+    public List<String> getStudents() {
         return students;
     }
 
@@ -53,8 +53,8 @@ public class Course {
         private String courseName;
         private String courseCode;
         private String latePenalty;
-        private List<User> instructors;
-        private List<User> students;
+        private List<String> instructors;
+        private List<String> students;
         private List<Assignment> assignments;
 
         CourseBuilder() {
@@ -78,12 +78,12 @@ public class Course {
             return this;
         }
 
-        public CourseBuilder addInstructor(User instructor) {
+        public CourseBuilder addInstructor(String instructor) {
             this.instructors.add(instructor);
             return this;
         }
 
-        public CourseBuilder addStudent(User student) {
+        public CourseBuilder addStudent(String student) {
             this.students.add(student);
             return this;
         }
