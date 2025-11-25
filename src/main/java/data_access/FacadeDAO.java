@@ -3,6 +3,13 @@ package data_access;
 import entity.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import usecase.Grade.GradeDataAccessInterface;
+import usecase.Resubmit.ResubmitUserDataAccessInterface;
+import usecase.Submission.SubmissionDataAccessInterface;
+import usecase.SubmissionList.SubmissionListDataAccessInterface;
+import usecase.Submit.SubmitUserDataAccessInterface;
+import usecase.class_average.ClassAverageUserDataAccessInterface;
+import usecase.login.LoginDataAccessInterface;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +18,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class FacadeDAO {
+public class FacadeDAO implements
+        LoginDataAccessInterface,
+        SubmitUserDataAccessInterface,
+        ResubmitUserDataAccessInterface,
+        SubmissionDataAccessInterface,
+        SubmissionListDataAccessInterface,
+        GradeDataAccessInterface,
+        ClassAverageUserDataAccessInterface {
     private final FileToStringDataAccessObject fsDA;
     private final GradeAPIDataAccessObject gradeDA;
     private final SessionDataAccessObject sessionDA;
@@ -37,12 +51,17 @@ public class FacadeDAO {
         return "course-CSC207";
     }
 
-
     // Submit
-    public void submit(File studentFile, User student, Course course, Assignment assignment)
+    @Override
+    public void submit(File studentFile)
             throws IOException
     {
+        User student = sessionDA.getUser();
+        Assignment assignment = sessionDA.getAssignment();
+        Course course = sessionDA.getCourse();
+
         Submission.SubmissionBuilder builder = Submission.getBuilder();
+
         builder.submitter(student.getName())
                 .submissionTime(LocalDateTime.now())
                 .submissionName(studentFile.getName())
@@ -65,6 +84,11 @@ public class FacadeDAO {
         submissionArray.put(submission.getSubmitter(), submissionJSON);
 
         gradeDA.modifyUserInfoEndpoint(getCourseUserName(course), COURSE_PASSWORD, courseObject);
+    }
+
+    @Override
+    public Assignment getAssignment() {
+        return sessionDA.getAssignment();
     }
 
     private JSONObject submissionToJSON(Submission submission) {
@@ -117,7 +141,7 @@ public class FacadeDAO {
         return assignmentNames;
     }
 
-    double getMyScore(String assignmentName, String username) {
+    public double getMyScore(String assignmentName, String username) {
         JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName());
         JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
         JSONObject assignmentObject = assignmentDictionary.getJSONObject(assignmentName);
@@ -135,17 +159,27 @@ public class FacadeDAO {
         gradeDA.createUser(user.getName(), user.getPassword());
     }
 
-    public User get(String username) throws DataAccessException {
-        JSONObject userObj = gradeDA.getUserInfo(username);
+    public User getUser(String username) throws DataAccessException {
+        // Get the whole object first to allow us to get their password
+        JSONObject userObj = gradeDA.getUserObject(username);
+        String password = userObj.getString("password");
+        // Everything else we need is in the info object
+        userObj = userObj.getJSONObject("info");
+        // TODO: We can make a simple helper function to handle converting this
         String userType = userObj.getString("type").toUpperCase();
-        JSONArray courseList = userObj.getJSONArray("courses");
+        String firstName = userObj.getString("firstName");
+        String lastName = userObj.getString("lastName");
 
+        JSONArray courseList = userObj.getJSONArray("courses");
         ArrayList<String> courses = new ArrayList<>();
         for (int i = 0; i < courseList.length(); i++) {
             courses.add(courseList.getString(i));
         }
 
-        return new User(username, "",
+        return new User(username,
+                password,
+                firstName,
+                lastName,
                 User.USER_TYPE.valueOf(userType),
                 courses
         );
@@ -157,10 +191,6 @@ public class FacadeDAO {
 
     public String getCurrentUsername() {
         return sessionDA.getUser().getName();
-    }
-
-    public User getUser(String username) {
-        return get(username);
     }
 
     public void setActiveUser(User user) {
