@@ -4,7 +4,6 @@ import data_access.FacadeDAO;
 import data_access.FakeUserDataAccessObject;
 import data_access.TestDAO;
 
-import entity.User;
 import interface_adapter.Resubmit.*;
 import interface_adapter.Submit.*;
 import interface_adapter.logged_in.*;
@@ -13,7 +12,6 @@ import interface_adapter.submission.*;
 import interface_adapter.submission_list.*;
 import interface_adapter.ViewManagerModel;
 
-import org.json.JSONObject;
 import usecase.Resubmit.*;
 import usecase.Submit.*;
 import usecase.logged_in.*;
@@ -42,7 +40,6 @@ public class AppBuilder {
     private LoggedInView loggedInView;
     private LoggedInViewModel loggedInViewModel;
     private SubmitView submitView;
-    private ResubmitView resubmitView;
     private SubmitViewModel submitViewModel;
     private ResubmitView resubmitView;
     private ResubmitViewModel resubmitViewModel;
