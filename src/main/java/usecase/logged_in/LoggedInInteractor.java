@@ -19,17 +19,16 @@ public class LoggedInInteractor implements LoggedInInputBoundary {
     @Override
     public void execute(LoggedInInputData loggedInInputData) {
         if (loggedInInputData.getLogout()) {
-            userDataAccessObject.resetSession();
-
+            // Create output data BEFORE resetting the session (or else username is null...)
             LoggedInOutputData outputData = new LoggedInOutputData(userDataAccessObject.getCurrentUsername(), null, null);
+
+            userDataAccessObject.resetSession();
 
             loginPresenter.switchToLoginView(outputData);
         }
         else {
             Assignment assignment = userDataAccessObject.getAssignment(loggedInInputData.getAssignment());
             userDataAccessObject.setActiveAssignment(assignment);
-
-
 
             if (userDataAccessObject.getUserType() == User.STUDENT) {
                 LoggedInOutputData outputData = new LoggedInOutputData(null, assignment.getName(), null);

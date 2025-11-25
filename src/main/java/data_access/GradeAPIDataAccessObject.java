@@ -242,7 +242,7 @@ public class GradeAPIDataAccessObject {
             if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
                 return responseBody.getString(MESSAGE).equals(USER_EXIST_MESSAGE);
             } else {
-                throw new DataAccessException(responseBody.getString(MESSAGE));
+                return false;
             }
         }
         catch (IOException | JSONException ex) {

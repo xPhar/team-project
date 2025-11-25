@@ -40,6 +40,7 @@ public class LoggedInPresenter implements LoggedInOutputBoundary {
         // On success, update the loginViewModel's state
         final LoginState loginState = loginViewModel.getState();
         loginState.setUsername(response.getUsername());
+        loginState.setPassword("");
         this.loginViewModel.firePropertyChange();
 
         // and clear everything from LoggedInViewModel's state
