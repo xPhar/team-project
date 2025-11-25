@@ -8,18 +8,20 @@ public class Main {
                 AppBuilder appBuilder = new AppBuilder();
 
                 JFrame application = appBuilder
-                                .addAssignmentView()
-                                .addCreateAssignmentView()
-                                .addEditAssignmentView()
+                                // TODO: Login,signup,loggedIn views
+                                .addLoginView()
                                 .addSubmitView()
                                 .addResubmitView()
                                 // TODO: other Views
-                                .addAssignmentsUseCase()
-                                .addCreateAssignmentUseCase()
-                                .addEditAssignmentUseCase()
+                                // TODO: signUp,LogIn use cases
+                                .addLoginUseCase()
                                 .addSubmitUseCase()
                                 .addResubmitUseCase()
                                 // TODO: other usecases
+                                .addSubmissionListView()
+                                .addSubmissionView()
+                                .addSubmissionListUseCase()
+                                .addSubmissionUseCase()
                                 .build();
 
                 application.pack();

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 public class ResubmitView extends JPanel implements PropertyChangeListener {
 
-    private final String viewName = "Resubmit";
+    private static final String viewName = "Resubmit";
     private final ResubmitViewModel resubmitViewModel;
     private final JLabel messageLabel = new JLabel("Are you sure you want to resubmit?" +
             " Only the latest one will be marked.");
@@ -36,27 +36,13 @@ public class ResubmitView extends JPanel implements PropertyChangeListener {
         // Center panel with resubmit button
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton resubmitButton = new JButton("I'm sure to resubmit");
-        resubmitButton.addActionListener(e -> {
-            if (resubmitController != null) {
-                resubmitController.execute(LocalDateTime.now());
-            }
-        });
-        centerPanel.add(resubmitButton);
+        resubmitButton.addActionListener(e -> resubmitController.execute(LocalDateTime.now()));
 
-        // Bottom panel with Back button
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JButton backButton = new JButton("← Back to Assignments");
-        backButton.addActionListener(e -> {
-            if (viewManagerModel != null) {
-                viewManagerModel.setState("Assignments");
-                viewManagerModel.firePropertyChange();
-            }
-        });
-        bottomPanel.add(backButton);
-
-        this.add(topPanel, BorderLayout.NORTH);
-        this.add(centerPanel, BorderLayout.CENTER);
-        this.add(bottomPanel, BorderLayout.SOUTH);
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        messageLabel.setAlignmentX(CENTER_ALIGNMENT);
+        resubmitButton.setAlignmentX(CENTER_ALIGNMENT);
+        this.add(messageLabel);
+        this.add(resubmitButton);
 
     }
 
@@ -91,6 +77,7 @@ public class ResubmitView extends JPanel implements PropertyChangeListener {
         ResubmitView view = new ResubmitView(new ResubmitViewModel());
         frame.setContentPane(view);
         frame.pack();
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 }

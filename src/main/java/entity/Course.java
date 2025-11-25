@@ -1,17 +1,24 @@
 package entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Course {
     private String courseName;
     private String courseCode;
-    private List<Instructor> instructors;
-    private List<Student> students;
+    private String latePenalty;
+    private List<User> instructors;
+    private List<User> students;
     private List<Assignment> assignments;
 
-    public Course(String courseName, String courseCode) {
+    public Course(String courseName, String courseCode, String latePenalty,
+            List<User> instructors, List<User> students, List<Assignment> assignments) {
         this.courseName = courseName;
         this.courseCode = courseCode;
+        this.latePenalty = latePenalty;
+        this.instructors = instructors;
+        this.students = students;
+        this.assignments = assignments;
     }
 
     public String getCourseName() {
@@ -22,11 +29,15 @@ public class Course {
         return courseCode;
     }
 
-    public List<Instructor> getInstructors() {
+    public String getLatePenalty() {
+        return latePenalty;
+    }
+
+    public List<User> getInstructors() {
         return instructors;
     }
 
-    public List<Student> getStudents() {
+    public List<User> getStudents() {
         return students;
     }
 
@@ -34,7 +45,56 @@ public class Course {
         return assignments;
     }
 
-    public void setAssignments(List<Assignment> assignments) {
-        this.assignments = assignments;
+    public static CourseBuilder getBuilder() {
+        return new CourseBuilder();
+    }
+
+    public static class CourseBuilder {
+        private String courseName;
+        private String courseCode;
+        private String latePenalty;
+        private List<User> instructors;
+        private List<User> students;
+        private List<Assignment> assignments;
+
+        CourseBuilder() {
+            this.instructors = new ArrayList<>();
+            this.students = new ArrayList<>();
+            this.assignments = new ArrayList<>();
+        }
+
+        public CourseBuilder courseName(String courseName) {
+            this.courseName = courseName;
+            return this;
+        }
+
+        public CourseBuilder courseCode(String courseCode) {
+            this.courseCode = courseCode;
+            return this;
+        }
+
+        public CourseBuilder latePenalty(String latePenalty) {
+            this.latePenalty = latePenalty;
+            return this;
+        }
+
+        public CourseBuilder addInstructor(User instructor) {
+            this.instructors.add(instructor);
+            return this;
+        }
+
+        public CourseBuilder addStudent(User student) {
+            this.students.add(student);
+            return this;
+        }
+
+        public CourseBuilder addAssignment(Assignment assignment) {
+            this.assignments.add(assignment);
+            return this;
+        }
+
+        public Course build() {
+            return new Course(courseName, courseCode, latePenalty, instructors, students, assignments);
+        }
     }
 }

@@ -6,7 +6,6 @@ import interface_adapter.Submit.SubmitViewModel;
 import interface_adapter.ViewManagerModel;
 
 import javax.swing.*;
-import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -14,29 +13,22 @@ import java.time.LocalDateTime;
 
 public class SubmitView extends JPanel implements PropertyChangeListener {
 
-    private final String viewName = "Submit";
-    private final SubmitViewModel submitViewModel;
+    private static final String viewName = "Submit";
 
     private final JLabel messageField = new JLabel("Click the button to submit");
 
     private SubmitController submitController = null;
     private ViewManagerModel viewManagerModel = null;
 
+    /**
+     * Initialize SubmitView (Subclass of JPanel)
+     * 
+     * @param submitViewModel Corresponding model storing its changing property
+     */
     public SubmitView(SubmitViewModel submitViewModel) {
 
-        this.submitViewModel = submitViewModel;
-        this.submitViewModel.addPropertyChangeListener(this);
+        submitViewModel.addPropertyChangeListener(this);
 
-        this.setLayout(new BorderLayout(10, 10));
-        this.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-
-        // Top panel with message
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        topPanel.add(messageField);
-
-        // Center panel with upload button
-        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton uploadButton = new JButton("Choose File");
         uploadButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
@@ -55,22 +47,12 @@ public class SubmitView extends JPanel implements PropertyChangeListener {
                 JOptionPane.showMessageDialog(this, "No file selected");
             }
         });
-        centerPanel.add(uploadButton);
 
-        // Bottom panel with Back button
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JButton backButton = new JButton("← Back to Assignments");
-        backButton.addActionListener(e -> {
-            if (viewManagerModel != null) {
-                viewManagerModel.setState("Assignments");
-                viewManagerModel.firePropertyChange();
-            }
-        });
-        bottomPanel.add(backButton);
-
-        this.add(topPanel, BorderLayout.NORTH);
-        this.add(centerPanel, BorderLayout.CENTER);
-        this.add(bottomPanel, BorderLayout.SOUTH);
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        messageField.setAlignmentX(CENTER_ALIGNMENT);
+        uploadButton.setAlignmentX(CENTER_ALIGNMENT);
+        this.add(messageField);
+        this.add(uploadButton);
 
     }
 
@@ -102,12 +84,16 @@ public class SubmitView extends JPanel implements PropertyChangeListener {
         return viewName;
     }
 
+    /**
+     * Show the UI only
+     */
     public static void main(String[] args) {
         JFrame frame = new JFrame("SubmitView Demo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         SubmitView submitView = new SubmitView(new SubmitViewModel());
         frame.setContentPane(submitView);
         frame.pack();
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 }
