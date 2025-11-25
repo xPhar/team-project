@@ -29,6 +29,9 @@ public class FacadeDAO {
         // TODO course username
         return "course-" + course.getCourseCode();
     }
+    private String getCourseUserName(String courseCode) {
+        return "course-" + courseCode;
+    }
     private String getCourseUserName() {
         // TODO course username
         return "course-CSC207";
@@ -202,25 +205,29 @@ public class FacadeDAO {
 
     public List<Assignment> getAssignments() {
         Course course = sessionDA.getCourse();
-        List<Assignment> assignments = new ArrayList<>();
-
         JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
         JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
-        Iterator<String> keyIt = assignmentDictionary.keys();
+
+        return getAssignmentsFromJSONObject(assignmentDictionary);
+    }
+
+    private List<Assignment> getAssignmentsFromJSONObject(JSONObject assignmentsObj) {
+        List<Assignment> result = new ArrayList<>();
+        Iterator<String> keyIt = assignmentsObj.keys();
         while (keyIt.hasNext()) {
             String assignmentName = keyIt.next();
-            JSONObject assignmentObj = assignmentDictionary.getJSONObject(assignmentName);
+            JSONObject assignmentObj = assignmentsObj.getJSONObject(assignmentName);
             Assignment.AssignmentBuilder builder = Assignment.builder();
             builder.name(assignmentName)
                     .description(assignmentObj.getString("description"))
                     .creationDate(LocalDateTime.parse(assignmentObj.getString("creationDate")))
                     .dueDate(LocalDateTime.parse(assignmentObj.getString("dueDate")))
                     .gracePeriod(assignmentObj.getDouble("gracePeriod"));
-                    // TODO add supported file types
-            assignments.add(builder.build());
+            // TODO add supported file types
+            result.add(builder.build());
         }
 
-        return assignments;
+        return result;
     }
 
     public Assignment getAssignment(String assignmentName) {
@@ -237,5 +244,65 @@ public class FacadeDAO {
                 .gracePeriod(assignmentObj.getDouble("gracePeriod"))
                 // TODO add supported file types
                 .build();
+    }
+
+    // Assignments
+    public void saveAssignment(String courseCode, Assignment assignment) {
+        JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(courseCode));
+        JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
+        assignmentDictionary.put(assignment.getName(), assignmentToJSON(assignment));
+        gradeDA.modifyUserInfoEndpoint(getCourseUserName(courseCode), COURSE_PASSWORD, courseObject);
+    }
+
+    private JSONObject assignmentToJSON(Assignment assignment) {
+        JSONObject assignmentObj = new JSONObject();
+        assignmentObj.put("creationDate", assignment.getCreationDate().toString());
+        assignmentObj.put("dueDate", assignment.getDueDate().toString());
+        assignmentObj.put("gracePeriod", assignment.getGracePeriod());
+        assignmentObj.put("description", assignment.getDescription());
+
+        JSONArray supportedFileTypesObj = new JSONArray();
+        for (String fileType : assignment.getSupportedFileTypes()) {
+            supportedFileTypesObj.put(fileType);
+        }
+
+        return assignmentObj;
+    }
+
+    public Assignment getAssignment(String courseCode, String assignmentName) {
+
+    }
+
+    public void deleteAssignment(String courseCode, String assignmentName) {
+
+    }
+
+    public Course getCourse() {
+        // TODO: Is this correct?
+        return sessionDA.getCourse();
+    }
+
+    public Course getCourse(String courseCode) {
+        JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(courseCode));
+        JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
+        Course.CourseBuilder builder = Course.getBuilder();
+        builder.courseCode(courseCode)
+                .courseName(courseObject.getString("courseName")); // TODO: not mentioned in the doc?
+
+        for (Assignment a : getAssignmentsFromJSONObject(assignmentDictionary)) {
+            builder.addAssignment(a);
+        }
+
+        // TODO: Add students and instructors
+
+        return builder.build();
+    }
+
+    public User getUser() {
+        return sessionDA.getUser();
+    }
+
+    public List<Assignment> getAssignments(String courseCode) {
+        return getCourse(courseCode).getAssignments();
     }
 }
