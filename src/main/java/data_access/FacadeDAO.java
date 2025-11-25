@@ -27,7 +27,7 @@ public class FacadeDAO implements
         GradeDataAccessInterface,
         ClassAverageUserDataAccessInterface {
     private final FileToStringDataAccessObject fsDA;
-    private final GradeAPIDataAccessObject gradeDA;
+    public final GradeAPIDataAccessObject gradeDA;
     private final SessionDataAccessObject sessionDA;
 
     // TODO course password?
@@ -234,6 +234,55 @@ public class FacadeDAO implements
 
     public void setActiveUser(User user) {
         sessionDA.setUser(user);
+
+        // TODO: Implement course selecting if we get time
+        // Since we're currently going under the assumption of a single course, make that course active as well
+        sessionDA.setCourse(getCourse(user.getCourses().get(0)));
+    }
+
+    public Course getCourse(String courseName) {
+        JSONObject userObj = gradeDA.getUserInfo(courseName);
+
+        if (!userObj.getString("type").equals("course")) {
+            return null;
+        }
+
+        Course.CourseBuilder courseBuilder = Course.getBuilder();
+        JSONObject courseData = userObj.getJSONObject("courseData");
+        courseData.getJSONArray("instructors").toList()
+                .stream()
+                .filter(o -> o instanceof String)
+                .map(o -> (String) o)
+                .forEach(courseBuilder::addInstructor);
+        courseData.getJSONArray("students").toList()
+                .stream()
+                .filter(o -> o instanceof String)
+                .map(o -> (String) o)
+                .forEach(courseBuilder::addInstructor);
+
+        courseBuilder.latePenalty(courseData.getString("latePolicy"));
+        JSONObject assignments = courseData.getJSONObject("assignments");
+        for (String assignmentName : assignments.keySet()) {
+            JSONObject assignmentObject = assignments.getJSONObject(assignmentName);
+
+            Assignment assignment = Assignment.builder()
+                    .name(assignmentName)
+                    .description(assignmentObject.getString("description"))
+                    .creationDate(LocalDateTime.parse(assignmentObject.getString("creationDate")))
+                    .dueDate(LocalDateTime.parse(assignmentObject.getString("dueDate")))
+                    .gracePeriod(Double.parseDouble(assignmentObject.getString("gracePeriod")))
+                    .supportedFileTypes(assignmentObject.getJSONArray("supportedFileTypes")
+                            .toList()
+                            .stream()
+                            .filter(o -> o instanceof String)
+                            .map(o -> (String) o)
+                            .toList())
+                    .build();
+
+            courseBuilder.addAssignment(assignment);
+        }
+
+        return courseBuilder.build();
     }
 
     // Mark Assignment
