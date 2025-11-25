@@ -3,7 +3,6 @@ package interface_adapter.logged_in;
 import interface_adapter.Resubmit.ResubmitViewModel;
 import interface_adapter.Submit.SubmitViewModel;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.submission_list.SubmissionListState;

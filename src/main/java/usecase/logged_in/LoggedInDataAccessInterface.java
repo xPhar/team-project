@@ -21,6 +21,12 @@ public interface LoggedInDataAccessInterface {
     String getUsername();
 
     /**
+     * Gets the user type of the current user.
+     * @return the user type for the current user
+     */
+    User.USER_TYPE getUserType();
+
+    /**
      * Gets a submission table model with submissions for the given assignment.
      * @param assignment the assignment to get submissions from
      * @return the submission table model for the requested assignment
@@ -33,6 +39,14 @@ public interface LoggedInDataAccessInterface {
      * @return the assignment entity for the requested assignment
      */
     Assignment getAssignment(String assignment);
+
+    /**
+     * Gets whether the current user has a submission for the given assignment.
+     * Assumes the current user is a student.
+     * @param assignment the assignment to look for a submission.
+     * @return true if the user has a submission, otherwise false
+     */
+    boolean userHasSubmitted(Assignment assignment);
 
     /**
      * Sets the Session's assignment to this assignment.

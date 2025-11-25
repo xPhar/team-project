@@ -5,6 +5,7 @@ import data_access.TestDAO;
 
 import interface_adapter.Resubmit.*;
 import interface_adapter.Submit.*;
+import interface_adapter.logged_in.*;
 import interface_adapter.login.*;
 import interface_adapter.submission.*;
 import interface_adapter.submission_list.*;
@@ -12,6 +13,7 @@ import interface_adapter.ViewManagerModel;
 
 import usecase.Resubmit.*;
 import usecase.Submit.*;
+import usecase.logged_in.*;
 import usecase.login.*;
 import usecase.Grade.*;
 import usecase.Submission.*;
@@ -34,6 +36,8 @@ public class AppBuilder {
 
     private LoginView loginView;
     private LoginViewModel loginViewModel;
+    private LoggedInView loggedInView;
+    private LoggedInViewModel loggedInViewModel;
     private SubmitView submitView;
     private ResubmitView resubmitView;
     private SubmitViewModel submitViewModel;
@@ -49,6 +53,13 @@ public class AppBuilder {
         loginViewModel = new LoginViewModel();
         loginView = new LoginView(loginViewModel);
         cardPanel.add(loginView, loginView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addLoggedInView() {
+        loggedInViewModel = new LoggedInViewModel();
+        loggedInView = new LoggedInView(loggedInViewModel);
+        cardPanel.add(loggedInView, loggedInView.getViewName());
         return this;
     }
 
@@ -72,6 +83,22 @@ public class AppBuilder {
                 userDataAccessObject, loginOutputBoundary);
         LoginController loginController = new LoginController(loginInteractor);
         loginView.setLoginController(loginController);
+        return this;
+    }
+
+    public AppBuilder addLoggedInUseCase() {
+        final LoggedInOutputBoundary loggedInOutputBoundary = new LoggedInPresenter(
+                viewManagerModel,
+                loggedInViewModel,
+                loginViewModel,
+                submitViewModel,
+                resubmitViewModel,
+                submissionListViewModel);
+        final LoggedInInputBoundary loggedInInteractor = new LoggedInInteractor(
+                userDataAccessObject, loggedInOutputBoundary);
+
+        LoggedInController loggedInController = new LoggedInController(loggedInInteractor);
+        loggedInView.setLoggedInController(loggedInController);
         return this;
     }
 

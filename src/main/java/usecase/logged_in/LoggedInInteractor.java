@@ -1,6 +1,7 @@
 package usecase.logged_in;
 
 import entity.Assignment;
+import entity.User;
 
 /**
  * The Logged In Interactor.
@@ -28,23 +29,23 @@ public class LoggedInInteractor implements LoggedInInputBoundary {
             Assignment assignment = userDataAccessObject.getAssignment(loggedInInputData.getAssignment());
             userDataAccessObject.setActiveAssignment(assignment);
 
-            switch (loggedInInputData.getUserType()) {
-                case "student" -> {
-                    LoggedInOutputData outputData = new LoggedInOutputData(null, assignment.getName(), null);
-                    if (loggedInInputData.getSubmitted()) {
-                        loginPresenter.switchToResubmitView(outputData);
-                    }
-                    else {
-                        loginPresenter.switchToSubmitView(outputData);
-                    }
+
+
+            if (userDataAccessObject.getUserType() == User.STUDENT) {
+                LoggedInOutputData outputData = new LoggedInOutputData(null, assignment.getName(), null);
+                if (userDataAccessObject.userHasSubmitted(assignment)) {
+                    loginPresenter.switchToResubmitView(outputData);
                 }
-                case "instructor" -> {
-                    LoggedInOutputData outputData = new LoggedInOutputData(
-                            userDataAccessObject.getUsername(),
-                            assignment.getName(),
-                            userDataAccessObject.getSubmissionTableModel(assignment));
-                    loginPresenter.switchToSubmissionListView(outputData);
+                else {
+                    loginPresenter.switchToSubmitView(outputData);
                 }
+            }
+            else if (userDataAccessObject.getUserType() == User.INSTRUCTOR) {
+                LoggedInOutputData outputData = new LoggedInOutputData(
+                        userDataAccessObject.getUsername(),
+                        assignment.getName(),
+                        userDataAccessObject.getSubmissionTableModel(assignment));
+                loginPresenter.switchToSubmissionListView(outputData);
             }
         }
     }

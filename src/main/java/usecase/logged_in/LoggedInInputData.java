@@ -5,30 +5,18 @@ package usecase.logged_in;
  */
 public class LoggedInInputData {
     private final boolean logout;
-    private boolean submitted;
     private final String assignment;
-    private final String userType;
 
-    public LoggedInInputData(boolean logout, boolean submitted, String assignment, String userType) {
+    public LoggedInInputData(boolean logout, String assignment) {
         this.logout = logout;
-        this.submitted = submitted;
         this.assignment = assignment;
-        this.userType = userType;
     }
 
     boolean getLogout() {
         return logout;
     }
 
-    boolean getSubmitted() {
-        return submitted;
-    }
-
     String getAssignment() {
         return assignment;
-    }
-
-    String getUserType() {
-        return userType;
     }
 }
