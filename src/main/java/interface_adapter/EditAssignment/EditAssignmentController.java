@@ -1,10 +1,12 @@
 package interface_adapter.EditAssignment;
 
-import entity.Assignment;
 import interface_adapter.Assignments.AssignmentsViewModel;
 import interface_adapter.ViewManagerModel;
 import usecase.EditAssignment.EditAssignmentInputBoundary;
 import usecase.EditAssignment.EditAssignmentInputData;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 public class EditAssignmentController {
     private final EditAssignmentInputBoundary interactor;
@@ -22,16 +24,14 @@ public class EditAssignmentController {
         this.editAssignmentViewModel = editAssignmentViewModel;
     }
 
-    public void execute(String originalName, Assignment assignment, String courseCode) {
+    public void execute(String name, String courseCode, String description,
+            LocalDateTime dueDate, List<String> supportedFileTypes) {
         EditAssignmentInputData inputData = new EditAssignmentInputData(
-                originalName,
-                assignment.getName(),
-                assignment.getDescription(),
-                assignment.getDueDate(),
-                assignment.getGracePeriod(),
-                assignment.getLatePenalty(),
-                assignment.getSupportedFileTypes(),
-                courseCode);
+                name,
+                courseCode,
+                description,
+                dueDate,
+                supportedFileTypes);
         interactor.execute(inputData);
     }
 
@@ -40,10 +40,10 @@ public class EditAssignmentController {
         viewManagerModel.firePropertyChange();
     }
 
-    public void prepareEdit(Assignment assignment) {
-        EditAssignmentState state = new EditAssignmentState();
-        state.setAssignment(assignment);
-        state.setOriginalName(assignment.getName());
+    public void prepareEdit(String courseCode, String name, String description,
+            LocalDateTime dueDate, double gracePeriod, List<String> supportedFileTypes) {
+        EditAssignmentState state = new EditAssignmentState(courseCode, name, description,
+                dueDate, gracePeriod, supportedFileTypes);
         editAssignmentViewModel.setState(state);
         editAssignmentViewModel.firePropertyChange();
 

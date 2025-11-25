@@ -1,7 +1,7 @@
 package usecase.EditAssignment;
 
 public interface EditAssignmentOutputBoundary {
-    void prepareSuccessView(EditAssignmentOutputData outputData);
+    void prepareSuccessView();
 
     void prepareFailureView(String error);
 }

@@ -1,8 +1,10 @@
 package interface_adapter.CreateAssignment;
 
-import entity.Assignment;
 import usecase.CreateAssignment.CreateAssignmentInputBoundary;
 import usecase.CreateAssignment.CreateAssignmentInputData;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 public class CreateAssignmentController {
     private final CreateAssignmentInputBoundary interactor;
@@ -11,8 +13,10 @@ public class CreateAssignmentController {
         this.interactor = interactor;
     }
 
-    public void execute(Assignment assignment, String courseCode) {
-        CreateAssignmentInputData inputData = new CreateAssignmentInputData(assignment, courseCode);
+    public void execute(String name, String description, LocalDateTime dueDate,
+            double gracePeriod, List<String> supportedFileTypes, String courseCode) {
+        CreateAssignmentInputData inputData = new CreateAssignmentInputData(
+                name, description, dueDate, gracePeriod, supportedFileTypes, courseCode);
         interactor.execute(inputData);
     }
 

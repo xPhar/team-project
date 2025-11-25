@@ -3,7 +3,6 @@ package interface_adapter.EditAssignment;
 import interface_adapter.Assignments.AssignmentsViewModel;
 import interface_adapter.ViewManagerModel;
 import usecase.EditAssignment.EditAssignmentOutputBoundary;
-import usecase.EditAssignment.EditAssignmentOutputData;
 
 public class EditAssignmentPresenter implements EditAssignmentOutputBoundary {
     private final EditAssignmentViewModel editAssignmentViewModel;
@@ -19,7 +18,7 @@ public class EditAssignmentPresenter implements EditAssignmentOutputBoundary {
     }
 
     @Override
-    public void prepareSuccessView(EditAssignmentOutputData outputData) {
+    public void prepareSuccessView() {
         EditAssignmentState state = editAssignmentViewModel.getState();
         state.setSuccess(true);
         state.setErrorMessage(null);

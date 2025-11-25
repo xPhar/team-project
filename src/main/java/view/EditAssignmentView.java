@@ -1,6 +1,5 @@
 package view;
 
-import entity.Assignment;
 import interface_adapter.EditAssignment.EditAssignmentController;
 import interface_adapter.EditAssignment.EditAssignmentState;
 import interface_adapter.EditAssignment.EditAssignmentViewModel;
@@ -27,8 +26,6 @@ public class EditAssignmentView extends JPanel implements PropertyChangeListener
     private final JTextArea descriptionArea = new JTextArea(5, 30);
     private final JTextField totalPointsField = new JTextField(8);
     private final JSpinner dueDateTime = new JSpinner(new SpinnerDateModel());
-    private final JTextField gracePeriodDaysField = new JTextField(8);
-    private final JTextField latePenaltyField = new JTextField(8);
 
     private final JCheckBox cbPdf = new JCheckBox("PDF");
     private final JCheckBox cbZip = new JCheckBox("ZIP");
@@ -127,13 +124,8 @@ public class EditAssignmentView extends JPanel implements PropertyChangeListener
         addFormField(form, "Description", descScroll, gbc, 0, 1, 2);
         gbc.gridwidth = 1;
 
-        // Row 3: Points & Due Date
-        addFormField(form, "Total Points*", styleTextField(totalPointsField), gbc, 0, 2, 1);
+        // Row 3: Due Date
         addFormField(form, "Due Date & Time*", styleSpinner(dueDateTime), gbc, 1, 2, 1);
-
-        // Row 4: Grace Period & Late Penalty
-        addFormField(form, "Grace Period (days)", styleTextField(gracePeriodDaysField), gbc, 0, 3, 1);
-        addFormField(form, "Late Penalty (% per day)", styleTextField(latePenaltyField), gbc, 1, 3, 1);
 
         return form;
     }
@@ -283,10 +275,17 @@ public class EditAssignmentView extends JPanel implements PropertyChangeListener
     private void setupButtonListeners() {
         saveButton.addActionListener(e -> {
             if (editAssignmentController != null) {
-                Assignment updatedAssignment = getAssignmentFromForm();
-                String originalName = editAssignmentViewModel.getState().getOriginalName();
-                String courseCode = "CSC207"; // Placeholder
-                editAssignmentController.execute(originalName, updatedAssignment, courseCode);
+                java.util.Date d = (java.util.Date) dueDateTime.getValue();
+                LocalDateTime dueAt = d.toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime();
+
+                editAssignmentController.execute(
+                        nameField.getText().trim(),
+                        courseValue.getText(),
+                        descriptionArea.getText(),
+                        dueAt,
+                        getSupportedFileTypes());
             }
         });
 
@@ -324,42 +323,6 @@ public class EditAssignmentView extends JPanel implements PropertyChangeListener
         return out;
     }
 
-    public Assignment getAssignmentFromForm() {
-        Assignment assignment = new Assignment();
-        assignment.setName(nameField.getText().trim());
-        assignment.setDescription(descriptionArea.getText());
-        // Creation date is preserved in interactor, or we can pass it if we had it.
-
-        java.util.Date d = (java.util.Date) dueDateTime.getValue();
-        LocalDateTime dueAt = d.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime();
-        assignment.setDueDate(dueAt);
-
-        try {
-            int days = Integer.parseInt(gracePeriodDaysField.getText().trim());
-            assignment.setGracePeriod(days);
-        } catch (NumberFormatException ex) {
-            assignment.setGracePeriod(0.0);
-        }
-
-        try {
-            String raw = latePenaltyField.getText().trim();
-            if (raw.endsWith("%")) {
-                raw = raw.substring(0, raw.length() - 1).trim();
-            }
-            double v = Double.parseDouble(raw);
-            double fraction = (v > 1.0) ? v / 100.0 : v;
-            assignment.setLatePenalty(String.valueOf(fraction));
-        } catch (NumberFormatException ex) {
-            assignment.setLatePenalty("");
-        }
-
-        assignment.setSupportedFileTypes(getSupportedFileTypes());
-
-        return assignment;
-    }
-
     public void setEditAssignmentController(EditAssignmentController controller) {
         this.editAssignmentController = controller;
     }
@@ -373,24 +336,24 @@ public class EditAssignmentView extends JPanel implements PropertyChangeListener
         EditAssignmentState state = (EditAssignmentState) evt.getNewValue();
         if (state.getErrorMessage() != null && !state.getErrorMessage().isEmpty()) {
             JOptionPane.showMessageDialog(this, state.getErrorMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } else if (state.getAssignment() != null) {
-            populateForm(state.getAssignment());
+        } else if (state.getName() != null && !state.getName().isEmpty()) {
+            populateForm(state.getCourseCode(), state.getName(), state.getDescription(),
+                    state.getDueDate(), state.getSupportedFileTypes());
         }
     }
 
-    private void populateForm(Assignment assignment) {
-        nameField.setText(assignment.getName());
-        descriptionArea.setText(assignment.getDescription());
+    private void populateForm(String courseCode, String name, String description,
+            LocalDateTime dueDate, List<String> supportedFileTypes) {
+        nameField.setText(name);
+        courseValue.setText(courseCode);
+        descriptionArea.setText(description);
 
-        if (assignment.getDueDate() != null) {
-            java.util.Date date = java.util.Date.from(assignment.getDueDate()
+        if (dueDate != null) {
+            java.util.Date date = java.util.Date.from(dueDate
                     .atZone(ZoneId.systemDefault())
                     .toInstant());
             dueDateTime.setValue(date);
         }
-
-        gracePeriodDaysField.setText(String.valueOf((int) assignment.getGracePeriod()));
-        latePenaltyField.setText(assignment.getLatePenalty());
 
         // Reset checkboxes
         cbPdf.setSelected(false);
@@ -413,8 +376,8 @@ public class EditAssignmentView extends JPanel implements PropertyChangeListener
         for (Component c : toRemove)
             typesPanel.remove(c);
 
-        if (assignment.getSupportedFileTypes() != null) {
-            for (String type : assignment.getSupportedFileTypes()) {
+        if (supportedFileTypes != null) {
+            for (String type : supportedFileTypes) {
                 boolean found = false;
                 for (Component c : typesPanel.getComponents()) {
                     if (c instanceof JCheckBox j && j.getText().equalsIgnoreCase(type)) {

@@ -1,6 +1,5 @@
 package view;
 
-import entity.Assignment;
 import interface_adapter.CreateAssignment.CreateAssignmentController;
 import interface_adapter.CreateAssignment.CreateAssignmentState;
 import interface_adapter.CreateAssignment.CreateAssignmentViewModel;
@@ -23,15 +22,11 @@ public class CreateAssignmentView extends JPanel implements PropertyChangeListen
     private final CreateAssignmentViewModel createAssignmentViewModel;
     private CreateAssignmentController createAssignmentController;
     private final JLabel courseValue;
-    private final Assignment assignment = new Assignment();
 
     // Components
     private final JTextField nameField = new JTextField(20);
     private final JTextArea descriptionArea = new JTextArea(5, 30);
-    private final JTextField totalPointsField = new JTextField(8);
     private final JSpinner dueDateTime = new JSpinner(new SpinnerDateModel());
-    private final JTextField gracePeriodDaysField = new JTextField(8);
-    private final JTextField latePenaltyField = new JTextField(8);
 
     private final JCheckBox cbPdf = new JCheckBox("PDF");
     private final JCheckBox cbZip = new JCheckBox("ZIP");
@@ -138,13 +133,8 @@ public class CreateAssignmentView extends JPanel implements PropertyChangeListen
         addFormField(form, "Description", descScroll, gbc, 0, 1, 2);
         gbc.gridwidth = 1;
 
-        // Row 3: Points & Due Date
-        addFormField(form, "Total Points*", styleTextField(totalPointsField), gbc, 0, 2, 1);
+        // Row 3: Due Date & Time
         addFormField(form, "Due Date & Time*", styleSpinner(dueDateTime), gbc, 1, 2, 1);
-
-        // Row 4: Grace Period & Late Penalty
-        addFormField(form, "Grace Period (days)", styleTextField(gracePeriodDaysField), gbc, 0, 3, 1);
-        addFormField(form, "Late Penalty (% per day)", styleTextField(latePenaltyField), gbc, 1, 3, 1);
 
         return form;
     }
@@ -354,9 +344,19 @@ public class CreateAssignmentView extends JPanel implements PropertyChangeListen
     private void setupButtonListeners() {
         createButton.addActionListener(e -> {
             if (createAssignmentController != null) {
-                Assignment newAssignment = getAssignment();
+                LocalDateTime dueDate = ((java.util.Date) dueDateTime.getValue())
+                        .toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime();
+
                 String courseCode = "CSC207"; // Placeholder
-                createAssignmentController.execute(newAssignment, courseCode);
+                createAssignmentController.execute(
+                        nameField.getText().trim(),
+                        descriptionArea.getText(),
+                        dueDate,
+                        0.0, // gracePeriod - default value
+                        getSupportedFileTypes(),
+                        courseCode);
             }
         });
 
@@ -402,47 +402,9 @@ public class CreateAssignmentView extends JPanel implements PropertyChangeListen
         return out;
     }
 
-    public Assignment getAssignment() {
-        assignment.setName(nameField.getText().trim());
-        assignment.setDescription(descriptionArea.getText());
-        assignment.setCreationDate(LocalDateTime.now());
-
-        java.util.Date d = (java.util.Date) dueDateTime.getValue();
-        LocalDateTime dueAt = d.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime();
-        assignment.setDueDate(dueAt);
-
-        try {
-            int days = Integer.parseInt(gracePeriodDaysField.getText().trim());
-            assignment.setGracePeriod(days);
-        } catch (NumberFormatException ex) {
-            assignment.setGracePeriod(0.0);
-        }
-
-        try {
-            String raw = latePenaltyField.getText().trim();
-            if (raw.endsWith("%")) {
-                raw = raw.substring(0, raw.length() - 1).trim();
-            }
-            double v = Double.parseDouble(raw);
-            double fraction = (v > 1.0) ? v / 100.0 : v;
-            assignment.setLatePenalty(String.valueOf(fraction));
-        } catch (NumberFormatException ex) {
-            assignment.setLatePenalty("");
-        }
-
-        assignment.setSupportedFileTypes(getSupportedFileTypes());
-
-        return assignment;
-    }
-
     public void clearForm() {
         nameField.setText("");
         descriptionArea.setText("");
-        totalPointsField.setText("");
-        gracePeriodDaysField.setText("");
-        latePenaltyField.setText("");
         dueDateTime.setValue(new java.util.Date());
         starterModel.clear();
         descriptionArea.setCaretPosition(0);

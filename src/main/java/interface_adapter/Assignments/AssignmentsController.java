@@ -10,8 +10,20 @@ public class AssignmentsController {
         this.interactor = interactor;
     }
 
-    public void execute(String courseCode) {
-        AssignmentsInputData inputData = new AssignmentsInputData(courseCode);
+    public void execute() {
+        AssignmentsInputData inputData = new AssignmentsInputData();
         interactor.execute(inputData);
+    }
+
+    public void switchToCreateAssignmentView() {
+        interactor.switchToCreateAssignmentView();
+    }
+
+    public void switchToSubmitView() {
+        interactor.switchToSubmitView();
+    }
+
+    public void switchToResubmitView() {
+        interactor.switchToResubmitView();
     }
 }

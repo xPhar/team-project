@@ -1,15 +1,14 @@
 package usecase.Assignments;
 
 import entity.Assignment;
-import entity.Course;
 import entity.User;
 
 import java.util.List;
 
 public interface AssignmentsDataAccessInterface {
-    Course getCourse();
+    List<Assignment> getAssignments(String courseCode);
 
     User getUser();
 
-    List<Assignment> getAssignments(String courseCode);
+    String getCourseCode();
 }

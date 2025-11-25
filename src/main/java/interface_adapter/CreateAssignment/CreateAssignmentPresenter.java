@@ -26,8 +26,6 @@ public class CreateAssignmentPresenter implements CreateAssignmentOutputBoundary
         createAssignmentViewModel.setState(state);
         createAssignmentViewModel.firePropertyChange();
 
-        // Switch back to assignment view and refresh?
-        // For now, let's just switch back
         viewManagerModel.setState(assignmentViewModel.getViewName());
         viewManagerModel.firePropertyChange();
     }

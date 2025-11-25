@@ -1,37 +1,50 @@
 package interface_adapter.EditAssignment;
 
-import entity.Assignment;
+import java.time.LocalDateTime;
+import java.util.List;
 
 public class EditAssignmentState {
-    private Assignment assignment = new Assignment();
-    private String originalName = "";
+    private String courseCode;
+    private String name;
+    private String description;
+    private LocalDateTime dueDate;
+    private double gracePeriod;
+    private List<String> supportedFileTypes;
     private String errorMessage = null;
     private boolean success = false;
 
-    public EditAssignmentState(EditAssignmentState copy) {
-        this.assignment = copy.assignment;
-        this.originalName = copy.originalName;
-        this.errorMessage = copy.errorMessage;
-        this.success = copy.success;
+    public EditAssignmentState(String courseCode, String name, String description,
+            LocalDateTime dueDate, double gracePeriod, List<String> supportedFileTypes) {
+        this.courseCode = courseCode;
+        this.name = name;
+        this.description = description;
+        this.dueDate = dueDate;
+        this.gracePeriod = gracePeriod;
+        this.supportedFileTypes = supportedFileTypes;
     }
 
-    public EditAssignmentState() {
+    public String getCourseCode() {
+        return courseCode;
     }
 
-    public Assignment getAssignment() {
-        return assignment;
+    public String getName() {
+        return name;
     }
 
-    public void setAssignment(Assignment assignment) {
-        this.assignment = assignment;
+    public String getDescription() {
+        return description;
     }
 
-    public String getOriginalName() {
-        return originalName;
+    public LocalDateTime getDueDate() {
+        return dueDate;
     }
 
-    public void setOriginalName(String originalName) {
-        this.originalName = originalName;
+    public double getGracePeriod() {
+        return gracePeriod;
+    }
+
+    public List<String> getSupportedFileTypes() {
+        return supportedFileTypes;
     }
 
     public String getErrorMessage() {

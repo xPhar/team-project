@@ -13,10 +13,16 @@ public class Main {
                                 .addSubmitView()
                                 .addResubmitView()
                                 // TODO: other Views
+                                .addCreateAssignmentView()
+                                .addEditAssignmentView()
+                                .addAssignmentView()
                                 // TODO: signUp,LogIn use cases
                                 .addLoginUseCase()
                                 .addSubmitUseCase()
                                 .addResubmitUseCase()
+                                .addCreateAssignmentUseCase()
+                                .addEditAssignmentUseCase()
+                                .addAssignmentsUseCase()
                                 // TODO: other usecases
                                 .addSubmissionListView()
                                 .addSubmissionView()

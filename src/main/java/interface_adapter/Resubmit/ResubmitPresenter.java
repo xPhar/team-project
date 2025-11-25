@@ -13,8 +13,8 @@ public class ResubmitPresenter implements ResubmitOutputBoundary {
     private final SubmitViewModel submitViewModel;
 
     public ResubmitPresenter(ViewManagerModel vmm,
-                                   ResubmitViewModel resubmitViewModel,
-                                   SubmitViewModel submitViewModel) {
+            ResubmitViewModel resubmitViewModel,
+            SubmitViewModel submitViewModel) {
         this.manager = vmm;
         this.resubmitViewModel = resubmitViewModel;
         this.submitViewModel = submitViewModel;

@@ -1,11 +1,11 @@
 package usecase.Assignments;
 
 import entity.Assignment;
-import entity.Course;
-import entity.Instructor;
-import entity.User;
+import entity.User.USER_TYPE;
+import interface_adapter.Assignments.AssignmentDTO;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AssignmentsInteractor implements AssignmentsInputBoundary {
     private final AssignmentsDataAccessInterface dataAccess;
@@ -20,33 +20,45 @@ public class AssignmentsInteractor implements AssignmentsInputBoundary {
     @Override
     public void execute(AssignmentsInputData inputData) {
         try {
-            Course course = dataAccess.getCourse();
-            User user = dataAccess.getUser();
-
-            if (course == null) {
-                presenter.prepareFailureView("No course selected");
-                return;
-            }
-
-            if (user == null) {
-                presenter.prepareFailureView("No user logged in");
-                return;
-            }
-
-            List<Assignment> assignments = dataAccess.getAssignments(course.getCourseCode());
+            List<Assignment> assignments = dataAccess.getAssignments(dataAccess.getCourseCode());
             assignments.sort(java.util.Comparator.comparing(Assignment::getDueDate,
                     java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder())));
-            boolean isInstructor = user instanceof Instructor;
+
+            boolean isInstructor = dataAccess.getUser().getUserType() == USER_TYPE.INSTRUCTOR;
+
+            // Map Assignment entities to AssignmentDTOs
+            List<AssignmentDTO> assignmentDTOs = assignments.stream()
+                    .map(assignment -> new AssignmentDTO(
+                            assignment.getName(),
+                            assignment.getDescription(),
+                            assignment.getDueDate(),
+                            assignment.getGracePeriod(),
+                            assignment.getSupportedFileTypes()))
+                    .collect(Collectors.toList());
 
             AssignmentsOutputData outputData = new AssignmentsOutputData(
-                    assignments,
-                    course.getCourseName(),
+                    assignmentDTOs,
+                    dataAccess.getCourseCode(),
                     isInstructor);
 
             presenter.prepareSuccessView(outputData);
-
         } catch (Exception e) {
             presenter.prepareFailureView("Error loading assignments: " + e.getMessage());
         }
+    }
+
+    @Override
+    public void switchToCreateAssignmentView() {
+        presenter.switchToCreateAssignmentView();
+    }
+
+    @Override
+    public void switchToSubmitView() {
+        presenter.switchToSubmitView();
+    }
+
+    @Override
+    public void switchToResubmitView() {
+        presenter.switchToResubmitView();
     }
 }

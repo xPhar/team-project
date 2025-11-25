@@ -1,12 +1,10 @@
 package view;
 
-import entity.Assignment;
-import entity.Submission;
+import interface_adapter.Assignments.AssignmentDTO;
 import interface_adapter.Assignments.AssignmentsState;
 import interface_adapter.Assignments.AssignmentsViewModel;
 import interface_adapter.Assignments.AssignmentsController;
 import interface_adapter.EditAssignment.EditAssignmentController;
-import interface_adapter.ViewManagerModel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -32,8 +30,7 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
 
     private AssignmentsController assignmentsController;
     private EditAssignmentController editAssignmentController;
-    private ViewManagerModel viewManagerModel;
-    private List<Assignment> currentAssignments;
+    private List<AssignmentDTO> currentAssignments;
     private boolean isInstructor;
     private String courseCode;
 
@@ -63,9 +60,7 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
         this.addComponentListener(new java.awt.event.ComponentAdapter() {
             @Override
             public void componentShown(java.awt.event.ComponentEvent e) {
-                if (courseCode != null) {
-                    loadAssignments(courseCode);
-                }
+                loadAssignments();
             }
         });
 
@@ -186,7 +181,7 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
         }
     }
 
-    private void addAssignmentRow(Assignment assignment, int index) {
+    private void addAssignmentRow(AssignmentDTO assignment, int index) {
         String name = (assignment.getName() != null && !assignment.getName().isEmpty())
                 ? assignment.getName()
                 : "(unnamed)";
@@ -204,7 +199,7 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
         }
     }
 
-    private String computeStatus(Assignment assignment) {
+    private String computeStatus(AssignmentDTO assignment) {
         LocalDateTime due = assignment.getDueDate();
         LocalDateTime now = LocalDateTime.now();
 
@@ -225,25 +220,19 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
             return "Closed";
         }
 
-        Submission submission = getSubmissionForAssignment(assignment.getName());
-        if (submission != null) {
-            return "Submitted";
-        }
-
         if (now.isAfter(due)) {
             return "Overdue";
         }
 
-        return "Not Submitted";
+        return "Open";
     }
 
-    private String getButtonText(Assignment assignment) {
-        Submission submission = getSubmissionForAssignment(assignment.getName());
+    private String getButtonText(AssignmentDTO assignment) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime due = assignment.getDueDate();
 
         if (due == null) {
-            return submission == null ? "Submit" : "Resubmit";
+            return "Submit";
         }
 
         double gracePeriodHours = assignment.getGracePeriod();
@@ -253,17 +242,12 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
             return "Closed";
         }
 
-        return submission == null ? "Submit" : "Resubmit";
-    }
-
-    private Submission getSubmissionForAssignment(String assignmentName) {
-        return null;
+        return "Submit";
     }
 
     private void handleCreateAssignment() {
-        if (viewManagerModel != null) {
-            viewManagerModel.setState("Create Assignment");
-            viewManagerModel.firePropertyChange();
+        if (assignmentsController != null) {
+            assignmentsController.switchToCreateAssignmentView();
         }
     }
 
@@ -272,11 +256,17 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
             return;
         }
 
-        Assignment assignment = currentAssignments.get(assignmentIndex);
+        AssignmentDTO assignment = currentAssignments.get(assignmentIndex);
 
         if (isInstructor) {
             if (editAssignmentController != null) {
-                editAssignmentController.prepareEdit(assignment);
+                editAssignmentController.prepareEdit(
+                        courseCode,
+                        assignment.getName(),
+                        assignment.getDescription(),
+                        assignment.getDueDate(),
+                        assignment.getGracePeriod(),
+                        assignment.getSupportedFileTypes());
             } else {
                 JOptionPane.showMessageDialog(this,
                         "Edit controller not initialized.",
@@ -284,15 +274,7 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
                         JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            Submission submission = getSubmissionForAssignment(assignment.getName());
-            if (viewManagerModel != null) {
-                if (submission == null) {
-                    viewManagerModel.setState("Submit");
-                } else {
-                    viewManagerModel.setState("Resubmit");
-                }
-                viewManagerModel.firePropertyChange();
-            }
+            assignmentsController.switchToSubmitView();
         }
     }
 
@@ -376,18 +358,13 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
         this.editAssignmentController = controller;
     }
 
-    public void setViewManagerModel(ViewManagerModel viewManagerModel) {
-        this.viewManagerModel = viewManagerModel;
-    }
-
     public String getViewName() {
         return viewName;
     }
 
-    public void loadAssignments(String courseCode) {
-        this.courseCode = courseCode;
+    public void loadAssignments() {
         if (assignmentsController != null) {
-            assignmentsController.execute(courseCode);
+            assignmentsController.execute();
         }
     }
 }

@@ -1,21 +1,21 @@
 package usecase.Assignments;
 
-import entity.Assignment;
+import interface_adapter.Assignments.AssignmentDTO;
 
 import java.util.List;
 
 public class AssignmentsOutputData {
-    private final List<Assignment> assignments;
+    private final List<AssignmentDTO> assignments;
     private final String courseName;
     private final boolean isInstructor;
 
-    public AssignmentsOutputData(List<Assignment> assignments, String courseName, boolean isInstructor) {
+    public AssignmentsOutputData(List<AssignmentDTO> assignments, String courseName, boolean isInstructor) {
         this.assignments = assignments;
         this.courseName = courseName;
         this.isInstructor = isInstructor;
     }
 
-    public List<Assignment> getAssignments() {
+    public List<AssignmentDTO> getAssignments() {
         return assignments;
     }
 
