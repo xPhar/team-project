@@ -15,6 +15,11 @@ public interface LoggedInOutputBoundary {
     void switchToSubmitView();
 
     /**
+     * Switches to resubmit view after assignment selected.
+     */
+    void switchToResubmitView();
+
+    /**
      * Switches to submission list view after assignment selected.
      */
     void switchToSubmissionListView();

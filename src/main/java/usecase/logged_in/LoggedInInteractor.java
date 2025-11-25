@@ -27,7 +27,14 @@ public class LoggedInInteractor implements LoggedInInputBoundary {
             userDataAccessObject.setActiveAssignment(assignment);
 
             switch (loggedInInputData.getUserType()) {
-                case "student" -> loginPresenter.switchToSubmitView();
+                case "student" -> {
+                    if (loggedInInputData.getSubmitted()) {
+                        loginPresenter.switchToResubmitView();
+                    }
+                    else {
+                        loginPresenter.switchToSubmitView();
+                    }
+                }
                 case "instructor" -> loginPresenter.switchToSubmissionListView();
             }
         }
