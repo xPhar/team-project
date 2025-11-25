@@ -4,49 +4,98 @@ import interface_adapter.Resubmit.ResubmitViewModel;
 import interface_adapter.Submit.SubmitViewModel;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.logged_in.LoggedInViewModel;
+import interface_adapter.login.LoginState;
+import interface_adapter.login.LoginViewModel;
+import interface_adapter.submission_list.SubmissionListState;
+import interface_adapter.submission_list.SubmissionListViewModel;
 import usecase.logged_in.LoggedInOutputBoundary;
+import usecase.logged_in.LoggedInOutputData;
 
 /**
  * The Presenter for the LoggedIn Use Case.
  */
 public class LoggedInPresenter implements LoggedInOutputBoundary {
-    private final LoggedInViewModel loginViewModel;
+    private final ViewManagerModel viewManagerModel;
+    private final LoggedInViewModel loggedInViewModel;
+    private final LoginViewModel loginViewModel;
     private final SubmitViewModel submitViewModel;
     private final ResubmitViewModel resubmitViewModel;
-    private final ViewManagerModel viewManagerModel;
+    private final SubmissionListViewModel submissionListViewModel;
 
     public LoggedInPresenter(ViewManagerModel viewManagerModel,
-                             SubmitViewModel loggedInViewModel,
+                             LoggedInViewModel loggedInViewModel,
+                             LoginViewModel loginViewModel,
+                             SubmitViewModel submitViewModel,
                              ResubmitViewModel resubmitViewModel,
-                             LoggedInViewModel loginViewModel) {
+                             SubmissionListViewModel submissionListViewModel) {
         this.viewManagerModel = viewManagerModel;
-        this.submitViewModel = loggedInViewModel;
-        this.resubmitViewModel = resubmitViewModel;
+        this.loggedInViewModel =  loggedInViewModel;
         this.loginViewModel = loginViewModel;
+        this.submitViewModel = submitViewModel;
+        this.resubmitViewModel = resubmitViewModel;
+        this.submissionListViewModel = submissionListViewModel;
     }
 
     @Override
-    public void switchToLoginView() {
+    public void switchToLoginView(LoggedInOutputData response) {
+        // On success, update the loginViewModel's state
+        final LoginState loginState = loginViewModel.getState();
+        loginState.setUsername(response.getUsername());
+        this.loginViewModel.firePropertyChange();
 
+        // and clear everything from LoggedInViewModel's state
+        loggedInViewModel.setState(new LoggedInState());
+
+        // switch to the login view
+        this.viewManagerModel.setState(loginViewModel.getViewName());
+        this.viewManagerModel.firePropertyChange();
     }
 
     @Override
-    public void switchToSubmitView() {
+    public void switchToSubmitView(LoggedInOutputData response) {
+        // On success, update the submitViewModel's state
+        // TODO: Fill this in once the submit view has been updated to display assignment information.
 
+        // and clear everything from LoggedInViewModel's state
+        loggedInViewModel.setState(new LoggedInState());
+
+        // switch to the submit view
+        this.viewManagerModel.setState(submitViewModel.getViewName());
+        this.viewManagerModel.firePropertyChange();
     }
 
     @Override
-    public void switchToResubmitView() {
+    public void switchToResubmitView(LoggedInOutputData response) {
+        // On success, update the resubmitViewModel's state
+        // TODO: Fill this in once the submit view has been updated to display assignment information.
 
+        // and clear everything from LoggedInViewModel's state
+        loggedInViewModel.setState(new LoggedInState());
+
+        // switch to the submit view
+        this.viewManagerModel.setState(resubmitViewModel.getViewName());
+        this.viewManagerModel.firePropertyChange();
     }
 
     @Override
-    public void switchToSubmissionListView() {
+    public void switchToSubmissionListView(LoggedInOutputData response) {
+        // On success, update the submissionListViewModel's state
+        final SubmissionListState submissionListState = submissionListViewModel.getState();
+        submissionListState.setTitle(response.getAssignmentName());
+        submissionListState.setTableModel(response.getSubmissionTableModel());
+        this.submissionListViewModel.firePropertyChange();
 
+        // and clear everything from LoggedInViewModel's state
+        loggedInViewModel.setState(new LoggedInState());
+
+        // switch to the submissionList view
+        this.viewManagerModel.setState(submissionListViewModel.getViewName());
+        this.viewManagerModel.firePropertyChange();
     }
 
     @Override
     public void prepareFailView(String error) {
+        // TODO: Maybe have an "error ocurred, please try again" popup?
 //        final LoggedInState loginState = loginViewModel.getState();
 //        loginState.setLoggedInError(error);
 //        loginViewModel.firePropertyChange();

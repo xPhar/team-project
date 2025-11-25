@@ -7,22 +7,22 @@ public interface LoggedInOutputBoundary {
     /**
      * Switches to the login view after logout.
      */
-    void switchToLoginView();
+    void switchToLoginView(LoggedInOutputData response);
 
     /**
      * Switches to submit view after assignment selected.
      */
-    void switchToSubmitView();
+    void switchToSubmitView(LoggedInOutputData response);
 
     /**
      * Switches to resubmit view after assignment selected.
      */
-    void switchToResubmitView();
+    void switchToResubmitView(LoggedInOutputData response);
 
     /**
      * Switches to submission list view after assignment selected.
      */
-    void switchToSubmissionListView();
+    void switchToSubmissionListView(LoggedInOutputData response);
 
     /**
      * Prepares the failure view for the Login Use Case.

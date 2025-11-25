@@ -20,7 +20,9 @@ public class LoggedInInteractor implements LoggedInInputBoundary {
         if (loggedInInputData.getLogout()) {
             userDataAccessObject.resetSession();
 
-            loginPresenter.switchToLoginView();
+            LoggedInOutputData outputData = new LoggedInOutputData(userDataAccessObject.getUsername(), null, null);
+
+            loginPresenter.switchToLoginView(outputData);
         }
         else {
             Assignment assignment = userDataAccessObject.getAssignment(loggedInInputData.getAssignment());
@@ -28,14 +30,21 @@ public class LoggedInInteractor implements LoggedInInputBoundary {
 
             switch (loggedInInputData.getUserType()) {
                 case "student" -> {
+                    LoggedInOutputData outputData = new LoggedInOutputData(null, assignment.getName(), null);
                     if (loggedInInputData.getSubmitted()) {
-                        loginPresenter.switchToResubmitView();
+                        loginPresenter.switchToResubmitView(outputData);
                     }
                     else {
-                        loginPresenter.switchToSubmitView();
+                        loginPresenter.switchToSubmitView(outputData);
                     }
                 }
-                case "instructor" -> loginPresenter.switchToSubmissionListView();
+                case "instructor" -> {
+                    LoggedInOutputData outputData = new LoggedInOutputData(
+                            userDataAccessObject.getUsername(),
+                            assignment.getName(),
+                            userDataAccessObject.getSubmissionTableModel(assignment));
+                    loginPresenter.switchToSubmissionListView(outputData);
+                }
             }
         }
     }
