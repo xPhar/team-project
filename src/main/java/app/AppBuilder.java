@@ -1,15 +1,19 @@
 package app;
 
+import data_access.FacadeDAO;
 import data_access.FakeUserDataAccessObject;
 import data_access.TestDAO;
 
+import entity.User;
 import interface_adapter.Resubmit.*;
 import interface_adapter.Submit.*;
+import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.login.*;
 import interface_adapter.submission.*;
 import interface_adapter.submission_list.*;
 import interface_adapter.ViewManagerModel;
 
+import org.json.JSONObject;
 import usecase.Resubmit.*;
 import usecase.Submit.*;
 import usecase.login.*;
@@ -34,12 +38,15 @@ public class AppBuilder {
 
     private LoginView loginView;
     private LoginViewModel loginViewModel;
+    private LoggedInView loggedInView;
+    private LoggedInViewModel loggedInViewModel;
     private SubmitView submitView;
-    private ResubmitView resubmitView;
     private SubmitViewModel submitViewModel;
+    private ResubmitView resubmitView;
     private ResubmitViewModel resubmitViewModel;
 
-    private final FakeUserDataAccessObject userDataAccessObject =  new FakeUserDataAccessObject(false, false);
+    //private final FakeUserDataAccessObject userDataAccessObject =  new FakeUserDataAccessObject(false, false);
+    private final FacadeDAO userDataAccessObject = new FacadeDAO();
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -49,6 +56,13 @@ public class AppBuilder {
         loginViewModel = new LoginViewModel();
         loginView = new LoginView(loginViewModel);
         cardPanel.add(loginView, loginView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addLoggedInView() {
+        loggedInViewModel = new  LoggedInViewModel();
+        loggedInView = new LoggedInView(loggedInViewModel);
+        cardPanel.add(loggedInView, loggedInView.getViewName());
         return this;
     }
 
@@ -67,11 +81,17 @@ public class AppBuilder {
     }
 
     public AppBuilder addLoginUseCase() {
-        final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel, loginViewModel);
+        final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(
+                viewManagerModel, loggedInViewModel, loginViewModel);
         final LoginInputBoundary loginInteractor = new LoginInteractor(
                 userDataAccessObject, loginOutputBoundary);
         LoginController loginController = new LoginController(loginInteractor);
         loginView.setLoginController(loginController);
+        return this;
+    }
+
+    public AppBuilder addLoggedInUseCase() {
+        // TODO: Implement
         return this;
     }
 
@@ -146,12 +166,14 @@ public class AppBuilder {
     // TODO: Implement builder methods
 
     public JFrame build() {
+        // Test user credentials: username: testUser123, password: password
+
         final JFrame application = new JFrame("This is a title");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         application.add(cardPanel);
 
-        viewManagerModel.setState(submitView.getViewName());
+        viewManagerModel.setState(loginView.getViewName());
         viewManagerModel.firePropertyChange();
 
         return application;

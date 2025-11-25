@@ -17,6 +17,8 @@ import java.beans.PropertyChangeListener;
  */
 public class LoginView extends JPanel implements ActionListener, PropertyChangeListener {
 
+    // TODO: title shifts when a login error is shown for some reason?
+
     private final String viewName = "login";
     private final LoginViewModel loginViewModel;
 

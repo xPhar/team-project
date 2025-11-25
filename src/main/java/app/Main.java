@@ -1,5 +1,7 @@
 package app;
 
+import org.json.JSONObject;
+
 import javax.swing.*;
 
 public class Main {
@@ -10,11 +12,13 @@ public class Main {
         JFrame application = appBuilder
                 // TODO: Login,signup,loggedIn views
                 .addLoginView()
+                .addLoggedInUseCase()
                 .addSubmitView()
                 .addResubmitView()
                 // TODO: other Views
                 // TODO: signUp,LogIn use cases
                 .addLoginUseCase()
+                .addLoggedInUseCase()
                 .addSubmitUseCase()
                 .addResubmitUseCase()
                 // TODO: other usecases

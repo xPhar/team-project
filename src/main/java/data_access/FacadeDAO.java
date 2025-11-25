@@ -148,14 +148,42 @@ public class FacadeDAO implements
     }
 
     // Login / Register
+    @Override
     public boolean existsByName(String username) {
         return gradeDA.checkUserExists(username);
     }
 
     public void save(User user) {
         gradeDA.createUser(user.getName(), user.getPassword());
+        String userType;
+        if (user.getUserType() == user.STUDENT) {
+            userType = "student";
+        }
+        else {
+            userType = "instructor";
+        }
+        JSONObject info = new JSONObject(
+                new StringBuilder()
+                        .append("{\n")
+                            .append("\t\"type\": \"")
+                            .append(userType)
+                            .append("\", \n")
+                            .append("\t\"userData\": {\n")
+                                .append("\t\t\"firstName\": \"")
+                                .append(user.getFirstName())
+                                .append("\", \n")
+                                .append("\t\t\"lastName\": \"")
+                                .append(user.getLastName())
+                                .append("\", \n")
+                                .append("\t\t\"courses\": []\n")
+                            .append("\t}\n")
+                        .append("}")
+                        .toString()
+        );
+        gradeDA.modifyUserInfoEndpoint(user.getName(), user.getPassword(), info);
     }
 
+    @Override
     public User getUser(String username) throws DataAccessException {
         // Get the whole object first to allow us to get their password
         JSONObject userObj = gradeDA.getUserObject(username);
@@ -164,6 +192,8 @@ public class FacadeDAO implements
         userObj = userObj.getJSONObject("info");
         // TODO: We can make a simple helper function to handle converting this
         String userType = userObj.getString("type").toUpperCase();
+        // The rest of the info is in the userData object... in hindsight we don't really need this anymore... :|
+        userObj = userObj.getJSONObject("userData");
         String firstName = userObj.getString("firstName");
         String lastName = userObj.getString("lastName");
 
@@ -180,6 +210,18 @@ public class FacadeDAO implements
                 User.USER_TYPE.valueOf(userType),
                 courses
         );
+    }
+
+    @Override
+    public Submission getSubmission(Assignment assignment) {
+        String user = getCurrentUsername();
+        List<Submission> submissions = getSubmissionList(assignment.getName());
+        for (Submission submission : submissions) {
+            if (submission.getSubmitter().equals(user)) {
+                return submission;
+            }
+        }
+        return null;
     }
 
     public void setCurrentUsername(String name) {

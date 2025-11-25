@@ -113,7 +113,7 @@ public class GradeAPIDataAccessObject {
     private static final String MESSAGE = "message";
     private static final String USER_EXIST_MESSAGE = "User exists";
 
-    public String createUser(String username, String password) throws DataAccessException {
+    public void createUser(String username, String password) throws DataAccessException {
         final OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
 
@@ -134,7 +134,7 @@ public class GradeAPIDataAccessObject {
             final JSONObject responseBody = new JSONObject(response.body().string());
 
             if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
-                return responseBody.getString(MESSAGE);
+                return;
             }
             else if (responseBody.getInt(STATUS_CODE_LABEL) == CREDENTIAL_ERROR) {
                 throw new DataAccessException("message could not be found or password was incorrect");

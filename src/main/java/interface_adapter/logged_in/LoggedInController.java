@@ -14,7 +14,7 @@ public class LoggedInController {
     }
 
     public void openAssignment(String assignmentName) {
-        String role = loggedInViewModel.getState().getRole();
+        String role = loggedInViewModel.getState().getUserType();
 
         if ("instructor".equals(role)) {
             viewManagerModel.setState("SubmissionList");
