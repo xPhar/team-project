@@ -27,7 +27,7 @@ public class FacadeDAO implements
         GradeDataAccessInterface,
         ClassAverageUserDataAccessInterface {
     private final FileToStringDataAccessObject fsDA;
-    public final GradeAPIDataAccessObject gradeDA;
+    private final GradeAPIDataAccessObject gradeDA;
     private final SessionDataAccessObject sessionDA;
 
     // TODO course password?

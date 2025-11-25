@@ -170,6 +170,7 @@ public class AppBuilder {
 
         final JFrame application = new JFrame("This is a title");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        application.setPreferredSize(new Dimension(1280, 720));
 
         application.add(cardPanel);
 
