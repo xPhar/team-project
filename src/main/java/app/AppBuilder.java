@@ -60,7 +60,7 @@ public class AppBuilder {
     }
 
     public AppBuilder addLoggedInView() {
-        loggedInViewModel = new  LoggedInViewModel();
+        loggedInViewModel = new LoggedInViewModel();
         loggedInView = new LoggedInView(loggedInViewModel);
         cardPanel.add(loggedInView, loggedInView.getViewName());
         return this;

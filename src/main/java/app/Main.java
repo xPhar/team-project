@@ -12,7 +12,7 @@ public class Main {
         JFrame application = appBuilder
                 // TODO: Login,signup,loggedIn views
                 .addLoginView()
-                .addLoggedInUseCase()
+                .addLoggedInView()
                 .addSubmitView()
                 .addResubmitView()
                 // TODO: other Views

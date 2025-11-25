@@ -41,11 +41,11 @@ public class FacadeDAO implements
 
     private String getCourseUserName(Course course) {
         // TODO course username
-        return "course-" + course.getCourseCode();
+        return course.getCourseName();
     }
     private String getCourseUserName() {
         // TODO course username
-        return "course-CSC207";
+        return "course-course-CSC207";
     }
 
     // Submit
@@ -104,6 +104,7 @@ public class FacadeDAO implements
         ArrayList<Submission> submissions = new ArrayList<>();
 
         JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName());
+        courseObject = courseObject.getJSONObject("courseData");
         JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
         JSONObject assignmentObject = assignmentDictionary.getJSONObject(assignmentName);
         JSONObject submissionArray = assignmentObject.getJSONObject("submissions");
@@ -116,7 +117,7 @@ public class FacadeDAO implements
                     .submissionTime(LocalDateTime.parse(submissionObj.getString("submittedAt")))
                     .submissionName(submissionObj.getString("fileName"))
                     .submissionData(submissionObj.getString("fileData"))
-                    .status(Submission.Status.valueOf(submissionObj.getString("status")))
+                    .status(Submission.Status.valueOf(submissionObj.getString("status").toUpperCase()))
                     .grade(submissionObj.getDouble("grade"))
                     .feedback(submissionObj.getString("feedback"));
 
@@ -260,7 +261,9 @@ public class FacadeDAO implements
                 .map(o -> (String) o)
                 .forEach(courseBuilder::addInstructor);
 
-        courseBuilder.latePenalty(courseData.getString("latePolicy"));
+        courseBuilder.courseName(courseName)
+                     .courseCode(courseName)
+                     .latePenalty(courseData.getString("latePolicy"));
         JSONObject assignments = courseData.getJSONObject("assignments");
         for (String assignmentName : assignments.keySet()) {
             JSONObject assignmentObject = assignments.getJSONObject(assignmentName);
@@ -326,6 +329,7 @@ public class FacadeDAO implements
         List<Assignment> assignments = new ArrayList<>();
 
         JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
+        courseObject = courseObject.getJSONObject("courseData");
         JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
         Iterator<String> keyIt = assignmentDictionary.keys();
         while (keyIt.hasNext()) {
