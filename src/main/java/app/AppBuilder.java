@@ -123,7 +123,8 @@ public class AppBuilder {
                 submitViewModel,
                 resubmitViewModel,
                 submissionListViewModel,
-                classAverageViewModel);
+                classAverageViewModel,
+                createAssignmentViewModel);
         final LoggedInInputBoundary loggedInInteractor = new LoggedInInteractor(
                 userDataAccessObject, loggedInOutputBoundary);
 
@@ -269,8 +270,6 @@ public class AppBuilder {
     }
 
     public JFrame build() {
-        // Test user credentials: username: testUser123, password: password
-
         final JFrame application = new JFrame("This is a title");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         application.setPreferredSize(new Dimension(1280, 720));

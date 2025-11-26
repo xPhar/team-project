@@ -96,14 +96,7 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
         }
 
         if (evt.getSource() == bottomRightButton) {
-            LoggedInState state = loggedInViewModel.getState();
-
-            if ("instructor".equals(state.getUserType())) {
-                // TODO: Implement createAssignment
-                // loggedInController.createAssignment();
-            } else {
-                loggedInController.execute(false, null);
-            }
+            loggedInController.execute(false, null);
         }
     }
 

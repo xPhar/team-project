@@ -27,10 +27,14 @@ public class LoggedInInteractor implements LoggedInInputBoundary {
             loginPresenter.switchToLoginView(outputData);
         }
         else if (loggedInInputData.getAssignment() == null) {
-            LoggedInOutputData outputData = new LoggedInOutputData(
-                    null, null, null, userDataAccessObject.getAllAssignmentNames());
+            if (userDataAccessObject.getUserType() == User.STUDENT) {
+                LoggedInOutputData outputData = new LoggedInOutputData(
+                        null, null, null, userDataAccessObject.getAllAssignmentNames());
 
-            loginPresenter.switchToClassAverageView(outputData);
+                loginPresenter.switchToClassAverageView(outputData);
+            }
+            else
+                loginPresenter.switchToCreateAssignmentView();
         }
         else {
             Assignment assignment = userDataAccessObject.getAssignment(loggedInInputData.getAssignment());

@@ -35,6 +35,11 @@ public interface LoggedInOutputBoundary {
     void switchToClassAverageView(LoggedInOutputData response);
 
     /**
+     * Switches to create assignment view on button press.
+     */
+    void switchToCreateAssignmentView();
+
+    /**
      * Prepares the failure view for the Login Use Case.
      * @param errorMessage the explanation of the failure
      */

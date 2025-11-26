@@ -1,5 +1,6 @@
 package interface_adapter.logged_in;
 
+import interface_adapter.CreateAssignment.CreateAssignmentViewModel;
 import interface_adapter.Resubmit.ResubmitViewModel;
 import interface_adapter.Submit.SubmitViewModel;
 import interface_adapter.ViewManagerModel;
@@ -23,6 +24,7 @@ public class LoggedInPresenter implements LoggedInOutputBoundary {
     private final ResubmitViewModel resubmitViewModel;
     private final SubmissionListViewModel submissionListViewModel;
     private final ClassAverageViewModel classAverageViewModel;
+    private final CreateAssignmentViewModel createAssignmentViewModel;
 
     public LoggedInPresenter(ViewManagerModel viewManagerModel,
                              LoggedInViewModel loggedInViewModel,
@@ -30,7 +32,8 @@ public class LoggedInPresenter implements LoggedInOutputBoundary {
                              SubmitViewModel submitViewModel,
                              ResubmitViewModel resubmitViewModel,
                              SubmissionListViewModel submissionListViewModel,
-                             ClassAverageViewModel classAverageViewModel) {
+                             ClassAverageViewModel classAverageViewModel,
+                             CreateAssignmentViewModel createAssignmentViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.loggedInViewModel =  loggedInViewModel;
         this.loginViewModel = loginViewModel;
@@ -38,6 +41,7 @@ public class LoggedInPresenter implements LoggedInOutputBoundary {
         this.resubmitViewModel = resubmitViewModel;
         this.submissionListViewModel = submissionListViewModel;
         this.classAverageViewModel = classAverageViewModel;
+        this.createAssignmentViewModel = createAssignmentViewModel;
     }
 
     @Override
@@ -110,6 +114,16 @@ public class LoggedInPresenter implements LoggedInOutputBoundary {
 
         // switch to the submissionList view
         this.viewManagerModel.setState(classAverageViewModel.getViewName());
+        this.viewManagerModel.firePropertyChange();
+    }
+
+    @Override
+    public void switchToCreateAssignmentView() {
+        // Clear everything from LoggedInViewModel's state
+        loggedInViewModel.setState(new LoggedInState());
+
+        // switch to the submissionList view
+        this.viewManagerModel.setState(createAssignmentViewModel.getViewName());
         this.viewManagerModel.firePropertyChange();
     }
 

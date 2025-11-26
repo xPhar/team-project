@@ -4,6 +4,8 @@ import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
+        // Test student credentials: username: testUser123, password: password
+        // Test instructor credentials: username: testInstructor, password: password
 
         AppBuilder appBuilder = new AppBuilder();
 
