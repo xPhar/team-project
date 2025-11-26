@@ -12,7 +12,7 @@ public class Assignment {
     private List<String> supportedFileTypes;
 
     public Assignment(String name, String description, LocalDateTime creationDate, LocalDateTime dueDate,
-                      double gracePeriod, List<String> supportedFileTypes) {
+            double gracePeriod, List<String> supportedFileTypes) {
         this.name = name;
         this.description = description;
         this.creationDate = creationDate;
@@ -21,33 +21,33 @@ public class Assignment {
         this.supportedFileTypes = supportedFileTypes;
     }
 
-     public String getName() {
-         return name;
-     }
+    public String getName() {
+        return name;
+    }
 
-     public String getDescription() {
-         return description;
-     }
+    public String getDescription() {
+        return description;
+    }
 
-     public LocalDateTime getCreationDate() {
-         return creationDate;
-     }
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
 
-     public LocalDateTime getDueDate() {
-         return dueDate;
-     }
+    public LocalDateTime getDueDate() {
+        return dueDate;
+    }
 
-     public double getGracePeriod() {
-         return gracePeriod;
-     }
+    public double getGracePeriod() {
+        return gracePeriod;
+    }
 
-     public List<String> getSupportedFileTypes() {
-         return supportedFileTypes;
-     }
+    public List<String> getSupportedFileTypes() {
+        return supportedFileTypes;
+    }
 
-     public static AssignmentBuilder builder() {
-         return new AssignmentBuilder();
-     }
+    public static AssignmentBuilder builder() {
+        return new AssignmentBuilder();
+    }
 
     public static class AssignmentBuilder {
         private String name;
@@ -57,7 +57,8 @@ public class Assignment {
         private double gracePeriod;
         private List<String> supportedFileTypes;
 
-        AssignmentBuilder() {}
+        AssignmentBuilder() {
+        }
 
         public AssignmentBuilder name(String name) {
             this.name = name;
@@ -96,8 +97,7 @@ public class Assignment {
                     this.creationDate,
                     this.dueDate,
                     this.gracePeriod,
-                    this.supportedFileTypes
-            );
+                    this.supportedFileTypes);
         }
     }
 }

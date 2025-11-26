@@ -4,6 +4,9 @@ import data_access.FacadeDAO;
 import data_access.FakeUserDataAccessObject;
 import data_access.TestDAO;
 
+import interface_adapter.Assignments.*;
+import interface_adapter.CreateAssignment.*;
+import interface_adapter.EditAssignment.*;
 import interface_adapter.Resubmit.*;
 import interface_adapter.Submit.*;
 import interface_adapter.logged_in.*;
@@ -13,6 +16,9 @@ import interface_adapter.submission_list.*;
 import interface_adapter.class_average.*;
 import interface_adapter.ViewManagerModel;
 
+import usecase.Assignments.*;
+import usecase.CreateAssignment.*;
+import usecase.EditAssignment.*;
 import usecase.Resubmit.*;
 import usecase.Submit.*;
 import usecase.logged_in.*;
@@ -35,7 +41,8 @@ public class AppBuilder {
 
     final ViewManagerModel viewManagerModel = new ViewManagerModel();
     ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
-    //If we need to switch View, just write viewManagerModel.setstate(viewName), where viewName is a String
+    // If we need to switch View, just write viewManagerModel.setstate(viewName),
+    // where viewName is a String
 
     private LoginView loginView;
     private LoginViewModel loginViewModel;
@@ -50,6 +57,14 @@ public class AppBuilder {
 
     //private final FakeUserDataAccessObject userDataAccessObject =  new FakeUserDataAccessObject(false, false);
     private final FacadeDAO userDataAccessObject = new FacadeDAO();
+
+    // Assignment-related views and view models
+    private AssignmentView assignmentView;
+    private AssignmentsViewModel assignmentsViewModel;
+    private CreateAssignmentView createAssignmentView;
+    private CreateAssignmentViewModel createAssignmentViewModel;
+    private EditAssignmentView editAssignmentView;
+    private EditAssignmentViewModel editAssignmentViewModel;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -129,10 +144,9 @@ public class AppBuilder {
 
     public AppBuilder addResubmitUseCase() {
         final ResubmitOutputBoundary resubmitOutputBoundary = new ResubmitPresenter(
-                viewManagerModel, resubmitViewModel, submitViewModel
-        );
+                viewManagerModel, resubmitViewModel, submitViewModel);
         final ResubmitInputBoundary resubmitInteractor = new ResubmitInteractor(resubmitOutputBoundary,
-                                                                                userDataAccessObject);
+                userDataAccessObject);
         ResubmitController resubmitController = new ResubmitController(resubmitInteractor);
         resubmitView.setResubmitController(resubmitController);
         return this;
@@ -163,41 +177,96 @@ public class AppBuilder {
         cardPanel.add(submissionListView, submissionListView.getViewName());
         return this;
     }
+
     public AppBuilder addSubmissionView() {
-        submissionViewModel = new  SubmissionViewModel();
+        submissionViewModel = new SubmissionViewModel();
         submissionView = new SubmissionView(submissionViewModel);
         cardPanel.add(submissionView, submissionView.getViewName());
         return this;
     }
-    public AppBuilder addSubmissionListUseCase() {
-        final SubmissionListOutputBoundary submissionListOutputBoundary =
-                new SubmissionListPresenter(submissionListViewModel, viewManagerModel,
-                        submissionViewModel);
-        SubmissionListInputBoundary submissionListInputBoundary =
-                new SubmissionListInteractor(submissionListOutputBoundary, testDAO);
 
-        SubmissionListController submissionListController =
-                new SubmissionListController(submissionListInputBoundary);
+    public AppBuilder addSubmissionListUseCase() {
+        final SubmissionListOutputBoundary submissionListOutputBoundary = new SubmissionListPresenter(
+                submissionListViewModel, viewManagerModel,
+                submissionViewModel);
+        SubmissionListInputBoundary submissionListInputBoundary = new SubmissionListInteractor(
+                submissionListOutputBoundary, testDAO);
+
+        SubmissionListController submissionListController = new SubmissionListController(submissionListInputBoundary);
         submissionListView.setSubmissionListController(submissionListController);
         return this;
     }
+
     public AppBuilder addSubmissionUseCase() {
         final SubmissionPresenter presenter = new SubmissionPresenter(submissionViewModel,
                 viewManagerModel, submissionListViewModel);
-        final SubmissionInputBoundary submissionInputBoundary =
-                new SubmissionInteractor(presenter, testDAO);
+        final SubmissionInputBoundary submissionInputBoundary = new SubmissionInteractor(presenter, testDAO);
         final GradeInputBoundary gradeInputBoundary = new GradeInteractor(
                 testDAO,
-                presenter
-        );
+                presenter);
 
-        SubmissionController submissionController =
-                new SubmissionController(submissionInputBoundary, gradeInputBoundary);
+        SubmissionController submissionController = new SubmissionController(submissionInputBoundary,
+                gradeInputBoundary);
         submissionView.setSubmissionController(submissionController);
         return this;
     }
 
-    // TODO: Implement builder methods
+    public AppBuilder addAssignmentView() {
+        assignmentsViewModel = new AssignmentsViewModel();
+        assignmentView = new AssignmentView(assignmentsViewModel);
+        cardPanel.add(assignmentView, assignmentView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addCreateAssignmentView() {
+        createAssignmentViewModel = new CreateAssignmentViewModel();
+        createAssignmentView = new CreateAssignmentView(createAssignmentViewModel);
+        cardPanel.add(createAssignmentView, createAssignmentView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addEditAssignmentView() {
+        editAssignmentViewModel = new EditAssignmentViewModel();
+        editAssignmentView = new EditAssignmentView(editAssignmentViewModel);
+        cardPanel.add(editAssignmentView, editAssignmentView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addAssignmentsUseCase() {
+        final AssignmentsOutputBoundary assignmentsOutputBoundary = new AssignmentsPresenter(
+                assignmentsViewModel, viewManagerModel);
+        final AssignmentsInputBoundary assignmentsInteractor = new AssignmentsInteractor(
+                testDAO, assignmentsOutputBoundary);
+
+        AssignmentsController assignmentsController = new AssignmentsController(assignmentsInteractor);
+        assignmentView.setAssignmentsController(assignmentsController);
+        return this;
+    }
+
+    public AppBuilder addCreateAssignmentUseCase() {
+        final CreateAssignmentOutputBoundary createAssignmentOutputBoundary = new CreateAssignmentPresenter(
+                createAssignmentViewModel, assignmentsViewModel, viewManagerModel);
+        final CreateAssignmentInputBoundary createAssignmentInteractor = new CreateAssignmentInteractor(
+                testDAO, createAssignmentOutputBoundary);
+
+        CreateAssignmentController createAssignmentController = new CreateAssignmentController(
+                createAssignmentInteractor);
+        createAssignmentView.setCreateAssignmentController(createAssignmentController);
+        return this;
+    }
+
+    public AppBuilder addEditAssignmentUseCase() {
+        final EditAssignmentOutputBoundary editAssignmentOutputBoundary = new EditAssignmentPresenter(
+                editAssignmentViewModel, assignmentsViewModel, viewManagerModel);
+        final EditAssignmentInputBoundary editAssignmentInteractor = new EditAssignmentInteractor(
+                testDAO, editAssignmentOutputBoundary);
+
+        EditAssignmentController editAssignmentController = new EditAssignmentController(
+                editAssignmentInteractor, viewManagerModel, assignmentsViewModel, editAssignmentViewModel);
+        editAssignmentView.setEditAssignmentController(editAssignmentController);
+        assignmentView.setEditAssignmentController(editAssignmentController);
+        return this;
+    }
 
     public JFrame build() {
         // Test user credentials: username: testUser123, password: password
@@ -213,26 +282,4 @@ public class AppBuilder {
 
         return application;
     }
-    // Here's an example method from the CA Lab:
-    /*
-    public AppBuilder addLoginView() {
-        loginViewModel = new LoginViewModel();
-        loginView = new LoginView(loginViewModel);
-        cardPanel.add(loginView, loginView.getViewName());
-        return this;
-    }
-
-    // TODO: Update builder once full login flow is complete
-    public JFrame build() {
-        final JFrame application = new JFrame("User Login Example");
-        application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-        application.add(cardPanel);
-
-        viewManagerModel.setState(loginView.getViewName());
-        viewManagerModel.firePropertyChange();
-
-        return application;
-    }
-     */
 }

@@ -15,6 +15,7 @@ public class User {
         STUDENT,
         INSTRUCTOR
     }
+
     public static final USER_TYPE STUDENT = USER_TYPE.STUDENT;
     public static final USER_TYPE INSTRUCTOR = USER_TYPE.INSTRUCTOR;
 

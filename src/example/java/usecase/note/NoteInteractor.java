@@ -1,5 +1,6 @@
 package usecase.example;
 
+import entity.Student;
 import entity.User;
 
 /**
@@ -16,7 +17,8 @@ public class NoteInteractor implements NoteInputBoundary {
     // you might allow a user of the program to create a new note, which you
     // could store as a "user" through the API OR you might maintain all notes
     // in a JSON object stored in one common "user" stored through the API.
-    private final User user = new User("jonathan_calver2", "abc123");
+    private final User user = new Student("jonathan_calver2", "abc123") {
+    };
 
     public NoteInteractor(NoteDataAccessInterface noteDataAccessInterface,
                           NoteOutputBoundary noteOutputBoundary) {

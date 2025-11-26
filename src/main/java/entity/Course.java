@@ -94,7 +94,7 @@ public class Course {
         }
 
         public Course build() {
-            return new  Course(courseName, courseCode, latePenalty, instructors, students, assignments);
+            return new Course(courseName, courseCode, latePenalty, instructors, students, assignments);
         }
     }
 }
