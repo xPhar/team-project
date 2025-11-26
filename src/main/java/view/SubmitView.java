@@ -3,6 +3,7 @@ package view;
 import interface_adapter.Submit.SubmitController;
 import interface_adapter.Submit.SubmitState;
 import interface_adapter.Submit.SubmitViewModel;
+import interface_adapter.ViewManagerModel;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
@@ -14,12 +15,14 @@ public class SubmitView extends JPanel implements PropertyChangeListener {
 
     private static final String viewName = "Submit";
 
-    private final JLabel messageField = new JLabel("Click the botton to submit");
+    private final JLabel messageField = new JLabel("Click the button to submit");
 
     private SubmitController submitController = null;
+    private ViewManagerModel viewManagerModel = null;
 
     /**
      * Initialize SubmitView (Subclass of JPanel)
+     * 
      * @param submitViewModel Corresponding model storing its changing property
      */
     public SubmitView(SubmitViewModel submitViewModel) {
@@ -36,7 +39,9 @@ public class SubmitView extends JPanel implements PropertyChangeListener {
                 JOptionPane.showMessageDialog(this,
                         "File selected: " + selectedFile.getAbsolutePath());
                 // Then go to controller
-                submitController.submitExecute(LocalDateTime.now(), selectedFile);
+                if (submitController != null) {
+                    submitController.submitExecute(LocalDateTime.now(), selectedFile);
+                }
 
             } else {
                 JOptionPane.showMessageDialog(this, "No file selected");
@@ -49,14 +54,19 @@ public class SubmitView extends JPanel implements PropertyChangeListener {
         this.add(messageField);
         this.add(uploadButton);
 
-
     }
+
     /**
-     * Staff below is copied from CA engine, a little modification is added to propertyChange so that
+     * Staff below is copied from CA engine, a little modification is added to
+     * propertyChange so that
      * User can see whether submit successfully or error msg
      */
     public void setSubmitController(SubmitController submitController) {
         this.submitController = submitController;
+    }
+
+    public void setViewManagerModel(ViewManagerModel viewManagerModel) {
+        this.viewManagerModel = viewManagerModel;
     }
 
     @Override
@@ -73,7 +83,6 @@ public class SubmitView extends JPanel implements PropertyChangeListener {
     public String getViewName() {
         return viewName;
     }
-
 
     /**
      * Show the UI only

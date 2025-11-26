@@ -12,7 +12,7 @@ public class Course {
     private List<Assignment> assignments;
 
     public Course(String courseName, String courseCode, String latePenalty,
-                  List<User> instructors, List<User> students, List<Assignment> assignments) {
+            List<User> instructors, List<User> students, List<Assignment> assignments) {
         this.courseName = courseName;
         this.courseCode = courseCode;
         this.latePenalty = latePenalty;
@@ -94,7 +94,7 @@ public class Course {
         }
 
         public Course build() {
-            return new  Course(courseName, courseCode, latePenalty, instructors, students, assignments);
+            return new Course(courseName, courseCode, latePenalty, instructors, students, assignments);
         }
     }
 }
