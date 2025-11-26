@@ -100,7 +100,7 @@ public class LoggedInPresenter implements LoggedInOutputBoundary {
 
     @Override
     public void switchToClassAverageView(LoggedInOutputData response) {
-        // TODO: Implement
+        // Update classAverageViewModel's state
         final ClassAverageState classAverageState = classAverageViewModel.getState();
         classAverageState.setAssignmentNames(response.getAssignments());
         classAverageViewModel.firePropertyChange();
@@ -111,19 +111,6 @@ public class LoggedInPresenter implements LoggedInOutputBoundary {
         // switch to the submissionList view
         this.viewManagerModel.setState(classAverageViewModel.getViewName());
         this.viewManagerModel.firePropertyChange();
-
-        /*
-         * Class Average State fields:
-         * private List<String> assignmentNames;
-         * private int studentCount;
-         * private double mean;
-         * private double median;
-         * private double stdDev;
-         * private double myScore;
-         * private JPanel chartPanel;
-         */
-
-
     }
 
     @Override
