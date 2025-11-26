@@ -77,6 +77,7 @@ public class FacadeDAO implements
         JSONObject submissionJSON = submissionToJSON(submission);
 
         JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
+        courseObject = courseObject.getJSONObject("courseData");
         JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
         JSONObject assignmentObject = assignmentDictionary.getJSONObject(assignment.getName());
         JSONObject submissionArray = assignmentObject.getJSONObject("submissions");
@@ -132,6 +133,7 @@ public class FacadeDAO implements
 
     public List<String> getAllAssignmentNames() {
         JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName());
+        courseObject = courseObject.getJSONObject("courseData");
         JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
         Iterator<String> keyIt = assignmentDictionary.keys();
         ArrayList<String> assignmentNames = new ArrayList<>();
@@ -144,6 +146,7 @@ public class FacadeDAO implements
 
     public double getMyScore(String assignmentName, String username) {
         JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName());
+        courseObject = courseObject.getJSONObject("courseData");
         JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
         JSONObject assignmentObject = assignmentDictionary.getJSONObject(assignmentName);
         JSONObject submissionArray = assignmentObject.getJSONObject("submissions");
@@ -314,6 +317,7 @@ public class FacadeDAO implements
         Course course = sessionDA.getCourse();
 
         JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
+        courseObject = courseObject.getJSONObject("courseData");
         JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
         JSONObject assignmentObject = assignmentDictionary.getJSONObject(assignment);
         JSONObject submissionArray = assignmentObject.getJSONObject("submissions");

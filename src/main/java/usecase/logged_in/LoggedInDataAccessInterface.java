@@ -5,6 +5,8 @@ import entity.Assignment;
 import entity.User;
 import interface_adapter.submission_list.SubmissionTableModel;
 
+import java.util.List;
+
 /**
  * DAO interface for the Logged In Use Case.
  */
@@ -39,6 +41,12 @@ public interface LoggedInDataAccessInterface {
      * @return the assignment entity for the requested assignment
      */
     Assignment getAssignment(String assignment);
+
+    /**
+     * Gets the assignments for the current user in the current course.
+     * @return a list containing the names of all assignments relevant to the current user and course.
+     */
+    List<String> getAllAssignmentNames();
 
     /**
      * Gets whether the current user has a submission for the given assignment.

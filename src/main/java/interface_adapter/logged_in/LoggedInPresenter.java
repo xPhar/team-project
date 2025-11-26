@@ -46,7 +46,7 @@ public class LoggedInPresenter implements LoggedInOutputBoundary {
         final LoginState loginState = loginViewModel.getState();
         loginState.setUsername(response.getUsername());
         loginState.setPassword("");
-        this.loginViewModel.firePropertyChange();
+        loginViewModel.firePropertyChange();
 
         // and clear everything from LoggedInViewModel's state
         loggedInViewModel.setState(new LoggedInState());
@@ -88,7 +88,7 @@ public class LoggedInPresenter implements LoggedInOutputBoundary {
         final SubmissionListState submissionListState = submissionListViewModel.getState();
         submissionListState.setTitle(response.getAssignmentName());
         submissionListState.setTableModel(response.getSubmissionTableModel());
-        this.submissionListViewModel.firePropertyChange();
+        submissionListViewModel.firePropertyChange();
 
         // and clear everything from LoggedInViewModel's state
         loggedInViewModel.setState(new LoggedInState());
@@ -102,6 +102,15 @@ public class LoggedInPresenter implements LoggedInOutputBoundary {
     public void switchToClassAverageView(LoggedInOutputData response) {
         // TODO: Implement
         final ClassAverageState classAverageState = classAverageViewModel.getState();
+        classAverageState.setAssignmentNames(response.getAssignments());
+        classAverageViewModel.firePropertyChange();
+
+        // and clear everything from LoggedInViewModel's state
+        loggedInViewModel.setState(new LoggedInState());
+
+        // switch to the submissionList view
+        this.viewManagerModel.setState(classAverageViewModel.getViewName());
+        this.viewManagerModel.firePropertyChange();
 
         /*
          * Class Average State fields:

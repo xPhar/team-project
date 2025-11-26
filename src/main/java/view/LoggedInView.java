@@ -103,7 +103,7 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
                 // loggedInController.createAssignment();
             } else {
                 // TODO: Implement showDistribution
-                // loggedInController.showDistribution();
+                loggedInController.execute(false, null);
             }
         }
     }

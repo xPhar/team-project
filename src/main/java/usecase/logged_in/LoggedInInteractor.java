@@ -20,18 +20,24 @@ public class LoggedInInteractor implements LoggedInInputBoundary {
     public void execute(LoggedInInputData loggedInInputData) {
         if (loggedInInputData.getLogout()) {
             // Create output data BEFORE resetting the session (or else username is null...)
-            LoggedInOutputData outputData = new LoggedInOutputData(userDataAccessObject.getCurrentUsername(), null, null);
+            LoggedInOutputData outputData = new LoggedInOutputData(userDataAccessObject.getCurrentUsername(), null, null, null);
 
             userDataAccessObject.resetSession();
 
             loginPresenter.switchToLoginView(outputData);
+        }
+        else if (loggedInInputData.getAssignment() == null) {
+            LoggedInOutputData outputData = new LoggedInOutputData(
+                    null, null, null, userDataAccessObject.getAllAssignmentNames());
+
+            loginPresenter.switchToClassAverageView(outputData);
         }
         else {
             Assignment assignment = userDataAccessObject.getAssignment(loggedInInputData.getAssignment());
             userDataAccessObject.setActiveAssignment(assignment);
 
             if (userDataAccessObject.getUserType() == User.STUDENT) {
-                LoggedInOutputData outputData = new LoggedInOutputData(null, assignment.getName(), null);
+                LoggedInOutputData outputData = new LoggedInOutputData(null, assignment.getName(), null, null);
                 if (userDataAccessObject.userHasSubmitted(assignment)) {
                     loginPresenter.switchToResubmitView(outputData);
                 }
@@ -43,7 +49,8 @@ public class LoggedInInteractor implements LoggedInInputBoundary {
                 LoggedInOutputData outputData = new LoggedInOutputData(
                         userDataAccessObject.getCurrentUsername(),
                         assignment.getName(),
-                        userDataAccessObject.getSubmissionTableModel(assignment));
+                        userDataAccessObject.getSubmissionTableModel(assignment),
+                        null);
                 loginPresenter.switchToSubmissionListView(outputData);
             }
         }

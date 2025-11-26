@@ -10,6 +10,7 @@ import interface_adapter.logged_in.*;
 import interface_adapter.login.*;
 import interface_adapter.submission.*;
 import interface_adapter.submission_list.*;
+import interface_adapter.class_average.*;
 import interface_adapter.ViewManagerModel;
 
 import usecase.Resubmit.*;
@@ -19,6 +20,7 @@ import usecase.login.*;
 import usecase.Grade.*;
 import usecase.Submission.*;
 import usecase.SubmissionList.*;
+import usecase.class_average.*;
 
 import view.*;
 
@@ -43,6 +45,8 @@ public class AppBuilder {
     private SubmitViewModel submitViewModel;
     private ResubmitView resubmitView;
     private ResubmitViewModel resubmitViewModel;
+    private ClassAverageView classAverageView;
+    private ClassAverageViewModel classAverageViewModel;
 
     //private final FakeUserDataAccessObject userDataAccessObject =  new FakeUserDataAccessObject(false, false);
     private final FacadeDAO userDataAccessObject = new FacadeDAO();
@@ -79,6 +83,13 @@ public class AppBuilder {
         return this;
     }
 
+    public AppBuilder addClassAverageView() {
+        classAverageViewModel = new ClassAverageViewModel();
+        classAverageView = new ClassAverageView(classAverageViewModel);
+        cardPanel.add(classAverageView, classAverageView.getViewName());
+        return this;
+    }
+
     public AppBuilder addLoginUseCase() {
         final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(
                 viewManagerModel, loggedInViewModel, loginViewModel);
@@ -96,7 +107,8 @@ public class AppBuilder {
                 loginViewModel,
                 submitViewModel,
                 resubmitViewModel,
-                submissionListViewModel);
+                submissionListViewModel,
+                classAverageViewModel);
         final LoggedInInputBoundary loggedInInteractor = new LoggedInInteractor(
                 userDataAccessObject, loggedInOutputBoundary);
 
@@ -123,6 +135,18 @@ public class AppBuilder {
                                                                                 userDataAccessObject);
         ResubmitController resubmitController = new ResubmitController(resubmitInteractor);
         resubmitView.setResubmitController(resubmitController);
+        return this;
+    }
+
+    public AppBuilder addClassAverageUseCase() {
+        final ClassAverageOutputBoundary classAverageOutputBoundary = new ClassAveragePresenter(
+                classAverageViewModel, loggedInViewModel, viewManagerModel
+        );
+        final ClassAverageInputBoundary classAverageInteractor = new  ClassAverageInteractor(
+                userDataAccessObject, classAverageOutputBoundary
+        );
+        ClassAverageController classAverageController = new ClassAverageController(classAverageInteractor);
+        classAverageView.setClassAverageController(classAverageController);
         return this;
     }
 

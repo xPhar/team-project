@@ -15,12 +15,14 @@ public class Main {
                 .addLoggedInView()
                 .addSubmitView()
                 .addResubmitView()
+                .addClassAverageView()
                 // TODO: other Views
                 // TODO: signUp,LogIn use cases
                 .addLoginUseCase()
                 .addLoggedInUseCase()
                 .addSubmitUseCase()
                 .addResubmitUseCase()
+                .addClassAverageUseCase()
                 // TODO: other usecases
                 .addSubmissionListView()
                 .addSubmissionView()
