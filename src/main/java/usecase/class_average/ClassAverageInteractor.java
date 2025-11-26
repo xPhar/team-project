@@ -1,6 +1,7 @@
 package usecase.class_average;
 
 import entity.Submission;
+import usecase.login.LoginOutputData;
 
 import java.util.*;
 
@@ -20,6 +21,11 @@ public class ClassAverageInteractor implements ClassAverageInputBoundary {
 
     @Override
     public void execute(ClassAverageInputData inputData) {
+
+        if (inputData.getBack()) {
+            // The state of loggedIn view shouldn't have changed, so no need to update it
+            presenter.backToLoggedInView();
+        }
 
         String assignmentName = inputData.getAssignmentName();
 

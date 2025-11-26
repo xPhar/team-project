@@ -9,6 +9,8 @@ public interface LoginOutputBoundary {
      */
     void switchToLoggedInView(LoginOutputData response);
 
+
+
     /**
      * Prepares the failure view for the Login Use Case.
      * @param errorMessage the explanation of the failure

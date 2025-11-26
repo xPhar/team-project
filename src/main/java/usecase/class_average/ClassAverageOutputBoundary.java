@@ -11,6 +11,11 @@ public interface ClassAverageOutputBoundary {
     void prepareSuccessView(ClassAverageOutputData outputData);
 
     /**
+     * Returns back to loggedIn view
+     */
+    void backToLoggedInView();
+
+    /**
      * Prepares the failure view for the Class Average Use Case.
      * @param errorMessage the explanation of the failure
      */

@@ -3,6 +3,8 @@ package interface_adapter.logged_in;
 import interface_adapter.Resubmit.ResubmitViewModel;
 import interface_adapter.Submit.SubmitViewModel;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.class_average.ClassAverageState;
+import interface_adapter.class_average.ClassAverageViewModel;
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.submission_list.SubmissionListState;
@@ -20,19 +22,22 @@ public class LoggedInPresenter implements LoggedInOutputBoundary {
     private final SubmitViewModel submitViewModel;
     private final ResubmitViewModel resubmitViewModel;
     private final SubmissionListViewModel submissionListViewModel;
+    private final ClassAverageViewModel classAverageViewModel;
 
     public LoggedInPresenter(ViewManagerModel viewManagerModel,
                              LoggedInViewModel loggedInViewModel,
                              LoginViewModel loginViewModel,
                              SubmitViewModel submitViewModel,
                              ResubmitViewModel resubmitViewModel,
-                             SubmissionListViewModel submissionListViewModel) {
+                             SubmissionListViewModel submissionListViewModel,
+                             ClassAverageViewModel classAverageViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.loggedInViewModel =  loggedInViewModel;
         this.loginViewModel = loginViewModel;
         this.submitViewModel = submitViewModel;
         this.resubmitViewModel = resubmitViewModel;
         this.submissionListViewModel = submissionListViewModel;
+        this.classAverageViewModel = classAverageViewModel;
     }
 
     @Override
@@ -91,6 +96,25 @@ public class LoggedInPresenter implements LoggedInOutputBoundary {
         // switch to the submissionList view
         this.viewManagerModel.setState(submissionListViewModel.getViewName());
         this.viewManagerModel.firePropertyChange();
+    }
+
+    @Override
+    public void switchToClassAverageView(LoggedInOutputData response) {
+        // TODO: Implement
+        final ClassAverageState classAverageState = classAverageViewModel.getState();
+
+        /*
+         * Class Average State fields:
+         * private List<String> assignmentNames;
+         * private int studentCount;
+         * private double mean;
+         * private double median;
+         * private double stdDev;
+         * private double myScore;
+         * private JPanel chartPanel;
+         */
+
+
     }
 
     @Override
