@@ -14,7 +14,7 @@ Course:
             "description"   - A String describing this assignment
             "creationDate"  - A String representing when this assignment was created
             "dueDate"       - A String representing when this assignment is due
-            "gradePeriod"   - A String holding an integer value, specifies how many minutes late submissions are accepted.
+            "gracePeriod"   - A String holding an integer value, specifies how many minutes late submissions are accepted.
             "supportedFileTypes"    - A JSON Array storing the file types this assignment supports.
                                         If any file type is supported, we can leave the array empty?
             "submissions"   - A JSON Object storing all of the submissions for this assignment.

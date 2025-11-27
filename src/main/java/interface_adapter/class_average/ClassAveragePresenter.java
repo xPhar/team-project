@@ -1,6 +1,8 @@
 package interface_adapter.class_average;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.logged_in.LoggedInState;
+import interface_adapter.logged_in.LoggedInViewModel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -12,19 +14,31 @@ import javax.swing.*;
 
 public class ClassAveragePresenter implements ClassAverageOutputBoundary {
 
-    private final ClassAverageViewModel viewModel;
+    private final ClassAverageViewModel classAverageViewModel;
+    private final LoggedInViewModel loggedInViewModel;
     private final ViewManagerModel viewManagerModel;
 
-    public ClassAveragePresenter(ClassAverageViewModel viewModel,
+    public ClassAveragePresenter(ClassAverageViewModel classAverageViewModel,
+                                 LoggedInViewModel loggedInViewModel,
                                  ViewManagerModel viewManagerModel) {
-        this.viewModel = viewModel;
+        this.classAverageViewModel = classAverageViewModel;
+        this.loggedInViewModel = loggedInViewModel;
         this.viewManagerModel = viewManagerModel;
     }
 
     @Override
-    public void prepareSuccessView(ClassAverageOutputData data) {
+    public void backToLoggedInView() {
+        // clear everything from classAverageViewModel's state
+        classAverageViewModel.setState(new ClassAverageState());
 
-        ClassAverageState state = viewModel.getState();
+        // switch to the loggedIn view
+        this.viewManagerModel.setState(loggedInViewModel.getViewName());
+        this.viewManagerModel.firePropertyChange();
+    }
+
+    @Override
+    public void prepareSuccessView(ClassAverageOutputData data) {
+        ClassAverageState state = classAverageViewModel.getState();
 
         state.setAssignmentNames(data.getAssignmentNames());
         state.setStudentCount(data.getStudentCount());
@@ -34,8 +48,8 @@ public class ClassAveragePresenter implements ClassAverageOutputBoundary {
         state.setMyScore(data.getMyScore());
         JPanel chartPanel = buildHistogramChart(data);
         state.setChartPanel(chartPanel);
-        viewModel.setState(state);
-        viewModel.firePropertyChange();
+        classAverageViewModel.setState(state);
+        classAverageViewModel.firePropertyChange();
     }
 
     @Override

@@ -1,6 +1,10 @@
 package usecase.login;
 
+import entity.Assignment;
+import entity.Submission;
 import entity.User;
+
+import java.util.List;
 
 /**
  * DAO interface for the Login Use Case.
@@ -26,4 +30,16 @@ public interface LoginDataAccessInterface {
      * @param user the user to make active
      */
     void setActiveUser(User user);
+
+    /**
+     * Gets the assignments for the users first course.
+     */
+    List<Assignment> getAssignments();
+
+    /**
+     * Gets the current users submission for the given assignment.
+     * @param assignment the assignment to check for a submission on.
+     * @return submission associated with this user, or null if none exists
+     */
+    Submission getSubmission(Assignment assignment);
 }

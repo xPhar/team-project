@@ -8,9 +8,15 @@ package usecase.class_average;
 public class ClassAverageInputData {
 
     private final String assignmentName;
+    private final boolean back;
 
-    public ClassAverageInputData(String assignmentName) {
+    public ClassAverageInputData(boolean back, String assignmentName) {
+        this.back = back;
         this.assignmentName = assignmentName;
+    }
+
+    public boolean getBack() {
+        return back;
     }
 
     public String getAssignmentName() {

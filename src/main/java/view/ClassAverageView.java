@@ -46,14 +46,12 @@ public class ClassAverageView extends JPanel implements ActionListener, Property
         topRow.setLayout(new FlowLayout(FlowLayout.LEFT));
 
         assignmentComboBox = new JComboBox<>();
-        assignmentComboBox.addItem("Assignment");
+        assignmentComboBox.addItem("Select an Assignment");
 
         assignmentComboBox.addActionListener(e -> {
-            if (classAverageController != null) {
-                String selected = (String) assignmentComboBox.getSelectedItem();
-                if (selected != null && !selected.equals("Assignment")) {
-                    classAverageController.execute(selected);
-                }
+            String selected = (String) assignmentComboBox.getSelectedItem();
+            if (selected != null && !selected.equals("Select an Assignment")) {
+                classAverageController.execute(false, selected);
             }
         });
 
@@ -94,8 +92,8 @@ public class ClassAverageView extends JPanel implements ActionListener, Property
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource().equals(backButton) && loggedInController != null) {
-            loggedInController.goBack();
+        if (e.getSource().equals(backButton)) {
+            classAverageController.execute(true, "");
         }
     }
 
@@ -106,7 +104,7 @@ public class ClassAverageView extends JPanel implements ActionListener, Property
 
         if (state.getAssignmentNames() != null) {
             assignmentComboBox.removeAllItems();
-            assignmentComboBox.addItem("Assignment");
+            assignmentComboBox.addItem("Select an Assignment");
             for (String name : state.getAssignmentNames()) {
                 assignmentComboBox.addItem(name);
             }

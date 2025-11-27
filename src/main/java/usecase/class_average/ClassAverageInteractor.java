@@ -1,6 +1,7 @@
 package usecase.class_average;
 
 import entity.Submission;
+import usecase.login.LoginOutputData;
 
 import java.util.*;
 
@@ -8,66 +9,70 @@ public class ClassAverageInteractor implements ClassAverageInputBoundary {
 
     private final ClassAverageUserDataAccessInterface submissionDAO;
     private final ClassAverageOutputBoundary presenter;
-    private final String currentUsername;
 
     public ClassAverageInteractor(ClassAverageUserDataAccessInterface submissionDAO,
-                                  ClassAverageOutputBoundary presenter,
-                                  String currentUsername) {
+                                  ClassAverageOutputBoundary presenter) {
         this.submissionDAO = submissionDAO;
         this.presenter = presenter;
-        this.currentUsername = currentUsername;
     }
 
     @Override
     public void execute(ClassAverageInputData inputData) {
 
-        String assignmentName = inputData.getAssignmentName();
+        if (inputData.getBack()) {
+            // The state of loggedIn view shouldn't have changed, so no need to update it
+            presenter.backToLoggedInView();
+        }
 
-        List<Submission> submissions = submissionDAO.getSubmissionsFor(assignmentName);
+        else {
+            String assignmentName = inputData.getAssignmentName();
 
-        if (assignmentName == null || assignmentName.equals("Assignment")) {
+            List<Submission> submissions = submissionDAO.getSubmissionsFor(assignmentName);
+
+            if (assignmentName == null || assignmentName.equals("Assignment")) {
+                List<String> assignmentNames = submissionDAO.getAllAssignmentNames();
+                ClassAverageOutputData outputData = new ClassAverageOutputData(
+                        assignmentNames,
+                        0, 0, 0, 0, 0,
+                        new LinkedHashMap<>(), " "
+                );
+                presenter.prepareSuccessView(outputData);
+                return;
+            }
+
+            List<Double> grades = new ArrayList<>();
+            for (Submission s : submissions) {
+                if (s.getStatus() == Submission.Status.GRADED) {
+                    grades.add(s.getGrade());
+                }
+            }
+
+            if (grades.isEmpty()) {
+                presenter.prepareFailView("Assignment not graded yet!");
+                return;
+            }
+
+            double mean = computeMean(grades);
+            double median = computeMedian(grades);
+            double stdDev = computeStdDev(grades, mean);
+            int studentCount = grades.size();
+
+            double myScore = submissionDAO.getMyScore(assignmentName, submissionDAO.getCurrentUsername());
+            Map<String, Integer> histogram = buildHistogram(grades);
             List<String> assignmentNames = submissionDAO.getAllAssignmentNames();
             ClassAverageOutputData outputData = new ClassAverageOutputData(
                     assignmentNames,
-                    0, 0, 0, 0, 0,
-                    new LinkedHashMap<>(), " "
+                    studentCount,
+                    mean,
+                    median,
+                    stdDev,
+                    myScore,
+                    histogram,
+                    assignmentName
             );
+
             presenter.prepareSuccessView(outputData);
-            return;
         }
-
-        List<Double> grades = new ArrayList<>();
-        for (Submission s : submissions) {
-            if (s.getStatus() == Submission.Status.GRADED) {
-                grades.add(s.getGrade());
-            }
-        }
-
-        if (grades.isEmpty()) {
-            presenter.prepareFailView("Assignment not graded yet!");
-            return;
-        }
-
-        double mean = computeMean(grades);
-        double median = computeMedian(grades);
-        double stdDev = computeStdDev(grades, mean);
-        int studentCount = grades.size();
-
-        double myScore = submissionDAO.getMyScore(assignmentName, currentUsername);
-        Map<String, Integer> histogram = buildHistogram(grades);
-        List<String> assignmentNames = submissionDAO.getAllAssignmentNames();
-        ClassAverageOutputData outputData = new ClassAverageOutputData(
-                assignmentNames,
-                studentCount,
-                mean,
-                median,
-                stdDev,
-                myScore,
-                histogram,
-                assignmentName
-        );
-
-        presenter.prepareSuccessView(outputData);
     }
 
     private double computeMean(List<Double> grades) {
