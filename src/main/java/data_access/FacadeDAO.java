@@ -4,6 +4,9 @@ import entity.*;
 import interface_adapter.submission_list.SubmissionTableModel;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import usecase.Assignments.AssignmentsDataAccessInterface;
+import usecase.CreateAssignment.CreateAssignmentDataAccessInterface;
+import usecase.EditAssignment.EditAssignmentDataAccessInterface;
 import usecase.Grade.GradeDataAccessInterface;
 import usecase.Resubmit.ResubmitUserDataAccessInterface;
 import usecase.Submission.SubmissionDataAccessInterface;
@@ -28,13 +31,16 @@ public class FacadeDAO implements
         SubmissionDataAccessInterface,
         SubmissionListDataAccessInterface,
         GradeDataAccessInterface,
-        ClassAverageUserDataAccessInterface {
+        ClassAverageUserDataAccessInterface,
+        AssignmentsDataAccessInterface,
+        CreateAssignmentDataAccessInterface,
+        EditAssignmentDataAccessInterface {
     private final FileToStringDataAccessObject fsDA;
     private final GradeAPIDataAccessObject gradeDA;
     private final SessionDataAccessObject sessionDA;
 
     // TODO course password?
-    private final String COURSE_PASSWORD = "";
+    private final String COURSE_PASSWORD = "COURSE";
 
     public FacadeDAO() {
         this.fsDA = new FileToStringDataAccessObject();
@@ -77,8 +83,8 @@ public class FacadeDAO implements
         JSONObject submissionJSON = submissionToJSON(submission);
 
         JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
-        courseObject = courseObject.getJSONObject("courseData");
-        JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
+        JSONObject courseData = courseObject.getJSONObject("courseData");
+        JSONObject assignmentDictionary = courseData.getJSONObject("assignments");
         JSONObject assignmentObject = assignmentDictionary.getJSONObject(assignment.getName());
         JSONObject submissionArray = assignmentObject.getJSONObject("submissions");
 
@@ -317,8 +323,8 @@ public class FacadeDAO implements
         Course course = sessionDA.getCourse();
 
         JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
-        courseObject = courseObject.getJSONObject("courseData");
-        JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
+        JSONObject courseData = courseObject.getJSONObject("courseData");
+        JSONObject assignmentDictionary = courseData.getJSONObject("assignments");
         JSONObject assignmentObject = assignmentDictionary.getJSONObject(assignment);
         JSONObject submissionArray = assignmentObject.getJSONObject("submissions");
         JSONObject submissionObj = submissionArray.getJSONObject(submitter);
@@ -399,5 +405,47 @@ public class FacadeDAO implements
                 .gracePeriod(assignmentObj.getDouble("gracePeriod"))
                 // TODO add supported file types
                 .build();
+    }
+
+    @Override
+    public User getCurrentUser() {
+        return this.sessionDA.getUser();
+    }
+
+    @Override
+    public String getCourseCode() {
+        return sessionDA.getCourse().getCourseCode();
+    }
+
+    @Override
+    public void saveAssignment(String courseCode, Assignment assignment) {
+        Course course = sessionDA.getCourse();
+
+        JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
+        JSONObject courseData = courseObject.getJSONObject("courseData");
+        JSONObject assignmentsObject = courseData.getJSONObject("assignments");
+
+        assignmentsObject.put(assignment.getName(), assignmentToJSON(assignment));
+
+        gradeDA.modifyUserInfoEndpoint(getCourseUserName(course), COURSE_PASSWORD, courseObject);
+    }
+
+    @Override
+    public void updateAssignment(String courseCode, String assignmentName, Assignment assignment) {
+        // Assuming that the assignment exists, this functions identically to saveAssignment,
+        // just overwriting the old assignment instead of creating a new one.
+        // TODO: assignmentName is useless when assignment object holds the assignment name...
+        saveAssignment(courseCode, assignment);
+    }
+
+    private JSONObject assignmentToJSON(Assignment assignment) {
+        JSONObject assignmentObj = new JSONObject();
+        assignmentObj.put("creationDate", assignment.getCreationDate().toString());
+        assignmentObj.put("description",  assignment.getDescription());
+        assignmentObj.put("dueDate", assignment.getDueDate().toString());
+        assignmentObj.put("gracePeriod", Double.toString(assignment.getGracePeriod()));
+        assignmentObj.put("supportedFileTypes", new JSONArray(assignment.getSupportedFileTypes()));
+        assignmentObj.put("submissions", new JSONObject());
+        return assignmentObj;
     }
 }

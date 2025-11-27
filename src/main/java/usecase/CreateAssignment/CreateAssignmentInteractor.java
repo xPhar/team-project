@@ -2,6 +2,8 @@ package usecase.CreateAssignment;
 
 import entity.Assignment;
 
+import java.time.LocalDateTime;
+
 public class CreateAssignmentInteractor implements CreateAssignmentInputBoundary {
     private final CreateAssignmentDataAccessInterface dataAccess;
     private final CreateAssignmentOutputBoundary presenter;
@@ -26,6 +28,7 @@ public class CreateAssignmentInteractor implements CreateAssignmentInputBoundary
                     .name(inputData.getName())
                     .description(inputData.getDescription())
                     .dueDate(inputData.getDueDate())
+                    .creationDate(LocalDateTime.now())
                     .gracePeriod(inputData.getGracePeriod())
                     .supportedFileTypes(inputData.getSupportedFileTypes())
                     .build();
