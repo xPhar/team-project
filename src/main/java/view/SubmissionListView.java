@@ -20,7 +20,7 @@ import java.util.ArrayList;
  * View to show a list of submissions for a given assignment.
  */
 public class SubmissionListView extends JPanel implements PropertyChangeListener {
-    private final String viewName = "submissionList";
+    private final String viewName = "SubmissionList";
     private SubmissionListController submissionListController;
 
     private final SubmissionListViewModel submissionListModel;
@@ -86,10 +86,8 @@ public class SubmissionListView extends JPanel implements PropertyChangeListener
     public void propertyChange(PropertyChangeEvent evt) {
         final SubmissionListState state = (SubmissionListState) evt.getNewValue();
 
-        if (evt.getPropertyName().equals("title")) {
+        if (evt.getPropertyName().equals("state")) {
             title.setText(state.getTitle());
-        }
-        else if (evt.getPropertyName().equals("tableModel")) {
             submissionTable.setModel(state.getTableModel());
             state.getTableModel().fireTableDataChanged();
         }
