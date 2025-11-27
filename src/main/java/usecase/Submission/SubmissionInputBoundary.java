@@ -4,5 +4,5 @@ import java.io.File;
 
 public interface SubmissionInputBoundary {
     void backToSubmissionList();
-    void downloadFile(File saveFile);
+    void downloadFile(SubmissionInputData data);
 }

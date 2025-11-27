@@ -3,6 +3,7 @@ package interface_adapter.submission;
 import usecase.Grade.GradeInputBoundary;
 import usecase.Grade.GradeInputData;
 import usecase.Submission.SubmissionInputBoundary;
+import usecase.Submission.SubmissionInputData;
 
 import java.io.File;
 
@@ -30,7 +31,8 @@ public class SubmissionController {
         submissionInputBoundary.backToSubmissionList();
     }
 
-    public void executeDownload(File saveFile) {
-        submissionInputBoundary.downloadFile(saveFile);
+    public void executeDownload(File saveFile, String submitter) {
+        SubmissionInputData data = new SubmissionInputData(saveFile, submitter);
+        submissionInputBoundary.downloadFile(data);
     }
 }

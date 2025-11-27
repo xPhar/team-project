@@ -18,6 +18,6 @@ public class SubmissionListController {
     }
 
     public void executeBack() {
-
+        submissionListInputBoundary.backToAssignment();
     }
 }

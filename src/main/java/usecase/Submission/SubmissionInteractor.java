@@ -1,5 +1,6 @@
 package usecase.Submission;
 
+import data_access.DataAccessException;
 import entity.Submission;
 
 import java.io.File;
@@ -22,8 +23,13 @@ public class SubmissionInteractor implements SubmissionInputBoundary {
     }
 
     @Override
-    public void downloadFile(File saveFile) {
-        submissionDataAccessInterface.saveFile(saveFile);
-        submissionOutputBoundary.prepareDownloadSuccessView(String.format("File saved to %s", saveFile.getAbsolutePath()));
+    public void downloadFile(SubmissionInputData data) {
+        try {
+            submissionDataAccessInterface.saveFile(data.getSaveFile(), data.getSubmitter());
+            submissionOutputBoundary.prepareDownloadSuccessView(String.format("File saved to %s", data.getSaveFile().getAbsolutePath()));
+        }
+        catch (DataAccessException e) {
+            submissionOutputBoundary.prepareDownloadFailureView(e.getMessage());
+        }
     }
 }

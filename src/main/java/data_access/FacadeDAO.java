@@ -295,6 +295,11 @@ public class FacadeDAO implements
     }
 
     // Mark Assignment
+    public List<Submission> getSubmissionList() {
+        String assignmentName = sessionDA.getAssignment().getName();
+        return getSubmissionsFor(assignmentName);
+    }
+
     public List<Submission> getSubmissionList(String assignmentName) {
         return getSubmissionsFor(assignmentName);
     }
@@ -309,8 +314,15 @@ public class FacadeDAO implements
         throw new DataAccessException("No submission found for " + submitter);
     }
 
-    public void saveFile(File saveFile) {
-        // TODO if we store submission in session then we can just save the file from there
+    public void saveFile(File saveFile, String submitter) throws DataAccessException {
+        String assignmentName = sessionDA.getAssignment().getName();
+        Submission submission = getSubmission(assignmentName, submitter);
+        try {
+            fsDA.saveFileFromString(submission.getSubmissionData(), saveFile);
+        }
+        catch (Exception e) {
+            throw new DataAccessException(e.getMessage());
+        }
     }
 
     public void grade(String assignment, String submitter, double grade, String feedback) {

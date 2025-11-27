@@ -2,6 +2,7 @@ package interface_adapter.submission_list;
 
 import entity.Submission;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.submission.SubmissionState;
 import interface_adapter.submission.SubmissionViewModel;
 import usecase.SubmissionList.SubmissionListOutputBoundary;
@@ -16,15 +17,18 @@ public class SubmissionListPresenter implements SubmissionListOutputBoundary {
     private final SubmissionListViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
     private final SubmissionViewModel submissionViewModel;
+    private final LoggedInViewModel loggedInViewModel;
 
     public SubmissionListPresenter(
             SubmissionListViewModel viewModel,
             ViewManagerModel viewManagerModel,
-            SubmissionViewModel submissionViewModel
+            SubmissionViewModel submissionViewModel,
+            LoggedInViewModel loggedInViewModel
     ) {
         this.viewModel = viewModel;
         this.viewManagerModel = viewManagerModel;
         this.submissionViewModel = submissionViewModel;
+        this.loggedInViewModel = loggedInViewModel;
     }
 
     @Override
@@ -56,6 +60,12 @@ public class SubmissionListPresenter implements SubmissionListOutputBoundary {
         submissionViewModel.setState(state);
         submissionViewModel.firePropertyChange();
         viewManagerModel.setState(submissionViewModel.getViewName());
+        viewManagerModel.firePropertyChange();
+    }
+
+    @Override
+    public void goToAssignmentView() {
+        viewManagerModel.setState(loggedInViewModel.getViewName());
         viewManagerModel.firePropertyChange();
     }
 }

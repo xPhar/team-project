@@ -37,6 +37,6 @@ public class SubmissionListInteractor implements SubmissionListInputBoundary {
 
     @Override
     public void backToAssignment() {
-
+        submissionListOutputBoundary.goToAssignmentView();
     }
 }

@@ -98,7 +98,7 @@ public class TestDAO implements
     }
 
     @Override
-    public void saveFile(File saveFile) {
+    public void saveFile(File saveFile, String submitter) {
 
     }
 

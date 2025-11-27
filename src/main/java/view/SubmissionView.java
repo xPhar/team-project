@@ -141,7 +141,7 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
         int result = fileChooser.showSaveDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
-            submissionController.executeDownload(selectedFile);
+            submissionController.executeDownload(selectedFile, submitterLabel.getText());
         }
     }
 
