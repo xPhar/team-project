@@ -21,6 +21,7 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
     private SubmissionController submissionController;
 
     private final JLabel submitterLabel = new JLabel("Submitter:");
+    private final JLabel submissionNameLabel = new JLabel("File name:");
     private final JLabel submittedDateLabel = new JLabel("Submitted at:");
     private final JLabel submissionStatusLabel = new JLabel("Status:");
     private final JTextField gradeTextField = new JTextField();
@@ -54,6 +55,7 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
         final JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.add(submitterLabel);
+        infoPanel.add(submissionNameLabel);
         infoPanel.add(submittedDateLabel);
         infoPanel.add(submissionStatusLabel);
         infoPanel.add(downloadButton);
@@ -126,6 +128,7 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
             feedbackTextArea.setText(submissionState.getFeedback());
             title.setText(submissionState.getAssignmentName());
             maxGradeLabel.setText("/" + submissionState.getMaxGrade());
+            submissionNameLabel.setText("File name: " + submissionState.getSubmissionName());
         }
         else if (evt.getPropertyName().equals("gradeSuccess")) {
             showSuccessDialog("Graded submission successfully", "Success");
@@ -161,6 +164,7 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
     private void chooseFilePathToSave() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Download file");
+        fileChooser.setSelectedFile(new File(submissionNameLabel.getText().substring(11)));
         int result = fileChooser.showSaveDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();

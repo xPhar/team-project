@@ -34,6 +34,7 @@ public class SubmissionController {
     }
 
     public void executeDownload(File saveFile, String submitter) {
+        submitter = submitter.substring(11);
         SubmissionInputData data = new SubmissionInputData(false, saveFile, submitter);
         submissionInputBoundary.execute(data);
     }
