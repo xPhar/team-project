@@ -63,7 +63,7 @@ public class TestDAO implements
         assignmentsByCourse.put("CSC207", csc207Assignments);
     }
 
-    @Override
+
     public Submission getSubmission(String assignmentName, String submitter) {
         Submission.SubmissionBuilder builder = Submission.getBuilder();
         builder.submitter("Indy");
@@ -74,7 +74,7 @@ public class TestDAO implements
         return builder.build();
     }
 
-    @Override
+
     public List<Submission> getSubmissionList(String assignmentName) {
         List<Submission> list = new ArrayList<>();
         for (int i = 0; i < 50; i++) {
@@ -133,5 +133,10 @@ public class TestDAO implements
                 }
             }
         }
+    }
+
+    @Override
+    public Submission getSubmissionForSubmissionView(String submitter) {
+        return null;
     }
 }

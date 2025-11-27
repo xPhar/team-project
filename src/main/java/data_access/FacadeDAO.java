@@ -314,6 +314,11 @@ public class FacadeDAO implements
         throw new DataAccessException("No submission found for " + submitter);
     }
 
+    public Submission getSubmissionForSubmissionView(String submitter) {
+        String assignmentName = sessionDA.getAssignment().getName();
+        return getSubmission(assignmentName, submitter);
+    }
+
     public void saveFile(File saveFile, String submitter) throws DataAccessException {
         String assignmentName = sessionDA.getAssignment().getName();
         Submission submission = getSubmission(assignmentName, submitter);

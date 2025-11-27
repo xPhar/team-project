@@ -191,7 +191,7 @@ public class AppBuilder {
                 submissionListViewModel, viewManagerModel,
                 submissionViewModel, loggedInViewModel);
         SubmissionListInputBoundary submissionListInputBoundary = new SubmissionListInteractor(
-                submissionListOutputBoundary, testDAO);
+                submissionListOutputBoundary, userDataAccessObject);
 
         SubmissionListController submissionListController = new SubmissionListController(submissionListInputBoundary);
         submissionListView.setSubmissionListController(submissionListController);

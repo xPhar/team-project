@@ -2,6 +2,7 @@ package usecase.SubmissionList;
 
 import entity.Submission;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class SubmissionListInteractor implements SubmissionListInputBoundary {
@@ -17,26 +18,26 @@ public class SubmissionListInteractor implements SubmissionListInputBoundary {
     }
 
     @Override
-    public void getSubmissionList(String assignmentName) {
-        List<Submission> submissions =
-                submissionListDataAccessInterface.getSubmissionList(assignmentName);
+    public void execute(SubmissionListInputData data) {
+        if (data.isBack()) {
+            submissionListOutputBoundary.goToAssignmentView();
+        } else {
+            Submission submission = submissionListDataAccessInterface
+                    .getSubmissionForSubmissionView(data.getSubmitter());
 
-        SubmissionListOutputData outputData =
-                new SubmissionListOutputData(assignmentName, submissions);
+            SubmissionListOutputData outputData = new SubmissionListOutputData(
+                    "",
+                    submission.getSubmitter(),
+                    submission.getStatus().toString(),
+                    submission.getSubmissionTime().format(
+                            DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss")
+                    ),
+                    String.format("%.1f", submission.getGrade()),
+                    submission.getFeedback(),
+                    submission.getSubmissionName()
+            );
 
-        submissionListOutputBoundary.prepareListView(outputData);
-    }
-
-    @Override
-    public void getSubmission(String assignmentName, String submitter) {
-        Submission submission = submissionListDataAccessInterface
-                .getSubmission(assignmentName, submitter);
-
-        submissionListOutputBoundary.prepareSubmissionView(submission);
-    }
-
-    @Override
-    public void backToAssignment() {
-        submissionListOutputBoundary.goToAssignmentView();
+            submissionListOutputBoundary.prepareSubmissionView(outputData);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package interface_adapter.submission_list;
 
 import usecase.SubmissionList.SubmissionListInputBoundary;
+import usecase.SubmissionList.SubmissionListInputData;
 
 /**
  * Submission list view related use case.
@@ -13,11 +14,13 @@ public class SubmissionListController {
         this.submissionListInputBoundary = submissionInputBoundary;
     }
 
-    public void executeChooseSubmission() {
-        submissionListInputBoundary.getSubmission("", "");
+    public void executeChooseSubmission(String submitter) {
+        SubmissionListInputData data = new SubmissionListInputData(false,submitter);
+        submissionListInputBoundary.execute(data);
     }
 
     public void executeBack() {
-        submissionListInputBoundary.backToAssignment();
+        SubmissionListInputData data = new SubmissionListInputData(true,"");
+        submissionListInputBoundary.execute(data);
     }
 }

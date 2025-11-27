@@ -32,30 +32,14 @@ public class SubmissionListPresenter implements SubmissionListOutputBoundary {
     }
 
     @Override
-    public void prepareListView(SubmissionListOutputData submissionListOutputData) {
-        SubmissionListState state = new SubmissionListState();
-        state.setTableModel(new SubmissionTableModel(submissionListOutputData.getSubmissions()));
-        state.setTitle(submissionListOutputData.getAssignmentName());
-
-        viewModel.setState(state);
-        viewModel.firePropertyChange("title");
-        viewModel.firePropertyChange("tableModel");
-        viewManagerModel.setState(viewModel.getViewName());
-        viewManagerModel.firePropertyChange();
-    }
-
-    @Override
-    public void prepareSubmissionView(Submission outputData) {
+    public void prepareSubmissionView(SubmissionListOutputData outputData) {
         SubmissionState state = new SubmissionState();
         state.setSubmitter(outputData.getSubmitter());
-        state.setSubmissionDate(
-                outputData.getSubmissionTime().format(
-                        DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss")
-                )
-        );
-        state.setStatus(outputData.getStatus().toString());
-        state.setGrade(String.format("%.1f", outputData.getGrade()));
+        state.setSubmissionDate(outputData.getSubmissionDate());
+        state.setStatus(outputData.getStatus());
+        state.setGrade(outputData.getGrade());
         state.setFeedback(outputData.getFeedback());
+        state.setSubmissionName(outputData.getSubmissionName());
 
         submissionViewModel.setState(state);
         submissionViewModel.firePropertyChange();
