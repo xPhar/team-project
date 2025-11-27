@@ -45,10 +45,22 @@ public class Assignment {
         return supportedFileTypes;
     }
 
+    /**
+     * Creates a new instance of the AssignmentBuilder, which can be used to construct
+     * an Assignment object with specified properties.
+     *
+     * @return a new instance of AssignmentBuilder
+     */
     public static AssignmentBuilder builder() {
         return new AssignmentBuilder();
     }
 
+    /**
+     * A builder class for creating instances of the Assignment class. This builder allows
+     * step-by-step specification of properties such as the assignment's name, description,
+     * creation date, due date, grace period, and supported file types before constructing
+     * the final Assignment object.
+     */
     public static class AssignmentBuilder {
         private String name;
         private String description;
@@ -60,36 +72,80 @@ public class Assignment {
         AssignmentBuilder() {
         }
 
-        public AssignmentBuilder name(String name) {
-            this.name = name;
+        /**
+         * Sets the name of the assignment to be built.
+         *
+         * @param newName the name of the assignment to be built
+         * @return the builder instance for method chaining
+         */
+        public AssignmentBuilder name(String newName) {
+            this.name = newName;
             return this;
         }
 
-        public AssignmentBuilder description(String description) {
-            this.description = description;
+        /**
+         * Sets the description of the assignment to be built.
+         *
+         * @param newDescription the description of the assignment to be built
+         * @return the builder instance for method chaining
+         */
+        public AssignmentBuilder description(String newDescription) {
+            this.description = newDescription;
             return this;
         }
 
-        public AssignmentBuilder creationDate(LocalDateTime creationDate) {
-            this.creationDate = creationDate;
+        /**
+         * Sets the creation date of the assignment to be built.
+         *
+         * @param newCreationDate the creation date of the assignment to be built
+         * @return the builder instance for method chaining
+         */
+        public AssignmentBuilder creationDate(LocalDateTime newCreationDate) {
+            this.creationDate = newCreationDate;
             return this;
         }
 
-        public AssignmentBuilder dueDate(LocalDateTime dueDate) {
+        /**
+         * Sets the due date for the assignment being built.
+         *
+         * @param newDueDate the due date of the assignment to be built
+         * @return the builder instance for method chaining
+         */
+        public AssignmentBuilder dueDate(LocalDateTime newDueDate) {
             this.dueDate = dueDate;
             return this;
         }
 
-        public AssignmentBuilder gracePeriod(double gracePeriod) {
+        /**
+         * Sets the grace period for the assignment being built.
+         *
+         * @param newGracePeriod the grace period (in days) to allow after the due date
+         *                       for submitting the assignment without penalty
+         * @return the builder instance for method chaining
+         */
+        public AssignmentBuilder gracePeriod(double newGracePeriod) {
             this.gracePeriod = gracePeriod;
             return this;
         }
 
-        public AssignmentBuilder supportedFileTypes(List<String> supportedFileTypes) {
+        /**
+         * Sets the supported file types for the assignment being built.
+         *
+         * @param newSupportedFileTypes the list of supported file types for the assignment
+         * @return the builder instance for method chaining
+         */
+        public AssignmentBuilder supportedFileTypes(List<String> newSupportedFileTypes) {
             this.supportedFileTypes = supportedFileTypes;
             return this;
         }
 
+        /**
+         * Builds and returns a new instance of the Assignment class using the properties
+         * set in the AssignmentBuilder.
+         *
+         * @return a new Assignment instance with the specified name, description,
+         * creation date, due date, grace period, and supported file types
+         */
         public Assignment build() {
             return new Assignment(
                     this.name,
