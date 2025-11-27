@@ -107,7 +107,7 @@ public class AppBuilder {
 
     public AppBuilder addLoginUseCase() {
         final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(
-                viewManagerModel, loggedInViewModel, loginViewModel);
+                viewManagerModel, loggedInViewModel, assignmentsViewModel, loginViewModel);
         final LoginInputBoundary loginInteractor = new LoginInteractor(
                 userDataAccessObject, loginOutputBoundary);
         LoginController loginController = new LoginController(loginInteractor);
@@ -170,7 +170,6 @@ public class AppBuilder {
     private SubmissionListViewModel submissionListViewModel;
     private SubmissionView submissionView;
     private SubmissionViewModel submissionViewModel;
-    private final TestDAO testDAO = new TestDAO();
 
     public AppBuilder addSubmissionListView() {
         submissionListViewModel = new SubmissionListViewModel();
@@ -191,7 +190,7 @@ public class AppBuilder {
                 submissionListViewModel, viewManagerModel,
                 submissionViewModel);
         SubmissionListInputBoundary submissionListInputBoundary = new SubmissionListInteractor(
-                submissionListOutputBoundary, testDAO);
+                submissionListOutputBoundary, userDataAccessObject);
 
         SubmissionListController submissionListController = new SubmissionListController(submissionListInputBoundary);
         submissionListView.setSubmissionListController(submissionListController);
@@ -201,9 +200,9 @@ public class AppBuilder {
     public AppBuilder addSubmissionUseCase() {
         final SubmissionPresenter presenter = new SubmissionPresenter(submissionViewModel,
                 viewManagerModel, submissionListViewModel);
-        final SubmissionInputBoundary submissionInputBoundary = new SubmissionInteractor(presenter, testDAO);
+        final SubmissionInputBoundary submissionInputBoundary = new SubmissionInteractor(presenter, userDataAccessObject);
         final GradeInputBoundary gradeInputBoundary = new GradeInteractor(
-                testDAO,
+                userDataAccessObject,
                 presenter);
 
         SubmissionController submissionController = new SubmissionController(submissionInputBoundary,
@@ -237,7 +236,7 @@ public class AppBuilder {
         final AssignmentsOutputBoundary assignmentsOutputBoundary = new AssignmentsPresenter(
                 assignmentsViewModel, viewManagerModel);
         final AssignmentsInputBoundary assignmentsInteractor = new AssignmentsInteractor(
-                testDAO, assignmentsOutputBoundary);
+                userDataAccessObject, assignmentsOutputBoundary);
 
         AssignmentsController assignmentsController = new AssignmentsController(assignmentsInteractor);
         assignmentView.setAssignmentsController(assignmentsController);
@@ -248,7 +247,7 @@ public class AppBuilder {
         final CreateAssignmentOutputBoundary createAssignmentOutputBoundary = new CreateAssignmentPresenter(
                 createAssignmentViewModel, assignmentsViewModel, viewManagerModel);
         final CreateAssignmentInputBoundary createAssignmentInteractor = new CreateAssignmentInteractor(
-                testDAO, createAssignmentOutputBoundary);
+                userDataAccessObject, createAssignmentOutputBoundary);
 
         CreateAssignmentController createAssignmentController = new CreateAssignmentController(
                 createAssignmentInteractor);
@@ -260,7 +259,7 @@ public class AppBuilder {
         final EditAssignmentOutputBoundary editAssignmentOutputBoundary = new EditAssignmentPresenter(
                 editAssignmentViewModel, assignmentsViewModel, viewManagerModel);
         final EditAssignmentInputBoundary editAssignmentInteractor = new EditAssignmentInteractor(
-                testDAO, editAssignmentOutputBoundary);
+                userDataAccessObject, editAssignmentOutputBoundary);
 
         EditAssignmentController editAssignmentController = new EditAssignmentController(
                 editAssignmentInteractor, viewManagerModel, assignmentsViewModel, editAssignmentViewModel);

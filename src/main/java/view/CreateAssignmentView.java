@@ -396,7 +396,16 @@ public class CreateAssignmentView extends JPanel implements PropertyChangeListen
         List<String> out = new ArrayList<>();
         for (Component c : typesPanel.getComponents()) {
             if (c instanceof JCheckBox j && j.isSelected()) {
-                out.add(j.getText().toLowerCase());
+                String text =  j.getText().trim().toLowerCase();
+                if (text.contains("py")) {
+                    out.add(".py");
+                }
+                else if (text.contains("java")) {
+                    out.add(".java");
+                }
+                else {
+                    out.add("." + text);
+                }
             }
         }
         return out;

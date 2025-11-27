@@ -2,6 +2,8 @@ package usecase.EditAssignment;
 
 import entity.Assignment;
 
+import java.time.LocalDateTime;
+
 public class EditAssignmentInteractor implements EditAssignmentInputBoundary {
     private final EditAssignmentDataAccessInterface dataAccessObject;
     private final EditAssignmentOutputBoundary outputBoundary;
@@ -18,6 +20,7 @@ public class EditAssignmentInteractor implements EditAssignmentInputBoundary {
                 .name(inputData.getName())
                 .description(inputData.getDescription())
                 .dueDate(inputData.getDueDate())
+                .creationDate(LocalDateTime.now())
                 .supportedFileTypes(inputData.getSupportedFileTypes())
                 .build();
 

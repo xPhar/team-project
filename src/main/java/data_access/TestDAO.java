@@ -103,12 +103,12 @@ public class TestDAO implements
     }
 
     @Override
-    public List<Assignment> getAssignments(String courseCode) {
-        return assignmentsByCourse.getOrDefault(courseCode, new ArrayList<>());
+    public List<Assignment> getAssignments() {
+        return assignmentsByCourse.getOrDefault(this.getCourseCode(), new ArrayList<>());
     }
 
     @Override
-    public User getUser() {
+    public User getCurrentUser() {
         return new User("instructor", "password", "Test", "Instructor", User.INSTRUCTOR);
     }
 
