@@ -4,21 +4,31 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class Assignment {
-    private String name;
-    private String description;
-    private LocalDateTime creationDate;
-    private LocalDateTime dueDate;
-    private double gracePeriod;
-    private List<String> supportedFileTypes;
+    private final String name;
+    private final String description;
+    private final LocalDateTime creationDate;
+    private final LocalDateTime dueDate;
+    private final double gracePeriod;
+    private final List<String> supportedFileTypes;
 
     public Assignment(String name, String description, LocalDateTime creationDate, LocalDateTime dueDate,
-            double gracePeriod, List<String> supportedFileTypes) {
+                      double gracePeriod, List<String> supportedFileTypes) {
         this.name = name;
         this.description = description;
         this.creationDate = creationDate;
         this.dueDate = dueDate;
         this.gracePeriod = gracePeriod;
         this.supportedFileTypes = supportedFileTypes;
+    }
+
+    /**
+     * Creates a new instance of the AssignmentBuilder, which can be used to construct
+     * an Assignment object with specified properties.
+     *
+     * @return a new instance of AssignmentBuilder
+     */
+    public static AssignmentBuilder builder() {
+        return new AssignmentBuilder();
     }
 
     public String getName() {
@@ -43,16 +53,6 @@ public class Assignment {
 
     public List<String> getSupportedFileTypes() {
         return supportedFileTypes;
-    }
-
-    /**
-     * Creates a new instance of the AssignmentBuilder, which can be used to construct
-     * an Assignment object with specified properties.
-     *
-     * @return a new instance of AssignmentBuilder
-     */
-    public static AssignmentBuilder builder() {
-        return new AssignmentBuilder();
     }
 
     /**
@@ -144,7 +144,7 @@ public class Assignment {
          * set in the AssignmentBuilder.
          *
          * @return a new Assignment instance with the specified name, description,
-         * creation date, due date, grace period, and supported file types
+         *      creation date, due date, grace period, and supported file types
          */
         public Assignment build() {
             return new Assignment(
