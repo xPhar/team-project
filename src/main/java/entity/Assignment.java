@@ -79,7 +79,7 @@ public class Assignment {
          * @return the builder instance for method chaining
          */
         public AssignmentBuilder name(String newName) {
-            this.name = newName;
+            name = newName;
             return this;
         }
 
@@ -90,7 +90,7 @@ public class Assignment {
          * @return the builder instance for method chaining
          */
         public AssignmentBuilder description(String newDescription) {
-            this.description = newDescription;
+            description = newDescription;
             return this;
         }
 
@@ -101,7 +101,7 @@ public class Assignment {
          * @return the builder instance for method chaining
          */
         public AssignmentBuilder creationDate(LocalDateTime newCreationDate) {
-            this.creationDate = newCreationDate;
+            creationDate = newCreationDate;
             return this;
         }
 
@@ -112,7 +112,7 @@ public class Assignment {
          * @return the builder instance for method chaining
          */
         public AssignmentBuilder dueDate(LocalDateTime newDueDate) {
-            this.dueDate = dueDate;
+            dueDate = newDueDate;
             return this;
         }
 
@@ -124,7 +124,7 @@ public class Assignment {
          * @return the builder instance for method chaining
          */
         public AssignmentBuilder gracePeriod(double newGracePeriod) {
-            this.gracePeriod = gracePeriod;
+            gracePeriod = newGracePeriod;
             return this;
         }
 
@@ -135,7 +135,7 @@ public class Assignment {
          * @return the builder instance for method chaining
          */
         public AssignmentBuilder supportedFileTypes(List<String> newSupportedFileTypes) {
-            this.supportedFileTypes = supportedFileTypes;
+            supportedFileTypes = newSupportedFileTypes;
             return this;
         }
 
