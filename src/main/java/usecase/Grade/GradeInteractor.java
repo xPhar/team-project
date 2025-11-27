@@ -18,10 +18,10 @@ public class GradeInteractor implements GradeInputBoundary {
     }
 
     @Override
-    public void grade(GradeInputData inputData) {
+    public void execute(GradeInputData inputData) {
         try {
             double grade = Double.parseDouble(inputData.getGrade());
-            final double maxGrade = 20; // TODO: Get max grade from session.assignment
+            final double maxGrade = 100; // Hardcoded
 
             if (grade < 0) {
                 throw new InvalidGradeException("Grade must be greater than 0!");
@@ -31,7 +31,6 @@ public class GradeInteractor implements GradeInputBoundary {
             }
 
             gradeDataAccessInterface.grade(
-                    "Assignment",
                     inputData.getSubmitter(),
                     grade,
                     inputData.getFeedback()

@@ -23,16 +23,18 @@ public class SubmissionController {
     }
 
     public void executeGrade(String grade, String submitter, String feedback) {
+        submitter = submitter.substring(11);
         GradeInputData data = new GradeInputData(grade, submitter, feedback);
-        gradeInputBoundary.grade(data);
+        gradeInputBoundary.execute(data);
     }
 
     public void executeBack() {
-        submissionInputBoundary.backToSubmissionList();
+        SubmissionInputData data = new SubmissionInputData(true, null, null);
+        submissionInputBoundary.execute(data);
     }
 
     public void executeDownload(File saveFile, String submitter) {
-        SubmissionInputData data = new SubmissionInputData(saveFile, submitter);
-        submissionInputBoundary.downloadFile(data);
+        SubmissionInputData data = new SubmissionInputData(false, saveFile, submitter);
+        submissionInputBoundary.execute(data);
     }
 }

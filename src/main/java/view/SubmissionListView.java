@@ -75,9 +75,8 @@ public class SubmissionListView extends JPanel implements PropertyChangeListener
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         if (e.getClickCount() == 2 && submissionTable.getSelectedRow() != -1) {
-                            System.out.println("here");
                             String submitter = submissionTable.getValueAt(submissionTable.getSelectedRow(), 0).toString();
-                            submissionListController.executeChooseSubmission(submitter);
+                            submissionListController.executeChooseSubmission(submitter, title.getText());
                         }
                     }
                 }

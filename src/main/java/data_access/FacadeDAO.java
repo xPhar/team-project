@@ -34,7 +34,7 @@ public class FacadeDAO implements
     private final SessionDataAccessObject sessionDA;
 
     // TODO course password?
-    private final String COURSE_PASSWORD = "";
+    private final String COURSE_PASSWORD = "COURSE";
 
     public FacadeDAO() {
         this.fsDA = new FileToStringDataAccessObject();
@@ -330,11 +330,12 @@ public class FacadeDAO implements
         }
     }
 
-    public void grade(String assignment, String submitter, double grade, String feedback) {
+    public void grade(String submitter, double grade, String feedback) {
         Course course = sessionDA.getCourse();
+        String assignment = sessionDA.getAssignment().getName();
 
-        JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
-        courseObject = courseObject.getJSONObject("courseData");
+        JSONObject userInfoObject = gradeDA.getUserInfo(getCourseUserName(course));
+        JSONObject courseObject = userInfoObject.getJSONObject("courseData");
         JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
         JSONObject assignmentObject = assignmentDictionary.getJSONObject(assignment);
         JSONObject submissionArray = assignmentObject.getJSONObject("submissions");
@@ -343,7 +344,7 @@ public class FacadeDAO implements
         submissionObj.put("feedback", feedback);
         submissionObj.put("status", Submission.Status.GRADED.toString());
 
-        gradeDA.modifyUserInfoEndpoint(getCourseUserName(course), COURSE_PASSWORD, courseObject);
+        gradeDA.modifyUserInfoEndpoint(getCourseUserName(course), COURSE_PASSWORD, userInfoObject);
     }
 
     // Some method I think we need (Indy)
@@ -387,6 +388,12 @@ public class FacadeDAO implements
         List<Submission> submissionList = getSubmissionList(assignment.getName());
 
         return new SubmissionTableModel(submissionList);
+    }
+
+    @Override
+    public SubmissionTableModel getSubmissionTableModelForCurrentAssignment() {
+        Assignment assignment = sessionDA.getAssignment();
+        return getSubmissionTableModel(assignment);
     }
 
     @Override

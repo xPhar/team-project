@@ -13,6 +13,7 @@ public class SubmissionListOutputData {
     private final String grade;
     private final String feedback;
     private final String submissionName;
+    private final String maxGrade;
 
     public SubmissionListOutputData(String assignmentName,
                                     String submitter,
@@ -20,7 +21,8 @@ public class SubmissionListOutputData {
                                     String submissionDate,
                                     String grade,
                                     String feedback,
-                                    String submissionName
+                                    String submissionName,
+                                    String maxGrade
     ) {
         this.assignmentName = assignmentName;
         this.submitter = submitter;
@@ -29,6 +31,7 @@ public class SubmissionListOutputData {
         this.grade = grade;
         this.feedback = feedback;
         this.submissionName = submissionName;
+        this.maxGrade = maxGrade;
     }
 
     public String getAssignmentName() {
@@ -57,5 +60,9 @@ public class SubmissionListOutputData {
 
     public String getSubmissionName() {
         return submissionName;
+    }
+
+    public String getMaxGrade() {
+        return maxGrade;
     }
 }

@@ -40,6 +40,8 @@ public class SubmissionListPresenter implements SubmissionListOutputBoundary {
         state.setGrade(outputData.getGrade());
         state.setFeedback(outputData.getFeedback());
         state.setSubmissionName(outputData.getSubmissionName());
+        state.setMaxGrade(outputData.getMaxGrade());
+        state.setAssignmentName(outputData.getAssignmentName());
 
         submissionViewModel.setState(state);
         submissionViewModel.firePropertyChange();

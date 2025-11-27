@@ -2,6 +2,7 @@ package usecase.Submission;
 
 import data_access.DataAccessException;
 import entity.Submission;
+import interface_adapter.submission_list.SubmissionTableModel;
 
 import java.io.File;
 
@@ -18,18 +19,20 @@ public class SubmissionInteractor implements SubmissionInputBoundary {
     }
 
     @Override
-    public void backToSubmissionList() {
-        submissionOutputBoundary.backToSubmissionListView();
-    }
-
-    @Override
-    public void downloadFile(SubmissionInputData data) {
-        try {
-            submissionDataAccessInterface.saveFile(data.getSaveFile(), data.getSubmitter());
-            submissionOutputBoundary.prepareDownloadSuccessView(String.format("File saved to %s", data.getSaveFile().getAbsolutePath()));
+    public void execute(SubmissionInputData data) {
+        if (data.isBack()) {
+            SubmissionTableModel tableModel = submissionDataAccessInterface.getSubmissionTableModelForCurrentAssignment();
+            SubmissionOutputData outputData = new SubmissionOutputData(tableModel);
+            submissionOutputBoundary.backToSubmissionListView(outputData);
         }
-        catch (DataAccessException e) {
-            submissionOutputBoundary.prepareDownloadFailureView(e.getMessage());
+        else {
+            try {
+                submissionDataAccessInterface.saveFile(data.getSaveFile(), data.getSubmitter());
+                submissionOutputBoundary.prepareDownloadSuccessView(String.format("File saved to %s", data.getSaveFile().getAbsolutePath()));
+            }
+            catch (DataAccessException e) {
+                submissionOutputBoundary.prepareDownloadFailureView(e.getMessage());
+            }
         }
     }
 }

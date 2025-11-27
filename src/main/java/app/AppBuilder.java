@@ -201,9 +201,9 @@ public class AppBuilder {
     public AppBuilder addSubmissionUseCase() {
         final SubmissionPresenter presenter = new SubmissionPresenter(submissionViewModel,
                 viewManagerModel, submissionListViewModel);
-        final SubmissionInputBoundary submissionInputBoundary = new SubmissionInteractor(presenter, testDAO);
+        final SubmissionInputBoundary submissionInputBoundary = new SubmissionInteractor(presenter, userDataAccessObject);
         final GradeInputBoundary gradeInputBoundary = new GradeInteractor(
-                testDAO,
+                userDataAccessObject,
                 presenter);
 
         SubmissionController submissionController = new SubmissionController(submissionInputBoundary,

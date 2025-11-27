@@ -5,6 +5,7 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.submission_list.SubmissionListViewModel;
 import usecase.Grade.GradeOutputBoundary;
 import usecase.Submission.SubmissionOutputBoundary;
+import usecase.Submission.SubmissionOutputData;
 
 import java.time.format.DateTimeFormatter;
 
@@ -30,12 +31,6 @@ public class SubmissionPresenter implements
     }
 
     @Override
-    public void backToSubmissionListView() {
-        viewManagerModel.setState(submissionListViewModel.getViewName());
-        viewManagerModel.firePropertyChange();
-    }
-
-    @Override
     public void prepareGradeSuccessView() {
         viewModel.firePropertyChange("gradeSuccess");
     }
@@ -56,5 +51,13 @@ public class SubmissionPresenter implements
     public void prepareDownloadFailureView(String msg) {
         viewModel.getState().setDownloadFailureMessage(msg);
         viewModel.firePropertyChange("downloadFailure");
+    }
+
+    @Override
+    public void backToSubmissionListView(SubmissionOutputData data) {
+        submissionListViewModel.getState().setTableModel(data.getSubmissionTableModel());
+        submissionListViewModel.firePropertyChange();
+        viewManagerModel.setState(submissionListViewModel.getViewName());
+        viewManagerModel.firePropertyChange();
     }
 }

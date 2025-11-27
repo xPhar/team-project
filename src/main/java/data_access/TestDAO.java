@@ -3,6 +3,7 @@ package data_access;
 import entity.Assignment;
 import entity.Submission;
 import entity.User;
+import interface_adapter.submission_list.SubmissionTableModel;
 import usecase.Assignments.AssignmentsDataAccessInterface;
 import usecase.CreateAssignment.CreateAssignmentDataAccessInterface;
 import usecase.EditAssignment.EditAssignmentDataAccessInterface;
@@ -93,13 +94,18 @@ public class TestDAO implements
     }
 
     @Override
-    public void grade(String assignment, String submitter, double grade, String feedback) {
+    public void grade(String submitter, double grade, String feedback) {
 
     }
 
     @Override
     public void saveFile(File saveFile, String submitter) {
 
+    }
+
+    @Override
+    public SubmissionTableModel getSubmissionTableModelForCurrentAssignment() {
+        return null;
     }
 
     @Override

@@ -5,6 +5,7 @@ import interface_adapter.submission.SubmissionState;
 import interface_adapter.submission.SubmissionViewModel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -25,6 +26,7 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
     private final JTextField gradeTextField = new JTextField();
     private final JLabel maxGradeLabel = new JLabel("/20");
     private final JTextArea feedbackTextArea = new JTextArea();
+    private final JLabel title;
 
     private final SubmissionViewModel viewModel;
 
@@ -57,9 +59,28 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
         infoPanel.add(downloadButton);
 
         final JButton backButton = new JButton("Back");
+        title = new JLabel("");
+        title.setHorizontalAlignment(SwingConstants.CENTER);
+        title.setFont(new Font(title.getFont().getFontName(), Font.PLAIN, 20));
+
+        final JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 0.05;
+        titlePanel.add(backButton, c);
+
+        c.gridx = 1;
+        c.gridy = 0;
+        c.weightx = 0.95;
+        c.anchor = GridBagConstraints.CENTER;
+        titlePanel.add(title, c);
 
         this.setLayout(new BoxLayout(this,  BoxLayout.Y_AXIS));
-        this.add(backButton);
+        this.add(titlePanel);
         this.add(infoPanel);
         this.add(feedbackPanel);
 
@@ -103,8 +124,10 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
             submissionStatusLabel.setText("Status: " + submissionState.getStatus());
             gradeTextField.setText(submissionState.getGrade());
             feedbackTextArea.setText(submissionState.getFeedback());
+            title.setText(submissionState.getAssignmentName());
+            maxGradeLabel.setText("/" + submissionState.getMaxGrade());
         }
-        else if (evt.getPropertyName().equals("gradSuccess")) {
+        else if (evt.getPropertyName().equals("gradeSuccess")) {
             showSuccessDialog("Graded submission successfully", "Success");
         }
         else if (evt.getPropertyName().equals("gradeFailure")) {

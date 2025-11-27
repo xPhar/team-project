@@ -1,5 +1,4 @@
 package usecase.SubmissionList;
-
 import entity.Submission;
 
 import java.util.List;
