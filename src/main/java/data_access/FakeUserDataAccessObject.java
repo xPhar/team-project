@@ -12,14 +12,24 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public class FakeUserDataAccessObject implements SubmitUserDataAccessInterface, ResubmitUserDataAccessInterface,
                                                  LoginDataAccessInterface {
     Assignment assignment;
     boolean submitFailure;
+    // Login
+    private final Map<String, User> users;
+    List<Assignment> assignments;
+    Map<Assignment, Map<String, Submission>> submissionMap;
+    User activeUser;
 
-
+    // For Submit/Resubmit Testing
     public FakeUserDataAccessObject(boolean deadlinePassed, boolean submitFails) {
+        users = Map.of();
+        assignments = List.of();
+        submissionMap = Map.of();
+
         this.submitFailure = submitFails;
 
         LocalDateTime deadline;
@@ -38,6 +48,57 @@ public class FakeUserDataAccessObject implements SubmitUserDataAccessInterface, 
                 .build();
     }
 
+    // For Login Testing
+    public FakeUserDataAccessObject(LocalDateTime baseTime) {
+        this.users = Map.of(
+                "FakeStudent1", new User("FakeStudent1", "password", "fake", "one", User.STUDENT),
+                "FakeStudent2", new User("FakeStudent2", "password", "fake", "two", User.STUDENT),
+                "FakeInstructor", new User("FakeInstructor", "password", "fake", "instructor", User.INSTRUCTOR)
+        );
+        this.assignments = List.of(
+                Assignment.builder().name("FakeAssignment1")
+                        .description("FakeAssignment1 description")
+                        .creationDate(baseTime)
+                        .dueDate(baseTime.plusMinutes(30))
+                        .gracePeriod(10)
+                        .supportedFileTypes(List.of(".txt", ".java"))
+                        .build(),
+                Assignment.builder().name("FakeAssignment2")
+                        .description("FakeAssignment2 description")
+                        .creationDate(baseTime.minusMinutes(240))
+                        .dueDate(baseTime)
+                        .gracePeriod(0)
+                        .supportedFileTypes(List.of(".py"))
+                        .build()
+        );
+        this.submissionMap = Map.of(
+                assignments.get(0), Map.of(
+                        "FakeStudent1", Submission.getBuilder().submitter("FakeStudent1")
+                                .submissionTime(baseTime.minusMinutes(50))
+                                .submissionName("pledge.txt")
+                                .submissionData("This work is 100% my own (except the part my AI best friend did).")
+                                .status(Submission.ON_TIME)
+                                .build()
+                ),
+                assignments.get(1), Map.of(
+                        "FakeStudent1", Submission.getBuilder().submitter("FakeStudent1")
+                                .submissionTime(baseTime.minusMinutes(50))
+                                .submissionName("sample.py")
+                                .submissionData("print(\"Hello, World!\")")
+                                .status(Submission.GRADED)
+                                .grade(21.0)
+                                .feedback("very relevant feedback")
+                                .build(),
+                        "FakeStudent2", Submission.getBuilder().submitter("FakeStudent2")
+                                .submissionTime(baseTime)
+                                .submissionName("coolio.py")
+                                .submissionData("phrase = \"Hello Python!\"\nprint(phrase)\n")
+                                .status(Submission.LATE)
+                                .build()
+                )
+        );
+    }
+
     @Override
     public void submit(File studentFile) throws IOException {
         if (submitFailure) {
@@ -52,26 +113,33 @@ public class FakeUserDataAccessObject implements SubmitUserDataAccessInterface, 
 
     @Override
     public boolean existsByName(String username) {
-        return false;
+        return this.users.containsKey(username);
     }
 
     @Override
     public User getUser(String username) {
-        return null;
+        return this.users.get(username);
     }
 
     @Override
     public void setActiveUser(User user) {
-        // Does nothing :D
+        this.activeUser = user;
     }
 
     @Override
     public List<Assignment> getAssignments() {
-        return List.of();
+        return this.assignments;
     }
 
     @Override
     public Submission getSubmission(Assignment assignment) {
+        if (this.submissionMap.containsKey(assignment)) {
+            Map<String, Submission> assignmentSubmissions = this.submissionMap.get(assignment);
+            String username = activeUser.getName();
+            if (assignmentSubmissions.containsKey(username)) {
+                return assignmentSubmissions.get(username);
+            }
+        }
         return null;
     }
 }
