@@ -1,7 +1,7 @@
 package usecase.Assignments;
 
 import entity.Assignment;
-import entity.User.USER_TYPE;
+import entity.User.UserType;
 import interface_adapter.Assignments.AssignmentDTO;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class AssignmentsInteractor implements AssignmentsInputBoundary {
             assignments.sort(java.util.Comparator.comparing(Assignment::getDueDate,
                     java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder())));
 
-            boolean isInstructor = dataAccess.getUser().getUserType() == USER_TYPE.INSTRUCTOR;
+            boolean isInstructor = dataAccess.getUser().getUserType() == UserType.INSTRUCTOR;
 
             // Map Assignment entities to AssignmentDTOs
             List<AssignmentDTO> assignmentDTOs = assignments.stream()

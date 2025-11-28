@@ -218,7 +218,7 @@ public class FacadeDAO implements
                 password,
                 firstName,
                 lastName,
-                User.USER_TYPE.valueOf(userType),
+                User.UserType.valueOf(userType),
                 courses
         );
     }
@@ -365,7 +365,7 @@ public class FacadeDAO implements
     }
 
     @Override
-    public User.USER_TYPE getUserType() {
+    public User.UserType getUserType() {
         return sessionDA.getUser().getUserType();
     }
 
