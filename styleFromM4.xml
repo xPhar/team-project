@@ -793,7 +793,9 @@
         </module>
         <module name="MethodLength"/>
         <module name="OuterTypeNumber"/>
-        <module name="ParameterNumber"/>
+        <module name="ParameterNumber">
+            <property name="max" value="30"/>
+        </module>
         <module name="RecordComponentNumber"/>
 
         <!-- Whitespace -->
