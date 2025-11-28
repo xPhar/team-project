@@ -20,7 +20,8 @@ public class LoggedInInteractor implements LoggedInInputBoundary {
     public void execute(LoggedInInputData loggedInInputData) {
         if (loggedInInputData.getLogout()) {
             // Create output data BEFORE resetting the session (or else username is null...)
-            LoggedInOutputData outputData = new LoggedInOutputData(userDataAccessObject.getCurrentUsername(), null, null, null);
+            final LoggedInOutputData outputData = new LoggedInOutputData(userDataAccessObject.getCurrentUsername(),
+                    null, null, null);
 
             userDataAccessObject.resetSession();
 
@@ -28,20 +29,22 @@ public class LoggedInInteractor implements LoggedInInputBoundary {
         }
         else if (loggedInInputData.getAssignment() == null) {
             if (userDataAccessObject.getUserType() == User.STUDENT) {
-                LoggedInOutputData outputData = new LoggedInOutputData(
-                        null, null, null, userDataAccessObject.getAllAssignmentNames());
+                final LoggedInOutputData outputData = new LoggedInOutputData(null, null, null,
+                        userDataAccessObject.getAllAssignmentNames());
 
                 loginPresenter.switchToClassAverageView(outputData);
             }
-            else
+            else {
                 loginPresenter.switchToCreateAssignmentView();
+            }
         }
         else {
-            Assignment assignment = userDataAccessObject.getAssignment(loggedInInputData.getAssignment());
+            final Assignment assignment = userDataAccessObject.getAssignment(loggedInInputData.getAssignment());
             userDataAccessObject.setActiveAssignment(assignment);
 
             if (userDataAccessObject.getUserType() == User.STUDENT) {
-                LoggedInOutputData outputData = new LoggedInOutputData(null, assignment.getName(), null, null);
+                final LoggedInOutputData outputData = new LoggedInOutputData(null, assignment.getName(),
+                        null, null);
                 if (userDataAccessObject.userHasSubmitted(assignment)) {
                     loginPresenter.switchToResubmitView(outputData);
                 }
@@ -50,7 +53,7 @@ public class LoggedInInteractor implements LoggedInInputBoundary {
                 }
             }
             else if (userDataAccessObject.getUserType() == User.INSTRUCTOR) {
-                LoggedInOutputData outputData = new LoggedInOutputData(
+                final LoggedInOutputData outputData = new LoggedInOutputData(
                         userDataAccessObject.getCurrentUsername(),
                         assignment.getName(),
                         userDataAccessObject.getSubmissionTableModel(assignment),

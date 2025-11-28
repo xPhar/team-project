@@ -18,10 +18,11 @@ public class ClassAverageController {
     /**
      * Execute the class average use case for the selected assignment.
      *
+     * @param back whether the user requested to go back to the previous view
      * @param assignmentName the name of the assignment chosen in the ComboBox
      */
     public void execute(boolean back, String assignmentName) {
-        ClassAverageInputData inputData = new ClassAverageInputData(back, assignmentName);
+        final ClassAverageInputData inputData = new ClassAverageInputData(back, assignmentName);
         classAverageUseCaseInteractor.execute(inputData);
     }
 }

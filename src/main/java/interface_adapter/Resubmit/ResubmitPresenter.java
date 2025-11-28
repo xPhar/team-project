@@ -1,10 +1,10 @@
 package interface_adapter.Resubmit;
 
+import java.awt.Color;
+
 import interface_adapter.Submit.SubmitViewModel;
 import interface_adapter.ViewManagerModel;
 import usecase.Resubmit.ResubmitOutputBoundary;
-
-import java.awt.*;
 
 public class ResubmitPresenter implements ResubmitOutputBoundary {
 
@@ -27,7 +27,7 @@ public class ResubmitPresenter implements ResubmitOutputBoundary {
 
     @Override
     public void prepareFailView(String errorMessage) {
-        ResubmitState resubmitState = new ResubmitState();
+        final ResubmitState resubmitState = new ResubmitState();
         resubmitState.setMessage(errorMessage);
         resubmitState.setMsgColor(Color.RED);
         resubmitViewModel.setState(resubmitState);

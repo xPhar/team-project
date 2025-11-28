@@ -4,11 +4,11 @@ package entity;
 Storing runtime data that will be passed between interactor (maybe DAO)
 Can be implemented as pattern Singleton
  */
-public class Session {
+public final class Session {
+    private static Session session;
     private User user;
     private Course course;
     private Assignment assignment;
-    private static Session session = null;
 
     private Session() {
         user = null;
@@ -16,11 +16,25 @@ public class Session {
         assignment = null;
     }
 
+    /**
+     * Provides a globally accessible instance of the {@code Session} class, ensuring that only
+     * one instance exists throughout the application's lifecycle.
+     *
+     * <p></p>
+     * This method follows the Singleton design pattern. If the instance does not already exist,
+     * it initializes a new instance. If an instance already exists, it returns the existing instance.
+     *
+     * @return the single instance of the {@code Session} class
+     */
     public static Session getInstance() {
         if (session == null) {
             session = new Session();
         }
         return session;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     // -----------------------
@@ -30,8 +44,8 @@ public class Session {
         this.user = user;
     }
 
-    public User getUser() {
-        return user;
+    public Course getCourse() {
+        return course;
     }
 
     // -----------------------
@@ -41,8 +55,8 @@ public class Session {
         this.course = course;
     }
 
-    public Course getCourse() {
-        return course;
+    public Assignment getAssignment() {
+        return assignment;
     }
 
     // -----------------------
@@ -50,9 +64,5 @@ public class Session {
     // -----------------------
     public void setAssignment(Assignment assignment) {
         this.assignment = assignment;
-    }
-
-    public Assignment getAssignment() {
-        return assignment;
     }
 }

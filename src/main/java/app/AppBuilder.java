@@ -1,7 +1,6 @@
 package app;
 
 import data_access.FacadeDAO;
-import data_access.FakeUserDataAccessObject;
 import data_access.TestDAO;
 
 import interface_adapter.Assignments.*;

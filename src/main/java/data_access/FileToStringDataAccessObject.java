@@ -1,7 +1,10 @@
 package data_access;
 
-import javax.swing.*;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -19,15 +22,9 @@ public class FileToStringDataAccessObject {
      *                               user have no read permission for the file
      */
     public String readFileToString(File file) throws IOException, FileNotFoundException {
-//        final JFileChooser fc = new JFileChooser();
-//        int returnVal = fc.showOpenDialog(null);
-//
-//        if (returnVal == JFileChooser.APPROVE_OPTION) {
-//            File file = fc.getSelectedFile();
-//        }
 
-        FileInputStream fis = new FileInputStream(file);
-        byte[] bytes = new byte[(int) file.length()];
+        final FileInputStream fis = new FileInputStream(file);
+        final byte[] bytes = new byte[(int) file.length()];
         fis.read(bytes);
         fis.close();
 
@@ -35,22 +32,16 @@ public class FileToStringDataAccessObject {
     }
 
     /**
-     * Save a string representing the content to a file
+     * Save a string representing the content to a file.
      * @param fileContent the string representing the content of the file to be saved
      * @param file the file to write the fileContent to
      * @throws IOException if something happens when writing to the file
      * @throws FileNotFoundException if the file is a directory or if the user has no write access
      *                               to the file
      */
-    public void saveFileFromString(String fileContent, File file) throws IOException, FileNotFoundException {
-//        final JFileChooser fc = new JFileChooser();
-//        int returnVal = fc.showSaveDialog(null);
+    public static void saveFileFromString(String fileContent, File file) throws IOException, FileNotFoundException {
 
-//        if (returnVal == JFileChooser.APPROVE_OPTION) {
-//            File file = fc.getSelectedFile();
-//        }
-
-        FileOutputStream fos = new FileOutputStream(file);
+        final FileOutputStream fos = new FileOutputStream(file);
         fos.write(fileContent.getBytes());
         fos.close();
     }

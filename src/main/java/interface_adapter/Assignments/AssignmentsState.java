@@ -3,16 +3,16 @@ package interface_adapter.Assignments;
 import java.util.List;
 
 public class AssignmentsState {
-    private List<AssignmentDTO> assignments;
+    private List<AssignmentDataTransferObject> assignments;
     private String courseName;
     private boolean isInstructor;
     private String errorMessage;
 
-    public List<AssignmentDTO> getAssignments() {
+    public List<AssignmentDataTransferObject> getAssignments() {
         return assignments;
     }
 
-    public void setAssignments(List<AssignmentDTO> assignments) {
+    public void setAssignments(List<AssignmentDataTransferObject> assignments) {
         this.assignments = assignments;
     }
 

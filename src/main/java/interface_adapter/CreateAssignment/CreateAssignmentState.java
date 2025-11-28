@@ -2,9 +2,10 @@ package interface_adapter.CreateAssignment;
 
 public class CreateAssignmentState {
     private String errorMessage = "";
-    private boolean success = false;
+    private boolean success;
 
     public CreateAssignmentState() {
+        success = false;
     }
 
     public String getErrorMessage() {

@@ -19,11 +19,10 @@ public class EditAssignmentPresenter implements EditAssignmentOutputBoundary {
 
     @Override
     public void prepareSuccessView() {
-        EditAssignmentState state = editAssignmentViewModel.getState();
+        final EditAssignmentState state = editAssignmentViewModel.getState();
         state.setSuccess(true);
         state.setErrorMessage(null);
         editAssignmentViewModel.firePropertyChange();
-
 
         viewManagerModel.setState(assignmentsViewModel.getViewName());
         viewManagerModel.firePropertyChange();
@@ -31,7 +30,7 @@ public class EditAssignmentPresenter implements EditAssignmentOutputBoundary {
 
     @Override
     public void prepareFailureView(String error) {
-        EditAssignmentState state = editAssignmentViewModel.getState();
+        final EditAssignmentState state = editAssignmentViewModel.getState();
         state.setErrorMessage(error);
         state.setSuccess(false);
         editAssignmentViewModel.firePropertyChange();

@@ -34,8 +34,10 @@ public class LoggedInPresenter implements LoggedInOutputBoundary {
                              SubmissionListViewModel submissionListViewModel,
                              ClassAverageViewModel classAverageViewModel,
                              CreateAssignmentViewModel createAssignmentViewModel) {
+
+        // Too much parameter (by checkstyle, maybe use map<String, ViewModel>?)
         this.viewManagerModel = viewManagerModel;
-        this.loggedInViewModel =  loggedInViewModel;
+        this.loggedInViewModel = loggedInViewModel;
         this.loginViewModel = loginViewModel;
         this.submitViewModel = submitViewModel;
         this.resubmitViewModel = resubmitViewModel;
@@ -130,9 +132,9 @@ public class LoggedInPresenter implements LoggedInOutputBoundary {
     @Override
     public void prepareFailView(String error) {
         // TODO: Maybe have an "error ocurred, please try again" popup?
-//        final LoggedInState loginState = loginViewModel.getState();
-//        loginState.setLoggedInError(error);
-//        loginViewModel.firePropertyChange();
+        // final LoggedInState loginState = loginViewModel.getState();
+        // loginState.setLoggedInError(error);
+        // loginViewModel.firePropertyChange();
         throw new Error("LoggedInPresenter not implemented");
     }
 }

@@ -1,8 +1,8 @@
 package usecase.logged_in;
 
-import interface_adapter.submission_list.SubmissionTableModel;
-
 import java.util.List;
+
+import interface_adapter.submission_list.SubmissionTableModel;
 
 public class LoggedInOutputData {
     private final String username;

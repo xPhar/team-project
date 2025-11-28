@@ -1,9 +1,20 @@
 package data_access;
 
-import entity.*;
-import interface_adapter.submission_list.SubmissionTableModel;
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import entity.Assignment;
+import entity.Course;
+import entity.Submission;
+import entity.User;
+import interface_adapter.submission_list.SubmissionTableModel;
 import usecase.Grade.GradeDataAccessInterface;
 import usecase.Resubmit.ResubmitUserDataAccessInterface;
 import usecase.Submission.SubmissionDataAccessInterface;
@@ -12,13 +23,6 @@ import usecase.Submit.SubmitUserDataAccessInterface;
 import usecase.class_average.ClassAverageUserDataAccessInterface;
 import usecase.logged_in.LoggedInDataAccessInterface;
 import usecase.login.LoginDataAccessInterface;
-
-import java.io.File;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public class FacadeDAO implements
         LoginDataAccessInterface,
@@ -163,7 +167,7 @@ public class FacadeDAO implements
     public void save(User user) {
         gradeDA.createUser(user.getName(), user.getPassword());
         String userType;
-        if (user.getUserType() == user.STUDENT) {
+        if (user.getUserType() == User.STUDENT) {
             userType = "student";
         }
         else {
@@ -214,7 +218,7 @@ public class FacadeDAO implements
                 password,
                 firstName,
                 lastName,
-                User.USER_TYPE.valueOf(userType),
+                User.UserType.valueOf(userType),
                 courses
         );
     }
@@ -260,12 +264,12 @@ public class FacadeDAO implements
                 .stream()
                 .filter(o -> o instanceof String)
                 .map(o -> (String) o)
-                .forEach(courseBuilder::addInstructor);
+                .forEach(courseBuilder::instructor);
         courseData.getJSONArray("students").toList()
                 .stream()
                 .filter(o -> o instanceof String)
                 .map(o -> (String) o)
-                .forEach(courseBuilder::addInstructor);
+                .forEach(courseBuilder::instructor);
 
         courseBuilder.courseName(courseName)
                      .courseCode(courseName)
@@ -288,7 +292,7 @@ public class FacadeDAO implements
                             .toList())
                     .build();
 
-            courseBuilder.addAssignment(assignment);
+            courseBuilder.assignment(assignment);
         }
 
         return courseBuilder.build();
@@ -361,7 +365,7 @@ public class FacadeDAO implements
     }
 
     @Override
-    public User.USER_TYPE getUserType() {
+    public User.UserType getUserType() {
         return sessionDA.getUser().getUserType();
     }
 

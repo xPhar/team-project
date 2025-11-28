@@ -1,7 +1,7 @@
 package interface_adapter.CreateAssignment;
 
-import interface_adapter.ViewManagerModel;
 import interface_adapter.Assignments.AssignmentsViewModel;
+import interface_adapter.ViewManagerModel;
 import usecase.CreateAssignment.CreateAssignmentOutputBoundary;
 import usecase.CreateAssignment.CreateAssignmentOutputData;
 
@@ -20,7 +20,7 @@ public class CreateAssignmentPresenter implements CreateAssignmentOutputBoundary
 
     @Override
     public void prepareSuccessView(CreateAssignmentOutputData outputData) {
-        CreateAssignmentState state = createAssignmentViewModel.getState();
+        final CreateAssignmentState state = createAssignmentViewModel.getState();
         state.setSuccess(true);
         state.setErrorMessage("");
         createAssignmentViewModel.setState(state);
@@ -32,7 +32,7 @@ public class CreateAssignmentPresenter implements CreateAssignmentOutputBoundary
 
     @Override
     public void prepareFailureView(String errorMessage) {
-        CreateAssignmentState state = createAssignmentViewModel.getState();
+        final CreateAssignmentState state = createAssignmentViewModel.getState();
         state.setSuccess(false);
         state.setErrorMessage(errorMessage);
         createAssignmentViewModel.setState(state);

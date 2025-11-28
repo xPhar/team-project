@@ -1,21 +1,21 @@
 package usecase.Assignments;
 
-import interface_adapter.Assignments.AssignmentDTO;
+import interface_adapter.Assignments.AssignmentDataTransferObject;
 
 import java.util.List;
 
 public class AssignmentsOutputData {
-    private final List<AssignmentDTO> assignments;
+    private final List<AssignmentDataTransferObject> assignments;
     private final String courseName;
     private final boolean isInstructor;
 
-    public AssignmentsOutputData(List<AssignmentDTO> assignments, String courseName, boolean isInstructor) {
+    public AssignmentsOutputData(List<AssignmentDataTransferObject> assignments, String courseName, boolean isInstructor) {
         this.assignments = assignments;
         this.courseName = courseName;
         this.isInstructor = isInstructor;
     }
 
-    public List<AssignmentDTO> getAssignments() {
+    public List<AssignmentDataTransferObject> getAssignments() {
         return assignments;
     }
 

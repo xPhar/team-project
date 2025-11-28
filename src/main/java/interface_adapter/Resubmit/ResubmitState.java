@@ -1,6 +1,6 @@
 package interface_adapter.Resubmit;
 
-import java.awt.*;
+import java.awt.Color;
 
 public class ResubmitState {
 
@@ -22,6 +22,4 @@ public class ResubmitState {
     public void setMessage(String message) {
         this.message = message;
     }
-
-
 }
