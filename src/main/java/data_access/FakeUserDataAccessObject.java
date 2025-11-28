@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import entity.Assignment;
+import entity.Submission;
 import entity.User;
 import usecase.Resubmit.ResubmitUserDataAccessInterface;
 import usecase.Submit.SubmitUserDataAccessInterface;
@@ -62,5 +63,15 @@ public class FakeUserDataAccessObject implements SubmitUserDataAccessInterface, 
     @Override
     public void setActiveUser(User user) {
         // Does nothing :D
+    }
+
+    @Override
+    public List<Assignment> getAssignments() {
+        return List.of();
+    }
+
+    @Override
+    public Submission getSubmission(Assignment assignment) {
+        return null;
     }
 }

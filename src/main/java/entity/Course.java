@@ -7,22 +7,18 @@ public class Course {
     private final String courseName;
     private final String courseCode;
     private final String latePenalty;
-    private final List<User> instructors;
-    private final List<User> students;
+    private final List<String> instructors;
+    private final List<String> students;
     private final List<Assignment> assignments;
 
     public Course(String courseName, String courseCode, String latePenalty,
-                  List<User> instructors, List<User> students, List<Assignment> assignments) {
+                  List<String> instructors, List<String> students, List<Assignment> assignments) {
         this.courseName = courseName;
         this.courseCode = courseCode;
         this.latePenalty = latePenalty;
         this.instructors = instructors;
         this.students = students;
         this.assignments = assignments;
-    }
-
-    public static CourseBuilder getBuilder() {
-        return new CourseBuilder();
     }
 
     public String getCourseName() {
@@ -37,11 +33,11 @@ public class Course {
         return latePenalty;
     }
 
-    public List<User> getInstructors() {
+    public List<String> getInstructors() {
         return instructors;
     }
 
-    public List<User> getStudents() {
+    public List<String> getStudents() {
         return students;
     }
 
@@ -49,12 +45,16 @@ public class Course {
         return assignments;
     }
 
+    public static CourseBuilder getBuilder() {
+        return new CourseBuilder();
+    }
+
     public static class CourseBuilder {
         private String courseName;
         private String courseCode;
         private String latePenalty;
-        private final List<User> instructors;
-        private final List<User> students;
+        private final List<String> instructors;
+        private final List<String> students;
         private final List<Assignment> assignments;
 
         CourseBuilder() {
@@ -69,7 +69,7 @@ public class Course {
          * @param newCourseName the name of the course
          * @return the current instance of {@code CourseBuilder} for method chaining
          */
-        public CourseBuilder addCourseName(String newCourseName) {
+        public CourseBuilder courseName(String newCourseName) {
             courseName = newCourseName;
             return this;
         }
@@ -92,7 +92,7 @@ public class Course {
          *         for late submissions
          * @return the current instance of {@code CourseBuilder} for method chaining
          */
-        public CourseBuilder addLatePenalty(String newLatePenalty) {
+        public CourseBuilder latePenalty(String newLatePenalty) {
             latePenalty = newLatePenalty;
             return this;
         }
@@ -103,7 +103,7 @@ public class Course {
          * @param instructor the instructor to be added to the course
          * @return the current instance of {@code CourseBuilder} for method chaining
          */
-        public CourseBuilder addInstructor(User instructor) {
+        public CourseBuilder instructor(String instructor) {
             instructors.add(instructor);
             return this;
         }
@@ -114,7 +114,7 @@ public class Course {
          * @param student the student to be added to the course
          * @return the current instance of {@code CourseBuilder} for method chaining
          */
-        public CourseBuilder addStudent(User student) {
+        public CourseBuilder addStudent(String student) {
             students.add(student);
             return this;
         }
@@ -125,7 +125,7 @@ public class Course {
          * @param assignment the assignment to be added to the course
          * @return the current instance of {@code CourseBuilder} for method chaining
          */
-        public CourseBuilder addAssignment(Assignment assignment) {
+        public CourseBuilder assignment(Assignment assignment) {
             assignments.add(assignment);
             return this;
         }

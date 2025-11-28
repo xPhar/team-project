@@ -1,6 +1,6 @@
 package app;
 
-import data_access.FakeUserDataAccessObject;
+import data_access.FacadeDAO;
 import data_access.TestDAO;
 
 import interface_adapter.Assignments.*;
@@ -8,9 +8,11 @@ import interface_adapter.CreateAssignment.*;
 import interface_adapter.EditAssignment.*;
 import interface_adapter.Resubmit.*;
 import interface_adapter.Submit.*;
+import interface_adapter.logged_in.*;
 import interface_adapter.login.*;
 import interface_adapter.submission.*;
 import interface_adapter.submission_list.*;
+import interface_adapter.class_average.*;
 import interface_adapter.ViewManagerModel;
 
 import usecase.Assignments.*;
@@ -18,10 +20,12 @@ import usecase.CreateAssignment.*;
 import usecase.EditAssignment.*;
 import usecase.Resubmit.*;
 import usecase.Submit.*;
+import usecase.logged_in.*;
 import usecase.login.*;
 import usecase.Grade.*;
 import usecase.Submission.*;
 import usecase.SubmissionList.*;
+import usecase.class_average.*;
 
 import view.*;
 
@@ -41,12 +45,17 @@ public class AppBuilder {
 
     private LoginView loginView;
     private LoginViewModel loginViewModel;
+    private LoggedInView loggedInView;
+    private LoggedInViewModel loggedInViewModel;
     private SubmitView submitView;
-    private ResubmitView resubmitView;
     private SubmitViewModel submitViewModel;
+    private ResubmitView resubmitView;
     private ResubmitViewModel resubmitViewModel;
+    private ClassAverageView classAverageView;
+    private ClassAverageViewModel classAverageViewModel;
 
-    private final FakeUserDataAccessObject userDataAccessObject = new FakeUserDataAccessObject(false, false);
+    //private final FakeUserDataAccessObject userDataAccessObject =  new FakeUserDataAccessObject(false, false);
+    private final FacadeDAO userDataAccessObject = new FacadeDAO();
 
     // Assignment-related views and view models
     private AssignmentView assignmentView;
@@ -67,10 +76,16 @@ public class AppBuilder {
         return this;
     }
 
+    public AppBuilder addLoggedInView() {
+        loggedInViewModel = new LoggedInViewModel();
+        loggedInView = new LoggedInView(loggedInViewModel);
+        cardPanel.add(loggedInView, loggedInView.getViewName());
+        return this;
+    }
+
     public AppBuilder addSubmitView() {
         submitViewModel = new SubmitViewModel();
         submitView = new SubmitView(submitViewModel);
-        submitView.setViewManagerModel(viewManagerModel);
         cardPanel.add(submitView, submitView.getViewName());
         return this;
     }
@@ -78,17 +93,42 @@ public class AppBuilder {
     public AppBuilder addResubmitView() {
         resubmitViewModel = new ResubmitViewModel();
         resubmitView = new ResubmitView(resubmitViewModel);
-        resubmitView.setViewManagerModel(viewManagerModel);
         cardPanel.add(resubmitView, resubmitView.getViewName());
         return this;
     }
 
+    public AppBuilder addClassAverageView() {
+        classAverageViewModel = new ClassAverageViewModel();
+        classAverageView = new ClassAverageView(classAverageViewModel);
+        cardPanel.add(classAverageView, classAverageView.getViewName());
+        return this;
+    }
+
     public AppBuilder addLoginUseCase() {
-        final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel, loginViewModel);
+        final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(
+                viewManagerModel, loggedInViewModel, loginViewModel);
         final LoginInputBoundary loginInteractor = new LoginInteractor(
                 userDataAccessObject, loginOutputBoundary);
         LoginController loginController = new LoginController(loginInteractor);
         loginView.setLoginController(loginController);
+        return this;
+    }
+
+    public AppBuilder addLoggedInUseCase() {
+        final LoggedInOutputBoundary loggedInOutputBoundary = new LoggedInPresenter(
+                viewManagerModel,
+                loggedInViewModel,
+                loginViewModel,
+                submitViewModel,
+                resubmitViewModel,
+                submissionListViewModel,
+                classAverageViewModel,
+                createAssignmentViewModel);
+        final LoggedInInputBoundary loggedInInteractor = new LoggedInInteractor(
+                userDataAccessObject, loggedInOutputBoundary);
+
+        LoggedInController loggedInController = new LoggedInController(loggedInInteractor);
+        loggedInView.setLoggedInController(loggedInController);
         return this;
     }
 
@@ -109,6 +149,18 @@ public class AppBuilder {
                 userDataAccessObject);
         ResubmitController resubmitController = new ResubmitController(resubmitInteractor);
         resubmitView.setResubmitController(resubmitController);
+        return this;
+    }
+
+    public AppBuilder addClassAverageUseCase() {
+        final ClassAverageOutputBoundary classAverageOutputBoundary = new ClassAveragePresenter(
+                classAverageViewModel, loggedInViewModel, viewManagerModel
+        );
+        final ClassAverageInputBoundary classAverageInteractor = new  ClassAverageInteractor(
+                userDataAccessObject, classAverageOutputBoundary
+        );
+        ClassAverageController classAverageController = new ClassAverageController(classAverageInteractor);
+        classAverageView.setClassAverageController(classAverageController);
         return this;
     }
 
@@ -217,36 +269,15 @@ public class AppBuilder {
     }
 
     public JFrame build() {
-        final JFrame application = new JFrame("Assignment Management System");
+        final JFrame application = new JFrame("This is a title");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        application.setPreferredSize(new Dimension(1280, 720));
 
         application.add(cardPanel);
 
-        viewManagerModel.setState(assignmentView.getViewName());
+        viewManagerModel.setState(loginView.getViewName());
         viewManagerModel.firePropertyChange();
 
         return application;
     }
-    // Here's an example method from the CA Lab:
-    /*
-     * public AppBuilder addLoginView() {
-     * loginViewModel = new LoginViewModel();
-     * loginView = new LoginView(loginViewModel);
-     * cardPanel.add(loginView, loginView.getViewName());
-     * return this;
-     * }
-     * 
-     * // TODO: Update builder once full login flow is complete
-     * public JFrame build() {
-     * final JFrame application = new JFrame("User Login Example");
-     * application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-     * 
-     * application.add(cardPanel);
-     * 
-     * viewManagerModel.setState(loginView.getViewName());
-     * viewManagerModel.firePropertyChange();
-     * 
-     * return application;
-     * }
-     */
 }

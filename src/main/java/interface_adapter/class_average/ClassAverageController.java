@@ -20,8 +20,8 @@ public class ClassAverageController {
      *
      * @param assignmentName the name of the assignment chosen in the ComboBox
      */
-    public void execute(String assignmentName) {
-        ClassAverageInputData inputData = new ClassAverageInputData(assignmentName);
+    public void execute(boolean back, String assignmentName) {
+        ClassAverageInputData inputData = new ClassAverageInputData(back, assignmentName);
         classAverageUseCaseInteractor.execute(inputData);
     }
 }

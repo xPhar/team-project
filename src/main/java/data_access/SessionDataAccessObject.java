@@ -12,6 +12,12 @@ public class SessionDataAccessObject {
         this.session = Session.getInstance();
     }
 
+    public void resetSession() {
+        setUser(null);
+        setCourse(null);
+        setAssignment(null);
+    }
+
     /**
      * Retrieves the currently active user from the session.
      *

@@ -21,7 +21,7 @@ public class FileToStringDataAccessObject {
      * @throws FileNotFoundException if the program can't find the file or the
      *                               user have no read permission for the file
      */
-    public static String readFileToString(File file) throws IOException, FileNotFoundException {
+    public String readFileToString(File file) throws IOException, FileNotFoundException {
 
         final FileInputStream fis = new FileInputStream(file);
         final byte[] bytes = new byte[(int) file.length()];

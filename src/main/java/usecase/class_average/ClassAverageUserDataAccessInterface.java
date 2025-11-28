@@ -26,6 +26,13 @@ public interface ClassAverageUserDataAccessInterface {
     List<String> getAllAssignmentNames();
 
     /**
+     * Return the username of the currently active user.
+     *
+     * @return username of the active user.
+     */
+    String getCurrentUsername();
+
+    /**
      * Return the grade of the current user (submitter) for this assignment.
      * If the student's submission is not graded yet, return -1.
      *

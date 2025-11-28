@@ -3,23 +3,19 @@ package entity;
 import java.time.LocalDateTime;
 
 public class Submission {
-    private String submitter;
-    private LocalDateTime submissionTime;
-    private String submissionName;
-    private String submissionData;
-    private double grade;
-    private Status status;
-    private String feedback;
-
-    public enum Status {
-        ON_TIME,
-        LATE,
-        GRADED,
-        UNDER_REVIEW
-    }
-
+    public static final Status ON_TIME = Status.ON_TIME;
+    public static final Status LATE = Status.LATE;
+    public static final Status GRADED = Status.GRADED;
+    public static final Status UNDER_REVIEW = Status.UNDER_REVIEW;
+    private final String submitter;
+    private final LocalDateTime submissionTime;
+    private final String submissionName;
+    private final String submissionData;
+    private final double grade;
+    private final Status status;
+    private final String feedback;
     public Submission(String submitter, LocalDateTime submissionTime, String submissionName,
-                    String submissionData, double grade, Status status, String feedback) {
+                      String submissionData, double grade, Status status, String feedback) {
         this.submitter = submitter;
         this.submissionTime = submissionTime;
         this.submissionName = submissionName;
@@ -27,6 +23,10 @@ public class Submission {
         this.grade = grade;
         this.status = status;
         this.feedback = feedback;
+    }
+
+    public static SubmissionBuilder getBuilder() {
+        return new SubmissionBuilder();
     }
 
     public String getSubmitter() {
@@ -57,8 +57,11 @@ public class Submission {
         return feedback;
     }
 
-    public static SubmissionBuilder getBuilder() {
-        return new SubmissionBuilder();
+    public enum Status {
+        ON_TIME,
+        LATE,
+        GRADED,
+        UNDER_REVIEW
     }
 
     public static class SubmissionBuilder {
@@ -70,7 +73,8 @@ public class Submission {
         private Status status;
         private String feedback;
 
-        SubmissionBuilder() {}
+        SubmissionBuilder() {
+        }
 
         public SubmissionBuilder submitter(String submitter) {
             this.submitter = submitter;
