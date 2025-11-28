@@ -2,6 +2,8 @@ package usecase.EditAssignment;
 
 import entity.Assignment;
 
+import java.time.LocalDateTime;
+
 public class EditAssignmentInteractor implements EditAssignmentInputBoundary {
     private final EditAssignmentDataAccessInterface dataAccessObject;
     private final EditAssignmentOutputBoundary outputBoundary;
@@ -14,14 +16,16 @@ public class EditAssignmentInteractor implements EditAssignmentInputBoundary {
 
     @Override
     public void execute(EditAssignmentInputData inputData) {
+        String originalName = inputData.getOriginalName();
+
         Assignment assignment = Assignment.builder()
-                .name(inputData.getName())
+                .name(inputData.getNewName())
                 .description(inputData.getDescription())
                 .dueDate(inputData.getDueDate())
                 .supportedFileTypes(inputData.getSupportedFileTypes())
                 .build();
 
-        dataAccessObject.updateAssignment(inputData.getCourseCode(), inputData.getName(), assignment);
+        dataAccessObject.updateAssignment(inputData.getCourseCode(), originalName, assignment);
 
         outputBoundary.prepareSuccessView();
     }

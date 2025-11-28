@@ -51,6 +51,9 @@ public class EditAssignmentView extends JPanel implements PropertyChangeListener
     private final Font LABEL_FONT = new Font("Segoe UI", Font.BOLD, 13);
     private final Font INPUT_FONT = new Font("Segoe UI", Font.PLAIN, 14);
 
+    // Store initial assignment name to allow updating of assignment names
+    private String originalAssignmentName = "";
+
     public EditAssignmentView(EditAssignmentViewModel editAssignmentViewModel) {
         this.editAssignmentViewModel = editAssignmentViewModel;
         this.editAssignmentViewModel.addPropertyChangeListener(this);
@@ -281,6 +284,7 @@ public class EditAssignmentView extends JPanel implements PropertyChangeListener
                         .toLocalDateTime();
 
                 editAssignmentController.execute(
+                        originalAssignmentName,
                         nameField.getText().trim(),
                         courseValue.getText(),
                         descriptionArea.getText(),
@@ -317,7 +321,16 @@ public class EditAssignmentView extends JPanel implements PropertyChangeListener
         List<String> out = new ArrayList<>();
         for (Component c : typesPanel.getComponents()) {
             if (c instanceof JCheckBox j && j.isSelected()) {
-                out.add(j.getText().toLowerCase());
+                String text =  j.getText().trim().toLowerCase();
+                if (text.contains("py")) {
+                    out.add(".py");
+                }
+                else if (text.contains("java")) {
+                    out.add(".java");
+                }
+                else {
+                    out.add("." + text);
+                }
             }
         }
         return out;
@@ -344,6 +357,8 @@ public class EditAssignmentView extends JPanel implements PropertyChangeListener
 
     private void populateForm(String courseCode, String name, String description,
             LocalDateTime dueDate, List<String> supportedFileTypes) {
+        this.originalAssignmentName = name;
+
         nameField.setText(name);
         courseValue.setText(courseCode);
         descriptionArea.setText(description);

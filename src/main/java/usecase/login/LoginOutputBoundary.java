@@ -5,11 +5,14 @@ package usecase.login;
  */
 public interface LoginOutputBoundary {
     /**
-     * Switches to logged in view after successful login.
+     * Switches to the logged in view for students after successful login.
      */
-    void switchToLoggedInView(LoginOutputData response);
+    void switchToStudentLoggedInView(LoginOutputData response);
 
-
+    /**
+     * Switches to the logged in view for instructors after successful login.
+     */
+    void switchToInstructorLoggedInView();
 
     /**
      * Prepares the failure view for the Login Use Case.

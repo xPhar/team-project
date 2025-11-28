@@ -20,11 +20,11 @@ public class AssignmentsInteractor implements AssignmentsInputBoundary {
     @Override
     public void execute(AssignmentsInputData inputData) {
         try {
-            List<Assignment> assignments = dataAccess.getAssignments(dataAccess.getCourseCode());
+            List<Assignment> assignments = dataAccess.getAssignments();
             assignments.sort(java.util.Comparator.comparing(Assignment::getDueDate,
                     java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder())));
 
-            boolean isInstructor = dataAccess.getUser().getUserType() == USER_TYPE.INSTRUCTOR;
+            boolean isInstructor = dataAccess.getCurrentUser().getUserType() == USER_TYPE.INSTRUCTOR;
 
             // Map Assignment entities to AssignmentDTOs
             List<AssignmentDTO> assignmentDTOs = assignments.stream()
