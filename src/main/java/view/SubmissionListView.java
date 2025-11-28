@@ -54,7 +54,7 @@ public class SubmissionListView extends JPanel implements PropertyChangeListener
         c.anchor = GridBagConstraints.CENTER;
         titlePanel.add(title, c);
 
-        submissionTable.setModel(new SubmissionTableModel(new ArrayList<Submission>()));
+        submissionTable.setModel(new SubmissionTableModel(new ArrayList<>()));
         submissionTable.setFont(new Font(submissionTable.getFont().getFontName(), Font.PLAIN, 14));
         submissionTable.setRowHeight(20);
         submissionTable.getColumnModel().getColumn(2).setPreferredWidth(20);
@@ -64,11 +64,7 @@ public class SubmissionListView extends JPanel implements PropertyChangeListener
         this.add(new JScrollPane(submissionTable));
 
         backButton.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-                        submissionListController.executeBack();
-                    }
-                }
+                evt -> submissionListController.executeBack()
         );
         submissionTable.addMouseListener(
                 new MouseAdapter() {
