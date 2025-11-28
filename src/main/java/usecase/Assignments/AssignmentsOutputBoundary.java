@@ -10,4 +10,6 @@ public interface AssignmentsOutputBoundary {
     void switchToSubmitView();
 
     void switchToResubmitView();
+
+    void switchToSubmissionListView(AssignmentsOutputData outputData);
 }

@@ -123,6 +123,21 @@ public class TestDAO implements
     }
 
     @Override
+    public List<Submission> getSubmissionList(Assignment assignment) {
+        return List.of();
+    }
+
+    @Override
+    public Assignment getAssignment(String assignment) {
+        return null;
+    }
+
+    @Override
+    public void setActiveAssignment(Assignment assignment) {
+
+    }
+
+    @Override
     public void saveAssignment(String courseCode, Assignment assignment) {
         assignmentsByCourse.computeIfAbsent(courseCode, k -> new ArrayList<>()).add(assignment);
     }
