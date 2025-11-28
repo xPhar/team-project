@@ -17,7 +17,7 @@ import java.time.LocalTime;
  * Submission detail view.
  */
 public class SubmissionView extends JPanel implements PropertyChangeListener {
-    private final String viewName = "Submission";
+    private final String viewName = "submission";
     private SubmissionController submissionController;
 
     private final JLabel submitterLabel = new JLabel("Submitter:");

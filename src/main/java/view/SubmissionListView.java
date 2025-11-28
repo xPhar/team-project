@@ -20,7 +20,7 @@ import java.util.ArrayList;
  * View to show a list of submissions for a given assignment.
  */
 public class SubmissionListView extends JPanel implements PropertyChangeListener {
-    private final String viewName = "SubmissionList";
+    private final String viewName = "submissionList";
     private SubmissionListController submissionListController;
 
     private final SubmissionListViewModel submissionListModel;
