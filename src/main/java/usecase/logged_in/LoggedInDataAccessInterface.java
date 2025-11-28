@@ -2,6 +2,7 @@ package usecase.logged_in;
 
 
 import entity.Assignment;
+import entity.Submission;
 import entity.User;
 import interface_adapter.submission_list.SubmissionTableModel;
 
@@ -29,11 +30,11 @@ public interface LoggedInDataAccessInterface {
     User.USER_TYPE getUserType();
 
     /**
-     * Gets a submission table model with submissions for the given assignment.
+     * Gets a list of submissions for the given assignment.
      * @param assignment the assignment to get submissions from
-     * @return the submission table model for the requested assignment
+     * @return the list of submissions for the requested assignment
      */
-    SubmissionTableModel getSubmissionTableModel(Assignment assignment);
+    List<Submission> getSubmissionList(Assignment assignment);
 
     /**
      * Gets the assignment entity with the given name.

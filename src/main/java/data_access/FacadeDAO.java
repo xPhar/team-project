@@ -308,6 +308,16 @@ public class FacadeDAO implements
     }
 
     // Mark Assignment
+    @Override
+    public List<Submission> getSubmissionList() {
+        String assignmentName = sessionDA.getAssignment().getName();
+        return getSubmissionsFor(assignmentName);
+    }
+    @Override
+    public List<Submission> getSubmissionList(Assignment assignment) {
+        return getSubmissionsFor(assignment.getName());
+    }
+
     public List<Submission> getSubmissionList(String assignmentName) {
         return getSubmissionsFor(assignmentName);
     }
@@ -322,16 +332,29 @@ public class FacadeDAO implements
         throw new DataAccessException("No submission found for " + submitter);
     }
 
-    public void saveFile(File saveFile) {
-        // TODO if we store submission in session then we can just save the file from there
+    public Submission getSubmissionForSubmissionView(String submitter) {
+        String assignmentName = sessionDA.getAssignment().getName();
+        return getSubmission(assignmentName, submitter);
     }
 
-    public void grade(String assignment, String submitter, double grade, String feedback) {
-        Course course = sessionDA.getCourse();
+    public void saveFile(File saveFile, String submitter) throws DataAccessException {
+        String assignmentName = sessionDA.getAssignment().getName();
+        Submission submission = getSubmission(assignmentName, submitter);
+        try {
+            fsDA.saveFileFromString(submission.getSubmissionData(), saveFile);
+        }
+        catch (Exception e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
 
-        JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
-        JSONObject courseData = courseObject.getJSONObject("courseData");
-        JSONObject assignmentDictionary = courseData.getJSONObject("assignments");
+    public void grade(String submitter, double grade, String feedback) {
+        Course course = sessionDA.getCourse();
+        String assignment = sessionDA.getAssignment().getName();
+
+        JSONObject userInfoObject = gradeDA.getUserInfo(getCourseUserName(course));
+        JSONObject courseObject = userInfoObject.getJSONObject("courseData");
+        JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
         JSONObject assignmentObject = assignmentDictionary.getJSONObject(assignment);
         JSONObject submissionArray = assignmentObject.getJSONObject("submissions");
         JSONObject submissionObj = submissionArray.getJSONObject(submitter);
@@ -339,7 +362,7 @@ public class FacadeDAO implements
         submissionObj.put("feedback", feedback);
         submissionObj.put("status", Submission.Status.GRADED.toString());
 
-        gradeDA.modifyUserInfoEndpoint(getCourseUserName(course), COURSE_PASSWORD, courseObject);
+        gradeDA.modifyUserInfoEndpoint(getCourseUserName(course), COURSE_PASSWORD, userInfoObject);
     }
 
     // Some method I think we need (Indy)
@@ -379,13 +402,6 @@ public class FacadeDAO implements
     @Override
     public User.USER_TYPE getUserType() {
         return sessionDA.getUser().getUserType();
-    }
-
-    @Override
-    public SubmissionTableModel getSubmissionTableModel(Assignment assignment) {
-        List<Submission> submissionList = getSubmissionList(assignment.getName());
-
-        return new SubmissionTableModel(submissionList);
     }
 
     @Override

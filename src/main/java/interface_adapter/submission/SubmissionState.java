@@ -6,11 +6,14 @@ import java.time.LocalDateTime;
  * The state for submission view.
  */
 public class SubmissionState {
+    private String assignmentName;
     private String submitter;
     private String status;
     private String submissionDate;
     private String grade;
     private String feedback;
+    private String submissionName;
+    private String maxGrade;
 
     private String gradeFailureMessage;
     private String downloadSuccessMessage;
@@ -80,5 +83,29 @@ public class SubmissionState {
 
     public void setDownloadFailureMessage(String downloadFailureMessage) {
         this.downloadFailureMessage = downloadFailureMessage;
+    }
+
+    public String getSubmissionName() {
+        return submissionName;
+    }
+
+    public void setSubmissionName(String submissionName) {
+        this.submissionName = submissionName;
+    }
+
+    public String getAssignmentName() {
+        return assignmentName;
+    }
+
+    public void setAssignmentName(String assignmentName) {
+        this.assignmentName = assignmentName;
+    }
+
+    public String getMaxGrade() {
+        return maxGrade;
+    }
+
+    public void setMaxGrade(String maxGrade) {
+        this.maxGrade = maxGrade;
     }
 }

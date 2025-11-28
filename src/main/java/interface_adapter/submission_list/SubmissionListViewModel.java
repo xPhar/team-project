@@ -7,7 +7,7 @@ import interface_adapter.ViewModel;
  */
 public class SubmissionListViewModel extends ViewModel<SubmissionListState> {
     public SubmissionListViewModel() {
-        super("SubmissionList");
+        super("submissionList");
         setState(new SubmissionListState());
     }
 }
