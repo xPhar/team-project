@@ -2,7 +2,7 @@ package usecase.Assignments;
 
 import entity.Assignment;
 import entity.User.UserType;
-import interface_adapter.Assignments.AssignmentDTO;
+import interface_adapter.Assignments.AssignmentDataTransferObject;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,8 +27,8 @@ public class AssignmentsInteractor implements AssignmentsInputBoundary {
             boolean isInstructor = dataAccess.getUser().getUserType() == UserType.INSTRUCTOR;
 
             // Map Assignment entities to AssignmentDTOs
-            List<AssignmentDTO> assignmentDTOs = assignments.stream()
-                    .map(assignment -> new AssignmentDTO(
+            List<AssignmentDataTransferObject> assignmentDataTransferObjects = assignments.stream()
+                    .map(assignment -> new AssignmentDataTransferObject(
                             assignment.getName(),
                             assignment.getDescription(),
                             assignment.getDueDate(),
@@ -37,7 +37,7 @@ public class AssignmentsInteractor implements AssignmentsInputBoundary {
                     .collect(Collectors.toList());
 
             AssignmentsOutputData outputData = new AssignmentsOutputData(
-                    assignmentDTOs,
+                    assignmentDataTransferObjects,
                     dataAccess.getCourseCode(),
                     isInstructor);
 

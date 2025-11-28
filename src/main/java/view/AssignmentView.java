@@ -1,6 +1,6 @@
 package view;
 
-import interface_adapter.Assignments.AssignmentDTO;
+import interface_adapter.Assignments.AssignmentDataTransferObject;
 import interface_adapter.Assignments.AssignmentsState;
 import interface_adapter.Assignments.AssignmentsViewModel;
 import interface_adapter.Assignments.AssignmentsController;
@@ -30,7 +30,7 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
 
     private AssignmentsController assignmentsController;
     private EditAssignmentController editAssignmentController;
-    private List<AssignmentDTO> currentAssignments;
+    private List<AssignmentDataTransferObject> currentAssignments;
     private boolean isInstructor;
     private String courseCode;
 
@@ -181,7 +181,7 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
         }
     }
 
-    private void addAssignmentRow(AssignmentDTO assignment, int index) {
+    private void addAssignmentRow(AssignmentDataTransferObject assignment, int index) {
         String name = (assignment.getName() != null && !assignment.getName().isEmpty())
                 ? assignment.getName()
                 : "(unnamed)";
@@ -199,7 +199,7 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
         }
     }
 
-    private String computeStatus(AssignmentDTO assignment) {
+    private String computeStatus(AssignmentDataTransferObject assignment) {
         LocalDateTime due = assignment.getDueDate();
         LocalDateTime now = LocalDateTime.now();
 
@@ -227,7 +227,7 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
         return "Open";
     }
 
-    private String getButtonText(AssignmentDTO assignment) {
+    private String getButtonText(AssignmentDataTransferObject assignment) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime due = assignment.getDueDate();
 
@@ -256,7 +256,7 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
             return;
         }
 
-        AssignmentDTO assignment = currentAssignments.get(assignmentIndex);
+        AssignmentDataTransferObject assignment = currentAssignments.get(assignmentIndex);
 
         if (isInstructor) {
             if (editAssignmentController != null) {
