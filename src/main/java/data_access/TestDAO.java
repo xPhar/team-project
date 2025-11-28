@@ -104,8 +104,8 @@ public class TestDAO implements
     }
 
     @Override
-    public SubmissionTableModel getSubmissionTableModelForCurrentAssignment() {
-        return null;
+    public List<Submission> getSubmissionList() {
+        return List.of();
     }
 
     @Override

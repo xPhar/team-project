@@ -10,6 +10,7 @@ import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.submission_list.SubmissionListState;
 import interface_adapter.submission_list.SubmissionListViewModel;
+import interface_adapter.submission_list.SubmissionTableModel;
 import usecase.logged_in.LoggedInOutputBoundary;
 import usecase.logged_in.LoggedInOutputData;
 
@@ -91,7 +92,7 @@ public class LoggedInPresenter implements LoggedInOutputBoundary {
         // On success, update the submissionListViewModel's state
         final SubmissionListState submissionListState = submissionListViewModel.getState();
         submissionListState.setTitle(response.getAssignmentName());
-        submissionListState.setTableModel(response.getSubmissionTableModel());
+        submissionListState.setTableModel(new SubmissionTableModel(response.getSubmissions()));
         submissionListViewModel.firePropertyChange();
 
         // and clear everything from LoggedInViewModel's state

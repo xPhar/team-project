@@ -1,9 +1,11 @@
 package usecase.Submission;
 
 import entity.Assignment;
+import entity.Submission;
 import interface_adapter.submission_list.SubmissionTableModel;
 
 import java.io.File;
+import java.util.List;
 
 public interface SubmissionDataAccessInterface {
     /**
@@ -17,5 +19,5 @@ public interface SubmissionDataAccessInterface {
      * Gets a submission table model with submissions for the current assignment.
      * @return the submission table model for the current assignment
      */
-    SubmissionTableModel getSubmissionTableModelForCurrentAssignment();
+    List<Submission> getSubmissionList();
 }
