@@ -1,11 +1,10 @@
 package interface_adapter.submission;
 
-import java.time.LocalDateTime;
-
 /**
  * The state for submission view.
  */
 public class SubmissionState {
+
     private String submitter;
     private String status;
     private String submissionDate;
@@ -16,7 +15,9 @@ public class SubmissionState {
     private String downloadSuccessMessage;
     private String downloadFailureMessage;
 
-    public SubmissionState() {}
+    public SubmissionState() {
+
+    }
 
     public String getSubmitter() {
         return submitter;

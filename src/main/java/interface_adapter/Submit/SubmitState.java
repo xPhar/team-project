@@ -1,13 +1,11 @@
 package interface_adapter.Submit;
 
-
-import java.awt.*;
+import java.awt.Color;
 
 public class SubmitState {
 
     private String message;
     private Color msgColor;
-
 
     public String getMessage() {
         return message;

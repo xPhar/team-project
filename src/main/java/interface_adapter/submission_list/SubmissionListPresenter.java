@@ -1,13 +1,13 @@
 package interface_adapter.submission_list;
 
+import java.time.format.DateTimeFormatter;
+
 import entity.Submission;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.submission.SubmissionState;
 import interface_adapter.submission.SubmissionViewModel;
 import usecase.SubmissionList.SubmissionListOutputBoundary;
 import usecase.SubmissionList.SubmissionListOutputData;
-
-import java.time.format.DateTimeFormatter;
 
 /**
  * Presenter for the submission list view.
@@ -29,7 +29,7 @@ public class SubmissionListPresenter implements SubmissionListOutputBoundary {
 
     @Override
     public void prepareListView(SubmissionListOutputData submissionListOutputData) {
-        SubmissionListState state = new SubmissionListState();
+        final SubmissionListState state = new SubmissionListState();
         state.setTableModel(new SubmissionTableModel(submissionListOutputData.getSubmissions()));
         state.setTitle(submissionListOutputData.getAssignmentName());
 
@@ -42,7 +42,7 @@ public class SubmissionListPresenter implements SubmissionListOutputBoundary {
 
     @Override
     public void prepareSubmissionView(Submission outputData) {
-        SubmissionState state = new SubmissionState();
+        final SubmissionState state = new SubmissionState();
         state.setSubmitter(outputData.getSubmitter());
         state.setSubmissionDate(
                 outputData.getSubmissionTime().format(
