@@ -6,9 +6,9 @@ import entity.User;
 import java.util.List;
 
 public interface AssignmentsDataAccessInterface {
-    List<Assignment> getAssignments(String courseCode);
+    List<Assignment> getAssignments();
 
-    User getUser();
+    User getCurrentUser();
 
     String getCourseCode();
 }

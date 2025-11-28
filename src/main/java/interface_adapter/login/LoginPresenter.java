@@ -1,5 +1,6 @@
 package interface_adapter.login;
 
+import interface_adapter.Assignments.AssignmentsViewModel;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.logged_in.LoggedInState;
 import interface_adapter.logged_in.LoggedInViewModel;
@@ -12,23 +13,25 @@ import usecase.login.LoginOutputData;
 public class LoginPresenter implements LoginOutputBoundary {
     private final LoginViewModel loginViewModel;
     private final LoggedInViewModel loggedInViewModel;
+    private final AssignmentsViewModel assignmentsViewModel;
     private final ViewManagerModel viewManagerModel;
 
     public LoginPresenter(ViewManagerModel viewManagerModel,
                           LoggedInViewModel loggedInViewModel,
+                          AssignmentsViewModel assignmentsViewModel,
                           LoginViewModel loginViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.loggedInViewModel = loggedInViewModel;
+        this.assignmentsViewModel = assignmentsViewModel;
         this.loginViewModel = loginViewModel;
     }
 
     @Override
-    public void switchToLoggedInView(LoginOutputData response) {
-
+    public void switchToStudentLoggedInView(LoginOutputData response) {
         // On success, update the loggedInViewModel's state
         final LoggedInState loggedInState = loggedInViewModel.getState();
         loggedInState.setUsername(response.getUsername());
-        loggedInState.setUserType(response.getUserType());
+        loggedInState.setUserType("student");
         loggedInState.setAssignments(response.getAssignments());
         this.loggedInViewModel.firePropertyChange();
 
@@ -37,6 +40,16 @@ public class LoginPresenter implements LoginOutputBoundary {
 
         // switch to the logged in view
         this.viewManagerModel.setState(loggedInViewModel.getViewName());
+        this.viewManagerModel.firePropertyChange();
+    }
+
+    @Override
+    public void switchToInstructorLoggedInView() {
+        // and clear everything from the LoginViewModel's state
+        loginViewModel.setState(new LoginState());
+
+        // switch to the logged in view
+        this.viewManagerModel.setState(assignmentsViewModel.getViewName());
         this.viewManagerModel.firePropertyChange();
     }
 

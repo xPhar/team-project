@@ -3,7 +3,6 @@ package data_access;
 import entity.Assignment;
 import entity.Submission;
 import entity.User;
-import interface_adapter.submission_list.SubmissionTableModel;
 import usecase.Assignments.AssignmentsDataAccessInterface;
 import usecase.CreateAssignment.CreateAssignmentDataAccessInterface;
 import usecase.EditAssignment.EditAssignmentDataAccessInterface;
@@ -109,12 +108,12 @@ public class TestDAO implements
     }
 
     @Override
-    public List<Assignment> getAssignments(String courseCode) {
-        return assignmentsByCourse.getOrDefault(courseCode, new ArrayList<>());
+    public List<Assignment> getAssignments() {
+        return assignmentsByCourse.getOrDefault(this.getCourseCode(), new ArrayList<>());
     }
 
     @Override
-    public User getUser() {
+    public User getCurrentUser() {
         return new User("instructor", "password", "Test", "Instructor", User.INSTRUCTOR);
     }
 

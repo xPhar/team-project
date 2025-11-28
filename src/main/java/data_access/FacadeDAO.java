@@ -4,6 +4,9 @@ import entity.*;
 import interface_adapter.submission_list.SubmissionTableModel;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import usecase.Assignments.AssignmentsDataAccessInterface;
+import usecase.CreateAssignment.CreateAssignmentDataAccessInterface;
+import usecase.EditAssignment.EditAssignmentDataAccessInterface;
 import usecase.Grade.GradeDataAccessInterface;
 import usecase.Resubmit.ResubmitUserDataAccessInterface;
 import usecase.Submission.SubmissionDataAccessInterface;
@@ -28,7 +31,10 @@ public class FacadeDAO implements
         SubmissionDataAccessInterface,
         SubmissionListDataAccessInterface,
         GradeDataAccessInterface,
-        ClassAverageUserDataAccessInterface {
+        ClassAverageUserDataAccessInterface,
+        AssignmentsDataAccessInterface,
+        CreateAssignmentDataAccessInterface,
+        EditAssignmentDataAccessInterface {
     private final FileToStringDataAccessObject fsDA;
     private final GradeAPIDataAccessObject gradeDA;
     private final SessionDataAccessObject sessionDA;
@@ -77,8 +83,8 @@ public class FacadeDAO implements
         JSONObject submissionJSON = submissionToJSON(submission);
 
         JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
-        courseObject = courseObject.getJSONObject("courseData");
-        JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
+        JSONObject courseData = courseObject.getJSONObject("courseData");
+        JSONObject assignmentDictionary = courseData.getJSONObject("assignments");
         JSONObject assignmentObject = assignmentDictionary.getJSONObject(assignment.getName());
         JSONObject submissionArray = assignmentObject.getJSONObject("submissions");
 
@@ -149,9 +155,16 @@ public class FacadeDAO implements
         courseObject = courseObject.getJSONObject("courseData");
         JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
         JSONObject assignmentObject = assignmentDictionary.getJSONObject(assignmentName);
-        JSONObject submissionArray = assignmentObject.getJSONObject("submissions");
-        JSONObject submissionObj = submissionArray.getJSONObject(username);
-        return submissionObj.getDouble("grade");
+        JSONObject submissionObject = assignmentObject.getJSONObject("submissions");
+        if (submissionObject.has(username)) {
+            JSONObject submissionObj = submissionObject.getJSONObject(username);
+            return submissionObj.getDouble("grade");
+        }
+        // If the student didn't have a submission, we'll assume they're given a 0
+        // (we don't have a way to manually add grades for students, feels a bit outside our scope)
+        else {
+            return 0.0;
+        }
     }
 
     // Login / Register
@@ -355,27 +368,30 @@ public class FacadeDAO implements
     // Some method I think we need (Indy)
 
     public List<Assignment> getAssignments() {
-        Course course = sessionDA.getCourse();
-        List<Assignment> assignments = new ArrayList<>();
+        return sessionDA.getCourse().getAssignments();
 
-        JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
-        courseObject = courseObject.getJSONObject("courseData");
-        JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
-        Iterator<String> keyIt = assignmentDictionary.keys();
-        while (keyIt.hasNext()) {
-            String assignmentName = keyIt.next();
-            JSONObject assignmentObj = assignmentDictionary.getJSONObject(assignmentName);
-            Assignment.AssignmentBuilder builder = Assignment.builder();
-            builder.name(assignmentName)
-                    .description(assignmentObj.getString("description"))
-                    .creationDate(LocalDateTime.parse(assignmentObj.getString("creationDate")))
-                    .dueDate(LocalDateTime.parse(assignmentObj.getString("dueDate")))
-                    .gracePeriod(assignmentObj.getDouble("gracePeriod"));
-                    // TODO add supported file types
-            assignments.add(builder.build());
-        }
-
-        return assignments;
+        // I believe this is unnecessary?
+//        Course course = sessionDA.getCourse();
+//        List<Assignment> assignments = new ArrayList<>();
+//
+//        JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
+//        courseObject = courseObject.getJSONObject("courseData");
+//        JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
+//        Iterator<String> keyIt = assignmentDictionary.keys();
+//        while (keyIt.hasNext()) {
+//            String assignmentName = keyIt.next();
+//            JSONObject assignmentObj = assignmentDictionary.getJSONObject(assignmentName);
+//            Assignment.AssignmentBuilder builder = Assignment.builder();
+//            builder.name(assignmentName)
+//                    .description(assignmentObj.getString("description"))
+//                    .creationDate(LocalDateTime.parse(assignmentObj.getString("creationDate")))
+//                    .dueDate(LocalDateTime.parse(assignmentObj.getString("dueDate")))
+//                    .gracePeriod(assignmentObj.getDouble("gracePeriod"));
+//                    // TODO add supported file types
+//            assignments.add(builder.build());
+//        }
+//
+//        return assignments;
     }
 
     @Override
@@ -415,5 +431,64 @@ public class FacadeDAO implements
                 .gracePeriod(assignmentObj.getDouble("gracePeriod"))
                 // TODO add supported file types
                 .build();
+    }
+
+    @Override
+    public User getCurrentUser() {
+        return this.sessionDA.getUser();
+    }
+
+    @Override
+    public String getCourseCode() {
+        return sessionDA.getCourse().getCourseCode();
+    }
+
+    @Override
+    public void saveAssignment(String courseCode, Assignment assignment) {
+        String courseName = getCourseUserName();
+
+        JSONObject courseObject = gradeDA.getUserInfo((courseName));
+        JSONObject courseData = courseObject.getJSONObject("courseData");
+        JSONObject assignmentsObject = courseData.getJSONObject("assignments");
+
+        assignmentsObject.put(assignment.getName(), assignmentToJSON(assignment));
+
+        gradeDA.modifyUserInfoEndpoint(courseName, COURSE_PASSWORD, courseObject);
+    }
+
+    @Override
+    public void updateAssignment(String courseCode, String originalName, Assignment assignment) {
+        // Get the creation date of the original assignment and add it to the new assignment object
+        LocalDateTime creationDate = getAssignment(originalName).getCreationDate();
+        assignment.setCreationDate(creationDate);
+
+        // If the course name has stayed the same, we can simply use the saveAssignment method and overwrite the old one
+        if (originalName.equals(assignment.getName())) {
+            saveAssignment(courseCode, assignment);
+        }
+        else {
+            String courseName = getCourseUserName();
+            JSONObject courseObject = gradeDA.getUserInfo(courseName);
+            JSONObject assignmentsObject = courseObject.getJSONObject("courseData").getJSONObject("assignments");
+
+            // Remove old assignment
+            assignmentsObject.put(originalName, (Object) null);
+
+            // Add updated assignment under the new name
+            assignmentsObject.put(assignment.getName(), assignmentToJSON(assignment));
+
+            gradeDA.modifyUserInfoEndpoint(courseName, COURSE_PASSWORD, courseObject);
+        }
+    }
+
+    private JSONObject assignmentToJSON(Assignment assignment) {
+        JSONObject assignmentObj = new JSONObject();
+        assignmentObj.put("creationDate", assignment.getCreationDate().toString());
+        assignmentObj.put("description",  assignment.getDescription());
+        assignmentObj.put("dueDate", assignment.getDueDate().toString());
+        assignmentObj.put("gracePeriod", Double.toString(assignment.getGracePeriod()));
+        assignmentObj.put("supportedFileTypes", new JSONArray(assignment.getSupportedFileTypes()));
+        assignmentObj.put("submissions", new JSONObject());
+        return assignmentObj;
     }
 }
