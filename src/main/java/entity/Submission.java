@@ -14,6 +14,7 @@ public class Submission {
     private final double grade;
     private final Status status;
     private final String feedback;
+
     public Submission(String submitter, LocalDateTime submissionTime, String submissionName,
                       String submissionData, double grade, Status status, String feedback) {
         this.submitter = submitter;
