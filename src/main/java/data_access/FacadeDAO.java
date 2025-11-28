@@ -15,6 +15,7 @@ import usecase.Submit.SubmitUserDataAccessInterface;
 import usecase.class_average.ClassAverageUserDataAccessInterface;
 import usecase.logged_in.LoggedInDataAccessInterface;
 import usecase.login.LoginDataAccessInterface;
+import usecase.signup.SignupDataAccessInterface;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +26,7 @@ import java.util.List;
 
 public class FacadeDAO implements
         LoginDataAccessInterface,
+        SignupDataAccessInterface,
         LoggedInDataAccessInterface,
         SubmitUserDataAccessInterface,
         ResubmitUserDataAccessInterface,
@@ -204,32 +206,37 @@ public class FacadeDAO implements
     }
 
     @Override
-    public User getUser(String username) throws DataAccessException {
-        // Get the whole object first to allow us to get their password
-        JSONObject userObj = gradeDA.getUserObject(username);
-        String password = userObj.getString("password");
-        // Everything else we need is in the info object
-        userObj = userObj.getJSONObject("info");
-        // TODO: We can make a simple helper function to handle converting this
-        String userType = userObj.getString("type").toUpperCase();
-        // The rest of the info is in the userData object... in hindsight we don't really need this anymore... :|
-        userObj = userObj.getJSONObject("userData");
-        String firstName = userObj.getString("firstName");
-        String lastName = userObj.getString("lastName");
+    public User getUser(String username) {
+        try {
+            JSONObject userObj = gradeDA.getUserObject(username);
+            String password = userObj.getString("password");
+            userObj = userObj.getJSONObject("info");
+            String userType = userObj.getString("type").toUpperCase();
+            userObj = userObj.getJSONObject("userData");
+            String firstName = userObj.getString("firstName");
+            String lastName = userObj.getString("lastName");
 
-        JSONArray courseList = userObj.getJSONArray("courses");
-        ArrayList<String> courses = new ArrayList<>();
-        for (int i = 0; i < courseList.length(); i++) {
-            courses.add(courseList.getString(i));
+            JSONArray courseList = userObj.getJSONArray("courses");
+            ArrayList<String> courses = new ArrayList<>();
+            for (int i = 0; i < courseList.length(); i++) {
+                courses.add(courseList.getString(i));
+            }
+
+            return new User(username,
+                    password,
+                    firstName,
+                    lastName,
+                    User.USER_TYPE.valueOf(userType),
+                    courses
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load user " + username, e);
         }
+    }
 
-        return new User(username,
-                password,
-                firstName,
-                lastName,
-                User.USER_TYPE.valueOf(userType),
-                courses
-        );
+    @Override
+    public User get(String username) {
+        return getUser(username);
     }
 
     @Override
@@ -244,12 +251,21 @@ public class FacadeDAO implements
         return null;
     }
 
+    @Override
     public void setCurrentUsername(String name) {
-        // TODO what to do here?
+        if (name == null || name.isEmpty()) {
+            return;
+        }
+        User user = getUser(name);
+        if (user != null) {
+            setActiveUser(user);
+        }
     }
 
+    @Override
     public String getCurrentUsername() {
-        return sessionDA.getUser().getName();
+        User user = sessionDA.getUser();
+        return user == null ? "" : user.getName();
     }
 
     public void setActiveUser(User user) {
@@ -257,7 +273,9 @@ public class FacadeDAO implements
 
         // TODO: Implement course selecting if we get time
         // Since we're currently going under the assumption of a single course, make that course active as well
-        sessionDA.setCourse(getCourse(user.getCourses().get(0)));
+        if (user.getCourses() != null && !user.getCourses().isEmpty()) {
+            sessionDA.setCourse(getCourse(user.getCourses().get(0)));
+        }
     }
 
     public Course getCourse(String courseName) {
@@ -345,7 +363,11 @@ public class FacadeDAO implements
     // Some method I think we need (Indy)
 
     public List<Assignment> getAssignments() {
-        return sessionDA.getCourse().getAssignments();
+        Course course = sessionDA.getCourse();
+        if (course == null) {
+            return List.of();
+        }
+        return course.getAssignments() == null ? List.of() : course.getAssignments();
 
         // I believe this is unnecessary?
 //        Course course = sessionDA.getCourse();
@@ -402,12 +424,15 @@ public class FacadeDAO implements
 
     public Assignment getAssignment(String assignmentName) {
         Course course = sessionDA.getCourse();
+        if (course == null) {
+            return null;
+        }
         JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
         courseObject = courseObject.getJSONObject("courseData");
         JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
         JSONObject assignmentObj =  assignmentDictionary.getJSONObject(assignmentName);
 
-        Assignment.AssignmentBuilder builder = Assignment.builder();
+        AssignmentBuilder builder = Assignment.builder();
         return builder.name(assignmentName)
                 .description(assignmentObj.getString("description"))
                 .creationDate(LocalDateTime.parse(assignmentObj.getString("creationDate")))

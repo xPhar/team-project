@@ -4,13 +4,11 @@ import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
-        // Test student credentials: username: testUser123, password: password
-        // Test instructor credentials: username: testInstructor, password: password
-
         AppBuilder appBuilder = new AppBuilder();
 
         JFrame application = appBuilder
                 .addLoginView()
+                .addSignupView()
                 .addLoggedInView()
 
                 .addSubmitView()
@@ -25,6 +23,7 @@ public class Main {
                 .addSubmissionListView()
                 .addSubmissionView()
 
+                .addSignupUseCase()
                 .addLoginUseCase()
                 .addLoggedInUseCase()
 
@@ -42,11 +41,6 @@ public class Main {
 
                 .build();
 
-        application.pack();
-        application.setLocationRelativeTo(null);
-        application.setVisible(true);
-
-        application.pack();
         application.setLocationRelativeTo(null);
         application.setVisible(true);
     }

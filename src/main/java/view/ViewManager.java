@@ -12,14 +12,15 @@ import java.beans.PropertyChangeListener;
  * in the ViewManagerModel and updates which View should be visible.
  */
 public class ViewManager implements PropertyChangeListener {
-
     private final CardLayout cardLayout;
     private final JPanel views;
+    private final ViewManagerModel viewManagerModel;
 
     public ViewManager(JPanel views, CardLayout cardLayout, ViewManagerModel viewManagerModel) {
         this.views = views;
         this.cardLayout = cardLayout;
-        viewManagerModel.addPropertyChangeListener(this);
+        this.viewManagerModel = viewManagerModel;
+        this.viewManagerModel.addPropertyChangeListener(this);
     }
 
     @Override
