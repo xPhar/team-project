@@ -1,7 +1,5 @@
 package usecase.Submission;
 
-import entity.Submission;
-
 import java.io.File;
 
 public class SubmissionInteractor implements SubmissionInputBoundary {
