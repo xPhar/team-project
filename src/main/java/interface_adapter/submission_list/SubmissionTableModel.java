@@ -11,14 +11,14 @@ import java.util.List;
  * Used for displaying submission data in a table in the submission list view
  */
 public class SubmissionTableModel extends AbstractTableModel {
-    private List<Submission> submissions;
+    private String[][] submissions;
     private final String[] header = {"Submitter","Submission Time", "Grade"};
 
     /**
      * Instantiate a SubmissionTableModel
      * @param submissions the list of submission to be displayed
      */
-    public SubmissionTableModel(List<Submission> submissions) {
+    public SubmissionTableModel(String[][] submissions) {
         this.submissions = submissions;
     }
 
@@ -26,7 +26,7 @@ public class SubmissionTableModel extends AbstractTableModel {
      * Set the list of submission to be displayed
      * @param submissions the list of submission to be displayed
      */
-    public void setSubmissions(List<Submission> submissions) {
+    public void setSubmissions(String[][] submissions) {
         this.submissions = submissions;
         fireTableDataChanged();
     }
@@ -35,11 +35,11 @@ public class SubmissionTableModel extends AbstractTableModel {
      * Returns the list of the submission to be displayed
      * @return the list of the submission to be displayed
      */
-    public List<Submission> getSubmissions() { return this.submissions; }
+    public String[][] getSubmissions() { return this.submissions; }
 
     @Override
     public int getRowCount() {
-        return submissions.size();
+        return submissions.length;
     }
 
     @Override
@@ -49,25 +49,7 @@ public class SubmissionTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Submission submission = submissions.get(rowIndex);
-        switch (columnIndex) {
-            case 0:
-                return submission.getSubmitter();
-            case 1:
-                LocalDateTime date = submission.getSubmissionTime();
-                return date.format(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss"));
-            case 2:
-                double grade = submission.getGrade();
-                Submission.Status status = submission.getStatus();
-                if (status == Submission.Status.GRADED) {
-                    return Math.round(grade * 10.0) / 10.0;
-                }
-                else {
-                    return "pending";
-                }
-            default:
-                throw new RuntimeException("Invalid column index");
-        }
+        return submissions[rowIndex][columnIndex];
     }
 
     @Override

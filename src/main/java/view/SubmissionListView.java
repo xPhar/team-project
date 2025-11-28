@@ -54,7 +54,7 @@ public class SubmissionListView extends JPanel implements PropertyChangeListener
         c.anchor = GridBagConstraints.CENTER;
         titlePanel.add(title, c);
 
-        submissionTable.setModel(new SubmissionTableModel(new ArrayList<Submission>()));
+        submissionTable.setModel(new SubmissionTableModel(new String[0][]));
         submissionTable.setFont(new Font(submissionTable.getFont().getFontName(), Font.PLAIN, 14));
         submissionTable.setRowHeight(20);
         submissionTable.getColumnModel().getColumn(2).setPreferredWidth(20);

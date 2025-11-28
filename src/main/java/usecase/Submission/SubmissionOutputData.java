@@ -3,15 +3,15 @@ package usecase.Submission;
 import interface_adapter.submission_list.SubmissionTableModel;
 
 public class SubmissionOutputData {
-    private final SubmissionTableModel submissionTableModel;
+    private final String[][] submissions;
 
     public  SubmissionOutputData(
-            SubmissionTableModel submissionTableModel
+            String[][] submissions
     ) {
-        this.submissionTableModel = submissionTableModel;
+        this.submissions = submissions;
     }
 
-    public SubmissionTableModel getSubmissionTableModel() {
-        return submissionTableModel;
+    public String[][] getSubmissions() {
+        return submissions;
     }
 }

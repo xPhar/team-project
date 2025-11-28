@@ -3,6 +3,7 @@ package interface_adapter.submission;
 import entity.Submission;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.submission_list.SubmissionListViewModel;
+import interface_adapter.submission_list.SubmissionTableModel;
 import usecase.Grade.GradeOutputBoundary;
 import usecase.Submission.SubmissionOutputBoundary;
 import usecase.Submission.SubmissionOutputData;
@@ -55,7 +56,8 @@ public class SubmissionPresenter implements
 
     @Override
     public void backToSubmissionListView(SubmissionOutputData data) {
-        submissionListViewModel.getState().setTableModel(data.getSubmissionTableModel());
+        SubmissionTableModel tableModel = new SubmissionTableModel(data.getSubmissions());
+        submissionListViewModel.getState().setTableModel(tableModel);
         submissionListViewModel.firePropertyChange();
         viewManagerModel.setState(submissionListViewModel.getViewName());
         viewManagerModel.firePropertyChange();

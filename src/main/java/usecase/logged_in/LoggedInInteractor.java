@@ -1,7 +1,11 @@
 package usecase.logged_in;
 
 import entity.Assignment;
+import entity.Submission;
 import entity.User;
+
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * The Logged In Interactor.
@@ -53,10 +57,33 @@ public class LoggedInInteractor implements LoggedInInputBoundary {
                 LoggedInOutputData outputData = new LoggedInOutputData(
                         userDataAccessObject.getCurrentUsername(),
                         assignment.getName(),
-                        userDataAccessObject.getSubmissionTableModel(assignment),
+                        getSubmissionText(assignment),
                         null);
                 loginPresenter.switchToSubmissionListView(outputData);
             }
         }
+    }
+
+    private String[][] getSubmissionText(Assignment assignment) {
+        List<Submission> submissions = userDataAccessObject.getSubmissionList(assignment);
+        String[][] submissionText = new String[submissions.size()][];
+        for (int i = 0; i < submissions.size(); i++) {
+            Submission submission = submissions.get(i);
+
+            String gradeString = "pending";
+            Submission.Status status = submission.getStatus();
+            if (status == Submission.Status.GRADED) {
+                gradeString = String.format("%.1f", submission.getGrade());
+            }
+
+            submissionText[i] = new String[]{
+                    submission.getSubmitter(),
+                    submission.getSubmissionTime().format(
+                            DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss")
+                    ),
+                    gradeString
+            };
+        }
+        return submissionText;
     }
 }

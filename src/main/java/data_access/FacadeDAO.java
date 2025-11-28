@@ -295,9 +295,14 @@ public class FacadeDAO implements
     }
 
     // Mark Assignment
+    @Override
     public List<Submission> getSubmissionList() {
         String assignmentName = sessionDA.getAssignment().getName();
         return getSubmissionsFor(assignmentName);
+    }
+    @Override
+    public List<Submission> getSubmissionList(Assignment assignment) {
+        return getSubmissionsFor(assignment.getName());
     }
 
     public List<Submission> getSubmissionList(String assignmentName) {
@@ -381,19 +386,6 @@ public class FacadeDAO implements
     @Override
     public User.USER_TYPE getUserType() {
         return sessionDA.getUser().getUserType();
-    }
-
-    @Override
-    public SubmissionTableModel getSubmissionTableModel(Assignment assignment) {
-        List<Submission> submissionList = getSubmissionList(assignment.getName());
-
-        return new SubmissionTableModel(submissionList);
-    }
-
-    @Override
-    public SubmissionTableModel getSubmissionTableModelForCurrentAssignment() {
-        Assignment assignment = sessionDA.getAssignment();
-        return getSubmissionTableModel(assignment);
     }
 
     @Override
