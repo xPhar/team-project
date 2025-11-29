@@ -2,7 +2,7 @@ package usecase.SubmissionList;
 
 import entity.Submission;
 
-import java.util.List;
+import java.time.format.DateTimeFormatter;
 
 public class SubmissionListInteractor implements SubmissionListInputBoundary {
     private final SubmissionListOutputBoundary submissionListOutputBoundary;
@@ -17,26 +17,27 @@ public class SubmissionListInteractor implements SubmissionListInputBoundary {
     }
 
     @Override
-    public void getSubmissionList(String assignmentName) {
-        List<Submission> submissions =
-                submissionListDataAccessInterface.getSubmissionList(assignmentName);
+    public void execute(SubmissionListInputData data) {
+        if (data.isBack()) {
+            submissionListOutputBoundary.goToAssignmentView();
+        } else {
+            Submission submission = submissionListDataAccessInterface
+                    .getSubmissionForSubmissionView(data.getSubmitter());
 
-        SubmissionListOutputData outputData =
-                new SubmissionListOutputData(assignmentName, submissions);
+            SubmissionListOutputData outputData = new SubmissionListOutputData(
+                    data.getAssignmentName(),
+                    submission.getSubmitter(),
+                    submission.getStatus().toString(),
+                    submission.getSubmissionTime().format(
+                            DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss")
+                    ),
+                    submission.getStatus() == Submission.Status.GRADED ? String.format("%.1f", submission.getGrade()) : "",
+                    submission.getFeedback(),
+                    submission.getSubmissionName(),
+                    "100" // Hardcoded
+            );
 
-        submissionListOutputBoundary.prepareListView(outputData);
-    }
-
-    @Override
-    public void getSubmission(String assignmentName, String submitter) {
-        Submission submission = submissionListDataAccessInterface
-                .getSubmission(assignmentName, submitter);
-
-        submissionListOutputBoundary.prepareSubmissionView(submission);
-    }
-
-    @Override
-    public void backToAssignment() {
-
+            submissionListOutputBoundary.prepareSubmissionView(outputData);
+        }
     }
 }

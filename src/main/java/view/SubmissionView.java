@@ -5,6 +5,7 @@ import interface_adapter.submission.SubmissionState;
 import interface_adapter.submission.SubmissionViewModel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -20,11 +21,13 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
     private SubmissionController submissionController;
 
     private final JLabel submitterLabel = new JLabel("Submitter:");
+    private final JLabel submissionNameLabel = new JLabel("File name:");
     private final JLabel submittedDateLabel = new JLabel("Submitted at:");
     private final JLabel submissionStatusLabel = new JLabel("Status:");
     private final JTextField gradeTextField = new JTextField();
     private final JLabel maxGradeLabel = new JLabel("/20");
     private final JTextArea feedbackTextArea = new JTextArea();
+    private final JLabel title;
 
     private final SubmissionViewModel viewModel;
 
@@ -52,14 +55,34 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
         final JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.add(submitterLabel);
+        infoPanel.add(submissionNameLabel);
         infoPanel.add(submittedDateLabel);
         infoPanel.add(submissionStatusLabel);
         infoPanel.add(downloadButton);
 
         final JButton backButton = new JButton("Back");
+        title = new JLabel("");
+        title.setHorizontalAlignment(SwingConstants.CENTER);
+        title.setFont(new Font(title.getFont().getFontName(), Font.PLAIN, 20));
+
+        final JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 0.05;
+        titlePanel.add(backButton, c);
+
+        c.gridx = 1;
+        c.gridy = 0;
+        c.weightx = 0.95;
+        c.anchor = GridBagConstraints.CENTER;
+        titlePanel.add(title, c);
 
         this.setLayout(new BoxLayout(this,  BoxLayout.Y_AXIS));
-        this.add(backButton);
+        this.add(titlePanel);
         this.add(infoPanel);
         this.add(feedbackPanel);
 
@@ -103,8 +126,11 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
             submissionStatusLabel.setText("Status: " + submissionState.getStatus());
             gradeTextField.setText(submissionState.getGrade());
             feedbackTextArea.setText(submissionState.getFeedback());
+            title.setText(submissionState.getAssignmentName());
+            maxGradeLabel.setText("/" + submissionState.getMaxGrade());
+            submissionNameLabel.setText("File name: " + submissionState.getSubmissionName());
         }
-        else if (evt.getPropertyName().equals("gradSuccess")) {
+        else if (evt.getPropertyName().equals("gradeSuccess")) {
             showSuccessDialog("Graded submission successfully", "Success");
         }
         else if (evt.getPropertyName().equals("gradeFailure")) {
@@ -138,10 +164,11 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
     private void chooseFilePathToSave() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Download file");
+        fileChooser.setSelectedFile(new File(submissionNameLabel.getText().substring(11)));
         int result = fileChooser.showSaveDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
-            submissionController.executeDownload(selectedFile);
+            submissionController.executeDownload(selectedFile, submitterLabel.getText());
         }
     }
 

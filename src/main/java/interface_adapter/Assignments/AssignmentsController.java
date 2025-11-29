@@ -26,4 +26,8 @@ public class AssignmentsController {
     public void switchToResubmitView() {
         interactor.switchToResubmitView();
     }
+
+    public void switchToSubmissionListView(String assignmentName) {
+        interactor.switchToSubmissionListView(assignmentName);
+    }
 }
