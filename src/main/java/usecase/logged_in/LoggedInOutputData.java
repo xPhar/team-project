@@ -7,14 +7,14 @@ import java.util.List;
 public class LoggedInOutputData {
     private final String username;
     private final String assignmentName;
-    private final SubmissionTableModel submissionTableModel;
+    private final String[][] submissions;
     private final List<String> assignments;
 
     public LoggedInOutputData(String username, String assignmentName,
-                              SubmissionTableModel submissionTableModel, List<String> assignments) {
+                              String[][] submissions, List<String> assignments) {
         this.username = username;
         this.assignmentName = assignmentName;
-        this.submissionTableModel = submissionTableModel;
+        this.submissions = submissions;
         this.assignments = assignments;
     }
 
@@ -26,8 +26,8 @@ public class LoggedInOutputData {
         return assignmentName;
     }
 
-    public SubmissionTableModel getSubmissionTableModel() {
-        return submissionTableModel;
+    public String[][] getSubmissions() {
+        return submissions;
     }
 
     public List<String> getAssignments() {

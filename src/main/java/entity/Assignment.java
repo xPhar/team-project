@@ -45,6 +45,12 @@ public class Assignment {
         return supportedFileTypes;
     }
 
+    // This is a patchwork solution to the problem of maintaining creation dates after editing an assignment...
+    // Probably a better way to make it work, but everything I can think of right now feels rather inelegant.
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
     public static AssignmentBuilder builder() {
         return new AssignmentBuilder();
     }

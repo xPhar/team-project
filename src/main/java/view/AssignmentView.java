@@ -12,6 +12,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.time.LocalDateTime;
@@ -138,6 +140,19 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
 
         // Add listener for Create New Assignment button
         newAssignmentButton.addActionListener(e -> handleCreateAssignment());
+
+        // Add listener for the table row to switch to submission list view
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = table.rowAtPoint(e.getPoint());
+                int col = table.columnAtPoint(e.getPoint());
+
+                if (col != 3 && e.getClickCount() == 2) {
+                    handleAssignmentDoubleClick(row);
+                }
+            }
+        });
     }
 
     private void stylePrimaryButton(JButton btn) {
@@ -275,6 +290,18 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
             }
         } else {
             assignmentsController.switchToSubmitView();
+        }
+    }
+
+    private void handleAssignmentDoubleClick(int assignmentIndex) {
+        if (assignmentIndex < 0 || assignmentIndex >= currentAssignments.size()) {
+            return;
+        }
+
+        AssignmentDTO assignment = currentAssignments.get(assignmentIndex);
+
+        if (isInstructor) {
+            assignmentsController.switchToSubmissionListView(assignment.getName());
         }
     }
 

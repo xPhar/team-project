@@ -188,7 +188,7 @@ public class AppBuilder {
     public AppBuilder addSubmissionListUseCase() {
         final SubmissionListOutputBoundary submissionListOutputBoundary = new SubmissionListPresenter(
                 submissionListViewModel, viewManagerModel,
-                submissionViewModel);
+                submissionViewModel, assignmentsViewModel);
         SubmissionListInputBoundary submissionListInputBoundary = new SubmissionListInteractor(
                 submissionListOutputBoundary, userDataAccessObject);
 
@@ -234,7 +234,7 @@ public class AppBuilder {
 
     public AppBuilder addAssignmentsUseCase() {
         final AssignmentsOutputBoundary assignmentsOutputBoundary = new AssignmentsPresenter(
-                assignmentsViewModel, viewManagerModel);
+                assignmentsViewModel, viewManagerModel, submissionListViewModel);
         final AssignmentsInputBoundary assignmentsInteractor = new AssignmentsInteractor(
                 userDataAccessObject, assignmentsOutputBoundary);
 

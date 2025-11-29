@@ -24,10 +24,11 @@ public class EditAssignmentController {
         this.editAssignmentViewModel = editAssignmentViewModel;
     }
 
-    public void execute(String name, String courseCode, String description,
+    public void execute(String originalName, String updatedName, String courseCode, String description,
             LocalDateTime dueDate, List<String> supportedFileTypes) {
         EditAssignmentInputData inputData = new EditAssignmentInputData(
-                name,
+                originalName,
+                updatedName,
                 courseCode,
                 description,
                 dueDate,

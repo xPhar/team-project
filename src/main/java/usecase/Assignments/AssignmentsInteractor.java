@@ -1,9 +1,11 @@
 package usecase.Assignments;
 
 import entity.Assignment;
+import entity.Submission;
 import entity.User.USER_TYPE;
 import interface_adapter.Assignments.AssignmentDTO;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,5 +62,41 @@ public class AssignmentsInteractor implements AssignmentsInputBoundary {
     @Override
     public void switchToResubmitView() {
         presenter.switchToResubmitView();
+    }
+
+    @Override
+    public void switchToSubmissionListView(String assignmentName) {
+        Assignment assignment = dataAccess.getAssignment(assignmentName);
+        dataAccess.setActiveAssignment(assignment);
+
+        AssignmentsOutputData outputData = new AssignmentsOutputData(
+                assignment.getName(),
+                getSubmissionText(assignment)
+        );
+
+        presenter.switchToSubmissionListView(outputData);
+    }
+
+    private String[][] getSubmissionText(Assignment assignment) {
+        List<Submission> submissions = dataAccess.getSubmissionList(assignment);
+        String[][] submissionText = new String[submissions.size()][];
+        for (int i = 0; i < submissions.size(); i++) {
+            Submission submission = submissions.get(i);
+
+            String gradeString = "pending";
+            Submission.Status status = submission.getStatus();
+            if (status == Submission.Status.GRADED) {
+                gradeString = String.format("%.1f", submission.getGrade());
+            }
+
+            submissionText[i] = new String[]{
+                    submission.getSubmitter(),
+                    submission.getSubmissionTime().format(
+                            DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss")
+                    ),
+                    gradeString
+            };
+        }
+        return submissionText;
     }
 }
