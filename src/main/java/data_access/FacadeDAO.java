@@ -39,7 +39,6 @@ public class FacadeDAO implements
     private final GradeAPIDataAccessObject gradeDA;
     private final SessionDataAccessObject sessionDA;
 
-    // TODO course password?
     private final String COURSE_PASSWORD = "COURSE";
 
     public FacadeDAO() {
@@ -49,11 +48,9 @@ public class FacadeDAO implements
     }
 
     private String getCourseUserName(Course course) {
-        // TODO course username
         return course.getCourseName();
     }
     private String getCourseUserName() {
-        // TODO course username
         return "course-course-CSC207";
     }
 
@@ -244,10 +241,6 @@ public class FacadeDAO implements
         return null;
     }
 
-    public void setCurrentUsername(String name) {
-        // TODO what to do here?
-    }
-
     public String getCurrentUsername() {
         return sessionDA.getUser().getName();
     }
@@ -387,7 +380,6 @@ public class FacadeDAO implements
 //                    .creationDate(LocalDateTime.parse(assignmentObj.getString("creationDate")))
 //                    .dueDate(LocalDateTime.parse(assignmentObj.getString("dueDate")))
 //                    .gracePeriod(assignmentObj.getDouble("gracePeriod"));
-//                    // TODO add supported file types
 //            assignments.add(builder.build());
 //        }
 //
@@ -429,7 +421,12 @@ public class FacadeDAO implements
                 .creationDate(LocalDateTime.parse(assignmentObj.getString("creationDate")))
                 .dueDate(LocalDateTime.parse(assignmentObj.getString("dueDate")))
                 .gracePeriod(assignmentObj.getDouble("gracePeriod"))
-                // TODO add supported file types
+                .supportedFileTypes(assignmentObj.getJSONArray("supportedFileTypes")
+                        .toList().stream()
+                        .filter(s -> s instanceof String)
+                        .map(s -> (String) s)
+                        .toList()
+                )
                 .build();
     }
 

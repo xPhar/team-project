@@ -5,11 +5,13 @@ public class LoggedInState {
     private String username;
     private String userType;
     private Object[][] assignments;
+    private String error;
 
     public LoggedInState() {
         this.username = "";
         this.userType = "";
         this.assignments = new Object[0][0];
+        this.error = "";
     }
 
     public String getUsername() {
@@ -34,5 +36,13 @@ public class LoggedInState {
 
     public void setAssignments(Object[][] assignments) {
         this.assignments = assignments;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 }
