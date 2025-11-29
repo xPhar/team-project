@@ -1,5 +1,6 @@
 package usecase.login;
 
+import data_access.DataAccessException;
 import entity.Assignment;
 import entity.Submission;
 import entity.User;
@@ -27,7 +28,13 @@ public class LoginInteractor implements LoginInputBoundary {
             loginPresenter.prepareFailView(username + ": Account does not exist.");
         }
         else {
-            final User user = userDataAccessObject.getUser(username);
+            final User user;
+            try {
+                user = userDataAccessObject.getUser(username);
+            } catch (DataAccessException e) {
+                loginPresenter.prepareFailView(e.getMessage());
+                return;
+            }
 
             if (!user.getPassword().equals(password)) {
                 loginPresenter.prepareFailView("Incorrect password for \"" + username + "\".");
@@ -37,8 +44,7 @@ public class LoginInteractor implements LoginInputBoundary {
 
                 if (user.getUserType() == User.INSTRUCTOR) {
                     loginPresenter.switchToInstructorLoggedInView();
-                }
-                else {  // UserType == user.STUDENT
+                } else {  // UserType == user.STUDENT
                     List<Assignment> assignments = userDataAccessObject.getAssignments();
 
                     Object[][] assignmentsArray = new Object[assignments.size()][4];

@@ -203,6 +203,10 @@ public class GradeAPIDataAccessObject {
 
     public JSONObject getUserInfo(String username) throws DataAccessException {
         final JSONObject userJSONObject = getUserObject(username);
+        if (!userJSONObject.has("info")) {
+            throw new DataAccessException("User data is mangled. This user is either saved incorrectly" +
+                    " or is not affiliated with this project");
+        }
         return userJSONObject.getJSONObject("info");
     }
 

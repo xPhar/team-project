@@ -20,10 +20,9 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
     private final LoginViewModel loginViewModel;
 
     private final JTextField usernameInputField = new JTextField(24);
-    private final JLabel usernameErrorField = new JLabel();
 
     private final JPasswordField passwordInputField = new JPasswordField(24);
-    private final JLabel passwordErrorField = new JLabel();
+    private final JLabel errorField = new JLabel();
 
     private final JButton logIn;
     private final JButton cancel;
@@ -39,15 +38,19 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
         final JPanel textEntryPanel = new JPanel();
         textEntryPanel.setLayout(new BoxLayout(textEntryPanel, BoxLayout.Y_AXIS));
+        textEntryPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         final LabelTextPanel usernameInfo = new LabelTextPanel(
                 new JLabel("Username"), usernameInputField);
         final LabelTextPanel passwordInfo = new LabelTextPanel(
                 new JLabel("Password"), passwordInputField);
         textEntryPanel.add(usernameInfo);
-        textEntryPanel.add(usernameErrorField);
+        usernameInfo.setAlignmentX(Component.CENTER_ALIGNMENT);
         textEntryPanel.add(passwordInfo);
-        textEntryPanel.add(passwordErrorField);
+        passwordInfo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        textEntryPanel.add(errorField);
+        errorField.setAlignmentX(Component.CENTER_ALIGNMENT);
+        textEntryPanel.add(Box.createVerticalGlue());
 
         textEntryPanel.setPreferredSize(new Dimension(0, 250));
 
@@ -141,7 +144,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
     public void propertyChange(PropertyChangeEvent evt) {
         final LoginState state = (LoginState) evt.getNewValue();
         setFields(state);
-        usernameErrorField.setText(state.getLoginError());
+        errorField.setText(state.getLoginError());
     }
 
     private void setFields(LoginState state) {

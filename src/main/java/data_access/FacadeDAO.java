@@ -3,6 +3,7 @@ package data_access;
 import entity.*;
 import interface_adapter.submission_list.SubmissionTableModel;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import usecase.Assignments.AssignmentsDataAccessInterface;
 import usecase.CreateAssignment.CreateAssignmentDataAccessInterface;
@@ -205,12 +206,16 @@ public class FacadeDAO implements
         // Get the whole object first to allow us to get their password
         JSONObject userObj = gradeDA.getUserObject(username);
         String password = userObj.getString("password");
-        // Everything else we need is in the info object
-        userObj = userObj.getJSONObject("info");
-        // TODO: We can make a simple helper function to handle converting this
-        String userType = userObj.getString("type").toUpperCase();
-        // The rest of the info is in the userData object... in hindsight we don't really need this anymore... :|
-        userObj = userObj.getJSONObject("userData");
+        String userType;
+        try {
+            // Everything else we need is in the info object
+            userObj = userObj.getJSONObject("info");
+            userType =  userObj.getString("type").toUpperCase();
+            // The rest of the info is in the userData object... in hindsight we don't really need this anymore... :|
+            userObj = userObj.getJSONObject("userData");
+        } catch (JSONException e) {
+            throw new DataAccessException("User data is mangled. Please try a different account.");
+        }
         String firstName = userObj.getString("firstName");
         String lastName = userObj.getString("lastName");
 
