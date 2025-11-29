@@ -25,7 +25,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
     private final JLabel errorField = new JLabel();
 
     private final JButton logIn;
-    private final JButton cancel;
+    private final JButton exit;
     private LoginController loginController = null;
 
     public LoginView(LoginViewModel loginViewModel) {
@@ -57,23 +57,12 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         final JPanel buttons = new JPanel();
         logIn = new JButton("log in");
         buttons.add(logIn);
-        cancel = new JButton("cancel");
-        buttons.add(cancel);
+        exit = new JButton("Exit");
+        buttons.add(exit);
 
-        logIn.addActionListener(
-                evt -> {
-                    if (evt.getSource().equals(logIn)) {
-                        final LoginState currentState = loginViewModel.getState();
+        logIn.addActionListener(this);
 
-                        loginController.execute(
-                                currentState.getUsername(),
-                                currentState.getPassword()
-                        );
-                    }
-                }
-        );
-
-        cancel.addActionListener(this);
+        exit.addActionListener(this);
 
         usernameInputField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -137,7 +126,21 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
      * @param evt the ActionEvent to react to
      */
     public void actionPerformed(ActionEvent evt) {
-        System.out.println("Click " + evt.getActionCommand());
+        if (evt.getSource().equals(logIn)) {
+            final LoginState currentState = loginViewModel.getState();
+
+            loginController.execute(
+                    currentState.getUsername(),
+                    currentState.getPassword()
+            );
+        }
+        else if (evt.getSource().equals(exit)) {
+            // Close program
+            if (this.getParent() instanceof JFrame frame) {
+                frame.dispose();
+            }
+            System.exit(0);
+        }
     }
 
     @Override
