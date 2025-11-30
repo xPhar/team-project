@@ -48,7 +48,8 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
         feedbackPanel.setLayout(new BorderLayout());
         feedbackPanel.add(new JLabel("Feedback:"), BorderLayout.NORTH);
         feedbackPanel.add(new JScrollPane(feedbackTextArea), BorderLayout.CENTER);
-//        feedbackPanel.setMaximumSize(new Dimension(500,feedbackPanel.getMaximumSize().height));
+        feedbackPanel.setMaximumSize(new Dimension(500,feedbackPanel.getMaximumSize().height));
+        feedbackPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         gradeTextField.setColumns(8);
         feedbackTextArea.setRows(3);
@@ -86,6 +87,10 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
         this.add(feedbackPanel);
         this.add(buttonPanel);
         this.setFont(new Font("Helvetica", Font.PLAIN, 16));
+
+        titlePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        infoPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        gradePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         backButton.addActionListener(
                 new ActionListener() {
