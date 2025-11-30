@@ -25,6 +25,17 @@ class SubmissionListInteractorTest {
                                 "Good job!"
                         );
                     }
+                    else if (submitter.equals("indy2")) {
+                        return new Submission(
+                                "indy2",
+                                LocalDateTime.of(2025,11,29, 16, 47, 0),
+                                "submission.java",
+                                "123456\naabbcc",
+                                0,
+                                Submission.ON_TIME,
+                                ""
+                        );
+                    }
                     else {
                         fail("Did not pass correct submitter to the DAO.");
                         return null;
@@ -71,6 +82,35 @@ class SubmissionListInteractorTest {
 
         SubmissionListInputData testInputData = new SubmissionListInputData(false,
                 "indy", "Test Assignment");
+
+        SubmissionListInteractor interactor = new SubmissionListInteractor(boundary, testDAO);
+        interactor.execute(testInputData);
+    }
+
+    @Test
+    void testSelectSubmissionNoGrade() {
+        final SubmissionListOutputBoundary boundary = new SubmissionListOutputBoundary() {
+            public void prepareSubmissionView (SubmissionListOutputData data){
+                assertEquals("Test Assignment", data.getAssignmentName());
+                assertEquals("indy2", data.getSubmitter());
+                assertEquals(Submission.ON_TIME.toString(), data.getStatus());
+                assertEquals(
+                        LocalDateTime.of(2025,11,29, 16, 47, 0)
+                                .format(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss")),
+                        data.getSubmissionDate()
+                );
+                assertEquals("submission.java", data.getSubmissionName());
+                assertEquals("", data.getGrade());
+                assertEquals("", data.getFeedback());
+                assertEquals("100", data.getMaxGrade()); // Hardcoded
+            }
+            public void goToAssignmentView () {
+                fail("Did not call the correct presenter method.");
+            }
+        };
+
+        SubmissionListInputData testInputData = new SubmissionListInputData(false,
+                "indy2", "Test Assignment");
 
         SubmissionListInteractor interactor = new SubmissionListInteractor(boundary, testDAO);
         interactor.execute(testInputData);
