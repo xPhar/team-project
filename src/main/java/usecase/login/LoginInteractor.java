@@ -44,7 +44,8 @@ public class LoginInteractor implements LoginInputBoundary {
         try {
             user = userDataAccessObject.getUser(username);
         } catch (DataAccessException e) {
-            loginPresenter.prepareFailView(e.getMessage());
+            loginPresenter.prepareFailView("An error has occurred, please try again.\n" +
+                    "Error message: " + e.getMessage());
             return;
         }
 

@@ -57,6 +57,7 @@ public class FakeUserDataAccessObject implements SubmitUserDataAccessInterface, 
         users.put("FakeStudent1", new User("FakeStudent1", "password", "fake", "one", User.STUDENT));
         users.put("FakeStudent2", new User("FakeStudent2", "password", "fake", "two", User.STUDENT));
         users.put("FakeInstructor", new User("FakeInstructor", "password", "fake", "instructor", User.INSTRUCTOR));
+        users.put("userThatThrowsException", null);
         this.assignments = new ArrayList<>();
         assignments.add(Assignment.builder().name("FakeAssignment1")
                         .description("FakeAssignment1 description")
@@ -117,7 +118,11 @@ public class FakeUserDataAccessObject implements SubmitUserDataAccessInterface, 
 
     @Override
     public User getUser(String username) {
-        return this.users.get(username);
+        User user = this.users.get(username);
+        if (user == null) {
+            throw new DataAccessException("User data is mangled. Please try a different account.");
+        }
+        return user;
     }
 
     @Override
