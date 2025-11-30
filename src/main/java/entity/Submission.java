@@ -23,7 +23,7 @@ public class Submission {
     public static final Status UNDER_REVIEW = Status.UNDER_REVIEW;
 
     public Submission(String submitter, LocalDateTime submissionTime, String submissionName,
-                    String submissionData, double grade, Status status, String feedback) {
+                      String submissionData, double grade, Status status, String feedback) {
         this.submitter = submitter;
         this.submissionTime = submissionTime;
         this.submissionName = submissionName;

@@ -9,15 +9,17 @@ public class Assignment {
     private LocalDateTime creationDate;
     private LocalDateTime dueDate;
     private double gracePeriod;
+    private String latePenalty;
     private List<String> supportedFileTypes;
 
     public Assignment(String name, String description, LocalDateTime creationDate, LocalDateTime dueDate,
-            double gracePeriod, List<String> supportedFileTypes) {
+                      double gracePeriod, String latePenalty, List<String> supportedFileTypes) {
         this.name = name;
         this.description = description;
         this.creationDate = creationDate;
         this.dueDate = dueDate;
         this.gracePeriod = gracePeriod;
+        this.latePenalty = latePenalty;
         this.supportedFileTypes = supportedFileTypes;
     }
 
@@ -33,6 +35,12 @@ public class Assignment {
         return creationDate;
     }
 
+    // This is a patchwork solution to the problem of maintaining creation dates after editing an assignment...
+    // Probably a better way to make it work, but everything I can think of right now feels rather inelegant.
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
     public LocalDateTime getDueDate() {
         return dueDate;
     }
@@ -41,14 +49,12 @@ public class Assignment {
         return gracePeriod;
     }
 
-    public List<String> getSupportedFileTypes() {
-        return supportedFileTypes;
+    public String getLatePenalty() {
+        return latePenalty;
     }
 
-    // This is a patchwork solution to the problem of maintaining creation dates after editing an assignment...
-    // Probably a better way to make it work, but everything I can think of right now feels rather inelegant.
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
+    public List<String> getSupportedFileTypes() {
+        return supportedFileTypes;
     }
 
     public static AssignmentBuilder builder() {
@@ -61,10 +67,10 @@ public class Assignment {
         private LocalDateTime creationDate;
         private LocalDateTime dueDate;
         private double gracePeriod;
+        private String latePenalty;
         private List<String> supportedFileTypes;
 
-        AssignmentBuilder() {
-        }
+        AssignmentBuilder() {}
 
         public AssignmentBuilder name(String name) {
             this.name = name;
@@ -91,6 +97,11 @@ public class Assignment {
             return this;
         }
 
+        public AssignmentBuilder latePenalty(String latePenalty) {
+            this.latePenalty = latePenalty;
+            return this;
+        }
+
         public AssignmentBuilder supportedFileTypes(List<String> supportedFileTypes) {
             this.supportedFileTypes = supportedFileTypes;
             return this;
@@ -103,6 +114,7 @@ public class Assignment {
                     this.creationDate,
                     this.dueDate,
                     this.gracePeriod,
+                    this.latePenalty,
                     this.supportedFileTypes);
         }
     }

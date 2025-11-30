@@ -1,7 +1,10 @@
 target/
+.m2repo/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+run.sh
+test.sh
 
 ### IntelliJ IDEA ###
 .idea/

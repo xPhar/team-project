@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
 /**
  * The View for when the user is logging in to the program.
  */
@@ -24,41 +25,56 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
     private final JPasswordField passwordInputField = new JPasswordField(24);
     private final JLabel errorField = new JLabel();
 
-    private final JButton logIn;
-    private final JButton exit;
+    private final JButton logIn = new JButton("Log in");
+    private final JButton register = new JButton("Register");
+    private final JButton exit = new JButton("Exit");;
     private LoginController loginController = null;
 
     public LoginView(LoginViewModel loginViewModel) {
         this.loginViewModel = loginViewModel;
         this.loginViewModel.addPropertyChangeListener(this);
 
-        final JLabel title = new JLabel("Coursework Submission Platform Login");
+        setLayout(new BorderLayout());
+        setBackground(new Color(242, 246, 255));
+        setBorder(BorderFactory.createEmptyBorder(24, 24, 24, 24));
+
+        JPanel card = new JPanel();
+        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+        card.setBackground(Color.WHITE);
+        card.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(210, 218, 235), 1, true),
+                BorderFactory.createEmptyBorder(24, 24, 24, 24)));
+
+        final JLabel title = new JLabel("Coursework Submission Platform");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
-        title.setFont(new Font(title.getFont().getFontName(), Font.BOLD, 24));
+        title.setFont(new Font("Inter", Font.BOLD, 22));
+        title.setForeground(new Color(38, 50, 74));
 
         final JPanel textEntryPanel = new JPanel();
         textEntryPanel.setLayout(new BoxLayout(textEntryPanel, BoxLayout.Y_AXIS));
+        textEntryPanel.setOpaque(false);
         textEntryPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         final LabelTextPanel usernameInfo = new LabelTextPanel(
                 new JLabel("Username"), usernameInputField);
         final LabelTextPanel passwordInfo = new LabelTextPanel(
                 new JLabel("Password"), passwordInputField);
+        errorField.setForeground(Color.RED);
         textEntryPanel.add(usernameInfo);
-        usernameInfo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        textEntryPanel.add(Box.createVerticalStrut(8));
         textEntryPanel.add(passwordInfo);
-        passwordInfo.setAlignmentX(Component.CENTER_ALIGNMENT);
         textEntryPanel.add(errorField);
-        errorField.setAlignmentX(Component.CENTER_ALIGNMENT);
-        textEntryPanel.add(Box.createVerticalGlue());
 
-        textEntryPanel.setPreferredSize(new Dimension(0, 250));
+        textEntryPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 140));
 
-        final JPanel buttons = new JPanel();
-        logIn = new JButton("log in");
+        final JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 0));
+        buttons.setOpaque(false);
+        stylePrimaryButton(logIn);
+        styleSecondaryButton(register);
+        styleGhostButton(exit);
         buttons.add(logIn);
-        exit = new JButton("Exit");
         buttons.add(exit);
+        buttons.add(register);
 
         logIn.addActionListener(this);
 
@@ -88,8 +104,6 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
             }
         });
 
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
         passwordInputField.getDocument().addDocumentListener(new DocumentListener() {
 
             private void documentListenerHelper() {
@@ -114,11 +128,43 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
             }
         });
 
-        this.add(title);
-        this.add(Box.createVerticalStrut(50));
-        this.add(textEntryPanel);
-        this.add(Box.createVerticalGlue());
-        this.add(buttons);
+        card.add(title);
+        card.add(Box.createVerticalStrut(18));
+        card.add(textEntryPanel);
+        card.add(Box.createVerticalStrut(16));
+        card.add(buttons);
+
+        add(card, BorderLayout.CENTER);
+    }
+
+    private void stylePrimaryButton(JButton button) {
+        button.setBackground(new Color(75, 123, 236));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setFont(button.getFont().deriveFont(Font.BOLD));
+        button.setPreferredSize(new Dimension(110, 32));
+        button.setOpaque(true);
+        button.setBorderPainted(false);
+    }
+
+    private void styleSecondaryButton(JButton button) {
+        button.setBackground(new Color(230, 234, 243));
+        button.setForeground(new Color(51, 63, 87));
+        button.setFocusPainted(false);
+        button.setFont(button.getFont().deriveFont(Font.BOLD));
+        button.setPreferredSize(new Dimension(110, 32));
+        button.setOpaque(true);
+        button.setBorderPainted(false);
+    }
+
+    private void styleGhostButton(JButton button) {
+        button.setBackground(new Color(247, 249, 252));
+        button.setForeground(new Color(96, 112, 139));
+        button.setFocusPainted(false);
+        button.setFont(button.getFont().deriveFont(Font.PLAIN));
+        button.setPreferredSize(new Dimension(110, 32));
+        button.setOpaque(true);
+        button.setBorderPainted(true);
     }
 
     /**

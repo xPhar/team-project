@@ -18,7 +18,7 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
     private final LoggedInViewModel loggedInViewModel;
     private LoggedInController loggedInController;
 
-    private JLabel nameLabel = new JLabel();
+    private final JLabel nameLabel = new JLabel();
     private JTable assignmentTable;
     private JButton bottomRightButton;
     private JButton logOutButton;
@@ -112,7 +112,7 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
 
             nameLabel.setText(state.getUsername());
 
-            if ("instructor".equals(state.getUserType())) {
+            if ("instructor".equalsIgnoreCase(state.getUserType())) {
                 bottomRightButton.setText("Create Assignment");
             } else {
                 bottomRightButton.setText("Show Distribution");

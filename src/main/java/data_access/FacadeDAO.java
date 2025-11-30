@@ -16,6 +16,7 @@ import usecase.Submit.SubmitUserDataAccessInterface;
 import usecase.class_average.ClassAverageUserDataAccessInterface;
 import usecase.logged_in.LoggedInDataAccessInterface;
 import usecase.login.LoginDataAccessInterface;
+import usecase.signup.SignupDataAccessInterface;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +27,7 @@ import java.util.List;
 
 public class FacadeDAO implements
         LoginDataAccessInterface,
+        SignupDataAccessInterface,
         LoggedInDataAccessInterface,
         SubmitUserDataAccessInterface,
         ResubmitUserDataAccessInterface,
@@ -246,6 +248,7 @@ public class FacadeDAO implements
         return null;
     }
 
+    @Override
     public String getCurrentUsername() {
         return sessionDA.getUser().getName();
     }
@@ -420,7 +423,7 @@ public class FacadeDAO implements
         JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
         JSONObject assignmentObj =  assignmentDictionary.getJSONObject(assignmentName);
 
-        Assignment.AssignmentBuilder builder = Assignment.builder();
+        var builder = Assignment.builder();
         return builder.name(assignmentName)
                 .description(assignmentObj.getString("description"))
                 .creationDate(LocalDateTime.parse(assignmentObj.getString("creationDate")))
