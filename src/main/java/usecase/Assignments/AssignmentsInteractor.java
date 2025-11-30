@@ -3,7 +3,6 @@ package usecase.Assignments;
 import entity.Assignment;
 import entity.Submission;
 import entity.User.USER_TYPE;
-import interface_adapter.Assignments.AssignmentDTO;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;

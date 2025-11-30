@@ -1,6 +1,6 @@
 package view;
 
-import interface_adapter.Assignments.AssignmentDTO;
+import usecase.Assignments.AssignmentDTO;
 import interface_adapter.Assignments.AssignmentsState;
 import interface_adapter.Assignments.AssignmentsViewModel;
 import interface_adapter.Assignments.AssignmentsController;

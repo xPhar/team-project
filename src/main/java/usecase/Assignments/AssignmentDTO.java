@@ -1,4 +1,4 @@
-package interface_adapter.Assignments;
+package usecase.Assignments;
 
 import java.time.LocalDateTime;
 import java.util.List;
