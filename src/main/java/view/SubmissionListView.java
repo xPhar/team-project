@@ -35,33 +35,31 @@ public class SubmissionListView extends JPanel implements PropertyChangeListener
 
         title = new JLabel("");
         title.setHorizontalAlignment(SwingConstants.CENTER);
-        title.setFont(new Font(title.getFont().getFontName(), Font.PLAIN, 20));
+        title.setFont(new Font("Helvetica", Font.BOLD, 20));
 
-        final JButton backButton = new JButton("Back");
+
         final JPanel titlePanel = new JPanel();
-        titlePanel.setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 0;
-        c.weightx = 0.05;
-        titlePanel.add(backButton, c);
-
-        c.gridx = 1;
-        c.gridy = 0;
-        c.weightx = 0.95;
-        c.anchor = GridBagConstraints.CENTER;
-        titlePanel.add(title, c);
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.X_AXIS));
+        titlePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        titlePanel.add(title);
 
         submissionTable.setModel(new SubmissionTableModel(new String[0][]));
         submissionTable.setFont(new Font(submissionTable.getFont().getFontName(), Font.PLAIN, 14));
-        submissionTable.setRowHeight(20);
+        submissionTable.setRowHeight(28);
         submissionTable.getColumnModel().getColumn(2).setPreferredWidth(20);
+
+        final JPanel bottomPanel = new JPanel();
+        bottomPanel.setLayout(new BorderLayout());
+        bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        final JButton backButton = new JButton("Back");
+        backButton.setMaximumSize(new Dimension(80, 30));
+        bottomPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+        bottomPanel.add(backButton, BorderLayout.WEST);
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.add(titlePanel);
         this.add(new JScrollPane(submissionTable));
+        this.add(bottomPanel);
 
         backButton.addActionListener(
                 new ActionListener() {
