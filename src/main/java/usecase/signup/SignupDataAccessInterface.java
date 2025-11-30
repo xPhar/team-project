@@ -26,15 +26,4 @@ public interface SignupDataAccessInterface {
      * @return the user with the given username
      */
     User getUser(String username);
-
-    /**
-     * Legacy alias for getUser to support older implementations.
-     */
-    default User get(String username) {
-        return getUser(username);
-    }
-
-    void setCurrentUsername(String name);
-
-    String getCurrentUsername();
 }

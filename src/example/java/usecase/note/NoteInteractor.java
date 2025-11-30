@@ -1,6 +1,5 @@
 package usecase.example;
 
-import entity.Student;
 import entity.User;
 
 /**

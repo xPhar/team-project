@@ -11,6 +11,11 @@ import java.util.List;
  */
 public interface LoginDataAccessInterface {
 
+    /**
+     * Checks if the given username exists.
+     * @param username the username to look for
+     * @return true if a user with the given username exists; false otherwise
+     */
     boolean existsByName(String username);
 
     /**
@@ -21,37 +26,10 @@ public interface LoginDataAccessInterface {
     User getUser(String username);
 
     /**
-     * Optional convenience method used by some data access implementations.
-     */
-    default User get(String username) {
-        return getUser(username);
-    }
-
-    /**
-     * Saves a user if needed by the data access implementation.
-     */
-    default void save(User user) {
-        // no-op by default
-    }
-
-    /**
      * Sets the Session's user to this user.
      * @param user the user to make active
      */
     void setActiveUser(User user);
-
-    /**
-     * Tracks the current username for lightweight implementations.
-     */
-    default void setCurrentUsername(String name) {
-        if (getUser(name) != null) {
-            setActiveUser(getUser(name));
-        }
-    }
-
-    default String getCurrentUsername() {
-        return "";
-    }
 
     /**
      * Gets the assignments for the users first course.

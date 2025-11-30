@@ -32,18 +32,19 @@ public class LoginPresenter implements LoginOutputBoundary {
 
     @Override
     public void prepareSuccessView(LoginOutputData response) {
-        final LoggedInState loggedInState = loggedInViewModel.getState();
-        loggedInState.setUsername(response.getUsername());
-        loggedInState.setUserType(response.getUserRole());
-        loggedInState.setAssignments(response.getAssignments());
-        loggedInViewModel.setState(loggedInState);
-        loggedInViewModel.firePropertyChange();
-
         loginViewModel.setState(new LoginState());
 
         if ("instructor".equalsIgnoreCase(response.getUserRole())) {
             viewManagerModel.setState(assignmentsViewModel.getViewName());
         } else {
+            final LoggedInState loggedInState = loggedInViewModel.getState();
+
+            loggedInState.setUsername(response.getUsername());
+            loggedInState.setUserType(response.getUserRole());
+            loggedInState.setAssignments(response.getAssignments());
+            loggedInViewModel.setState(loggedInState);
+            loggedInViewModel.firePropertyChange();
+
             viewManagerModel.setState(loggedInViewModel.getViewName());
         }
         viewManagerModel.firePropertyChange();
@@ -53,7 +54,6 @@ public class LoginPresenter implements LoginOutputBoundary {
     public void prepareFailView(String error) {
         final LoginState loginState = loginViewModel.getState();
         loginState.setLoginError(error);
-        loginViewModel.setState(loginState);
         loginViewModel.firePropertyChange();
     }
 

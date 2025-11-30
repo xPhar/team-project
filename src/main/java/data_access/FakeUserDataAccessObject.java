@@ -73,25 +73,10 @@ public class FakeUserDataAccessObject implements SubmitUserDataAccessInterface, 
     }
 
     @Override
-    public User get(String username) {
-        return getUser(username);
-    }
-
-    @Override
-    public void setCurrentUsername(String name) {
-        this.currentUsername = name;
-    }
-
-    @Override
-    public String getCurrentUsername() {
-        return currentUsername;
-    }
-
-    @Override
     public void setActiveUser(User user) {
         if (user != null) {
             save(user);
-            setCurrentUsername(user.getName());
+            setActiveUser(user);
         }
     }
 

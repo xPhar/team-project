@@ -230,13 +230,8 @@ public class FacadeDAO implements
                     courses
             );
         } catch (Exception e) {
-            throw new DataAccessException("Failed to load user " + username, e);
+            throw new DataAccessException("Failed to load user " + username);
         }
-    }
-
-    @Override
-    public User get(String username) {
-        return getUser(username);
     }
 
     @Override
@@ -249,17 +244,6 @@ public class FacadeDAO implements
             }
         }
         return null;
-    }
-
-    @Override
-    public void setCurrentUsername(String name) {
-        if (name == null || name.isEmpty()) {
-            return;
-        }
-        User user = getUser(name);
-        if (user != null) {
-            setActiveUser(user);
-        }
     }
 
     @Override
@@ -448,7 +432,7 @@ public class FacadeDAO implements
         JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
         JSONObject assignmentObj =  assignmentDictionary.getJSONObject(assignmentName);
 
-        AssignmentBuilder builder = Assignment.builder();
+        var builder = Assignment.builder();
         return builder.name(assignmentName)
                 .description(assignmentObj.getString("description"))
                 .creationDate(LocalDateTime.parse(assignmentObj.getString("creationDate")))
