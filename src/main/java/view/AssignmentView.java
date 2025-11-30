@@ -174,6 +174,17 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
         courseLabel.setText("Course: " + state.getCourseName());
         this.currentAssignments = state.getAssignments();
         this.isInstructor = state.isInstructor();
+        this.courseCode = state.getCourseName();
+
+        if (this.courseCode == null || this.courseCode.trim().isEmpty()) {
+            courseLabel.setText("No Course Selected");
+            courseLabel.setForeground(Color.RED);
+            newAssignmentButton.setVisible(false);
+        } else {
+            courseLabel.setText("Course: " + this.courseCode);
+            courseLabel.setForeground(TEXT_SECONDARY);
+            newAssignmentButton.setVisible(state.isInstructor());
+        }
 
         tableModel.setRowCount(0);
         tableModel.setColumnCount(4);
@@ -183,11 +194,11 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
         table.getColumn("Action").setMaxWidth(120);
         table.getColumn("Action").setMinWidth(120);
 
-        for (int i = 0; i < currentAssignments.size(); i++) {
-            addAssignmentRow(currentAssignments.get(i), i);
+        if (currentAssignments != null) {
+            for (int i = 0; i < currentAssignments.size(); i++) {
+                addAssignmentRow(currentAssignments.get(i), i);
+            }
         }
-
-        newAssignmentButton.setVisible(state.isInstructor());
 
         if (state.getErrorMessage() != null && !state.getErrorMessage().isEmpty()) {
             errorLabel.setText(state.getErrorMessage());
@@ -195,6 +206,7 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
             errorLabel.setText("");
         }
     }
+
 
     private void addAssignmentRow(AssignmentDTO assignment, int index) {
         String name = (assignment.getName() != null && !assignment.getName().isEmpty())

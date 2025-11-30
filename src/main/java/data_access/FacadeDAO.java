@@ -273,9 +273,7 @@ public class FacadeDAO implements
 
         // TODO: Implement course selecting if we get time
         // Since we're currently going under the assumption of a single course, make that course active as well
-        if (user.getCourses() != null && !user.getCourses().isEmpty()) {
-            sessionDA.setCourse(getCourse(user.getCourses().get(0)));
-        }
+        sessionDA.setCourse(getCourse("course-course-CSC207"));
     }
 
     public Course getCourse(String courseName) {
@@ -393,27 +391,26 @@ public class FacadeDAO implements
         return course.getAssignments() == null ? List.of() : course.getAssignments();
 
         // I believe this is unnecessary?
-//        Course course = sessionDA.getCourse();
-//        List<Assignment> assignments = new ArrayList<>();
-//
-//        JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
-//        courseObject = courseObject.getJSONObject("courseData");
-//        JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
-//        Iterator<String> keyIt = assignmentDictionary.keys();
-//        while (keyIt.hasNext()) {
-//            String assignmentName = keyIt.next();
-//            JSONObject assignmentObj = assignmentDictionary.getJSONObject(assignmentName);
-//            Assignment.AssignmentBuilder builder = Assignment.builder();
-//            builder.name(assignmentName)
-//                    .description(assignmentObj.getString("description"))
-//                    .creationDate(LocalDateTime.parse(assignmentObj.getString("creationDate")))
-//                    .dueDate(LocalDateTime.parse(assignmentObj.getString("dueDate")))
-//                    .gracePeriod(assignmentObj.getDouble("gracePeriod"));
+//      Course course = sessionDA.getCourse();
+//      List<Assignment> assignments = new ArrayList<>();
+//      JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
+//      courseObject = courseObject.getJSONObject("courseData");
+//      JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
+//      Iterator<String> keyIt = assignmentDictionary.keys();
+ //     while (keyIt.hasNext()) {
+ //         String assignmentName = keyIt.next();
+ //         JSONObject assignmentObj = assignmentDictionary.getJSONObject(assignmentName);
+ //         Assignment.AssignmentBuilder builder = Assignment.builder();
+ //         builder.name(assignmentName)
+ //                 .description(assignmentObj.getString("description"))
+ //                 .creationDate(LocalDateTime.parse(assignmentObj.getString("creationDate")))
+ //                 .dueDate(LocalDateTime.parse(assignmentObj.getString("dueDate")))
+  //                .gracePeriod(assignmentObj.getDouble("gracePeriod"));
 //                    // TODO add supported file types
-//            assignments.add(builder.build());
-//        }
+  //        assignments.add(builder.build());
+  //    }
 //
-//        return assignments;
+   //    return assignments;
     }
 
     @Override
@@ -479,6 +476,7 @@ public class FacadeDAO implements
         assignmentsObject.put(assignment.getName(), assignmentToJSON(assignment));
 
         gradeDA.modifyUserInfoEndpoint(courseName, COURSE_PASSWORD, courseObject);
+        sessionDA.setCourse(getCourse(courseName));
     }
 
     @Override
@@ -503,6 +501,7 @@ public class FacadeDAO implements
             assignmentsObject.put(assignment.getName(), assignmentToJSON(assignment));
 
             gradeDA.modifyUserInfoEndpoint(courseName, COURSE_PASSWORD, courseObject);
+            sessionDA.setCourse(getCourse(courseName));
         }
     }
 

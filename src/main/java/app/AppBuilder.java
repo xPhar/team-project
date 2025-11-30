@@ -267,8 +267,14 @@ public class AppBuilder {
     public AppBuilder addCreateAssignmentUseCase() {
         final CreateAssignmentOutputBoundary createAssignmentOutputBoundary = new CreateAssignmentPresenter(
                 createAssignmentViewModel, assignmentsViewModel, viewManagerModel);
+
+        final AssignmentsOutputBoundary assignmentsOutputBoundary = new AssignmentsPresenter(
+                assignmentsViewModel, viewManagerModel, submissionListViewModel);
+        final AssignmentsInputBoundary assignmentsInteractor = new AssignmentsInteractor(
+                userDataAccessObject, assignmentsOutputBoundary);
+
         final CreateAssignmentInputBoundary createAssignmentInteractor = new CreateAssignmentInteractor(
-                userDataAccessObject, createAssignmentOutputBoundary);
+                userDataAccessObject, createAssignmentOutputBoundary, assignmentsInteractor);
 
         CreateAssignmentController createAssignmentController = new CreateAssignmentController(
                 createAssignmentInteractor);
@@ -279,8 +285,14 @@ public class AppBuilder {
     public AppBuilder addEditAssignmentUseCase() {
         final EditAssignmentOutputBoundary editAssignmentOutputBoundary = new EditAssignmentPresenter(
                 editAssignmentViewModel, assignmentsViewModel, viewManagerModel);
+
+        final AssignmentsOutputBoundary assignmentsOutputBoundary = new AssignmentsPresenter(
+                assignmentsViewModel, viewManagerModel, submissionListViewModel);
+        final AssignmentsInputBoundary assignmentsInteractor = new AssignmentsInteractor(
+                userDataAccessObject, assignmentsOutputBoundary);
+
         final EditAssignmentInputBoundary editAssignmentInteractor = new EditAssignmentInteractor(
-                userDataAccessObject, editAssignmentOutputBoundary);
+                userDataAccessObject, editAssignmentOutputBoundary, assignmentsInteractor);
 
         EditAssignmentController editAssignmentController = new EditAssignmentController(
                 editAssignmentInteractor, viewManagerModel, assignmentsViewModel, editAssignmentViewModel);

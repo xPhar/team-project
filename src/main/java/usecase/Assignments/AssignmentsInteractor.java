@@ -23,13 +23,13 @@ public class AssignmentsInteractor implements AssignmentsInputBoundary {
     public void execute(AssignmentsInputData inputData) {
         try {
             List<Assignment> assignments = dataAccess.getAssignments();
-            assignments.sort(java.util.Comparator.comparing(Assignment::getDueDate,
-                    java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder())));
 
             boolean isInstructor = dataAccess.getCurrentUser().getUserType() == USER_TYPE.INSTRUCTOR;
 
             // Map Assignment entities to AssignmentDTOs
             List<AssignmentDTO> assignmentDTOs = assignments.stream()
+                    .sorted(java.util.Comparator.comparing(Assignment::getDueDate,
+                            java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder())))
                     .map(assignment -> new AssignmentDTO(
                             assignment.getName(),
                             assignment.getDescription(),
@@ -48,6 +48,7 @@ public class AssignmentsInteractor implements AssignmentsInputBoundary {
             presenter.prepareFailureView("Error loading assignments: " + e.getMessage());
         }
     }
+
 
     @Override
     public void switchToCreateAssignmentView() {
