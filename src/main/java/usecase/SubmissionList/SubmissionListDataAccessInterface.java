@@ -1,5 +1,4 @@
 package usecase.SubmissionList;
-
 import entity.Submission;
 
 import java.util.List;
@@ -9,17 +8,9 @@ import java.util.List;
  */
 public interface SubmissionListDataAccessInterface {
     /**
-     * Get a list of submissions for an assignment.
-     * @param assignmentName the name of the assignment
-     * @return a list of submissions for that assignment
-     */
-    List<Submission> getSubmissionList(String assignmentName);
-
-    /**
-     * Returns a specific submission based on the assignment and the submitter's name.
-     * @param assignmentName the name of the assignment
+     * Returns a specific submission based on the submitter's name.
      * @param submitter the name of the assignment
-     * @return the submission made by the submitter for the assignment
+     * @return the submission made by the submitter
      */
-    Submission getSubmission(String assignmentName, String submitter);
+    Submission getSubmissionForSubmissionView(String submitter);
 }

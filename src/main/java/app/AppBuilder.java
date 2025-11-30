@@ -188,7 +188,7 @@ public class AppBuilder {
     public AppBuilder addSubmissionListUseCase() {
         final SubmissionListOutputBoundary submissionListOutputBoundary = new SubmissionListPresenter(
                 submissionListViewModel, viewManagerModel,
-                submissionViewModel);
+                submissionViewModel, assignmentsViewModel);
         SubmissionListInputBoundary submissionListInputBoundary = new SubmissionListInteractor(
                 submissionListOutputBoundary, testDAO);
 

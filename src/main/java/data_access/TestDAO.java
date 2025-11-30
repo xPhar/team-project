@@ -78,7 +78,6 @@ public class TestDAO implements
         assignmentsByCourse.put("CSC207", csc207Assignments);
     }
 
-    @Override
     public Submission getSubmission(String assignmentName, String submitter) {
         final Submission.SubmissionBuilder builder = Submission.getBuilder();
         builder.submitter("Indy");
@@ -89,7 +88,6 @@ public class TestDAO implements
         return builder.build();
     }
 
-    @Override
     public List<Submission> getSubmissionList(String assignmentName) {
         final List<Submission> list = new ArrayList<>();
         for (int i = 0; i < TEST_LIST_LENGTH; i++) {
@@ -105,16 +103,6 @@ public class TestDAO implements
         }
 
         return list;
-    }
-
-    @Override
-    public void grade(String assignment, String submitter, double grade, String feedback) {
-
-    }
-
-    @Override
-    public void saveFile(File saveFile) {
-
     }
 
     @Override
@@ -148,5 +136,25 @@ public class TestDAO implements
                 }
             }
         }
+    }
+
+    @Override
+    public void saveFile(File saveFile, String submitter) {
+
+    }
+
+    @Override
+    public List<Submission> getSubmissionList() {
+        return List.of();
+    }
+
+    @Override
+    public Submission getSubmissionForSubmissionView(String submitter) {
+        return null;
+    }
+
+    @Override
+    public void grade(String submitter, double grade, String feedback) {
+
     }
 }

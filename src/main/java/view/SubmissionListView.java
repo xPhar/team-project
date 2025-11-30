@@ -54,7 +54,7 @@ public class SubmissionListView extends JPanel implements PropertyChangeListener
         c.anchor = GridBagConstraints.CENTER;
         titlePanel.add(title, c);
 
-        submissionTable.setModel(new SubmissionTableModel(new ArrayList<>()));
+        submissionTable.setModel(new SubmissionTableModel(new String[0][]));
         submissionTable.setFont(new Font(submissionTable.getFont().getFontName(), Font.PLAIN, 14));
         submissionTable.setRowHeight(20);
         submissionTable.getColumnModel().getColumn(2).setPreferredWidth(20);
@@ -64,14 +64,19 @@ public class SubmissionListView extends JPanel implements PropertyChangeListener
         this.add(new JScrollPane(submissionTable));
 
         backButton.addActionListener(
-                evt -> submissionListController.executeBack()
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+                        submissionListController.executeBack();
+                    }
+                }
         );
         submissionTable.addMouseListener(
                 new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         if (e.getClickCount() == 2 && submissionTable.getSelectedRow() != -1) {
-                            submissionListController.executeChooseSubmission();
+                            String submitter = submissionTable.getValueAt(submissionTable.getSelectedRow(), 0).toString();
+                            submissionListController.executeChooseSubmission(submitter, title.getText());
                         }
                     }
                 }
@@ -82,10 +87,8 @@ public class SubmissionListView extends JPanel implements PropertyChangeListener
     public void propertyChange(PropertyChangeEvent evt) {
         final SubmissionListState state = (SubmissionListState) evt.getNewValue();
 
-        if (evt.getPropertyName().equals("title")) {
+        if (evt.getPropertyName().equals("state")) {
             title.setText(state.getTitle());
-        }
-        else if (evt.getPropertyName().equals("tableModel")) {
             submissionTable.setModel(state.getTableModel());
             state.getTableModel().fireTableDataChanged();
         }
