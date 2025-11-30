@@ -7,6 +7,7 @@ import usecase.login.LoginInputData;
  * The controller for the Login Use Case.
  */
 public class LoginController {
+
     private final LoginInputBoundary loginUseCaseInteractor;
 
     public LoginController(LoginInputBoundary loginUseCaseInteractor) {
@@ -22,5 +23,12 @@ public class LoginController {
         final LoginInputData loginInputData = new LoginInputData(username, password);
 
         loginUseCaseInteractor.execute(loginInputData);
+    }
+
+    /**
+     * Executes the "switch to SignupView" Use Case.
+     */
+    public void switchToSignupView() {
+        loginUseCaseInteractor.switchToSignupView();
     }
 }

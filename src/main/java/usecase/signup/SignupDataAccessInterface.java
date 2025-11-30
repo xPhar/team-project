@@ -1,0 +1,40 @@
+package usecase.signup;
+
+import entity.User;
+
+/**
+ * DAO interface for the Signup Use Case.
+ */
+public interface SignupDataAccessInterface {
+
+    /**
+     * Checks if the given username exists.
+     * @param username the username to look for
+     * @return true if a user with the given username exists; false otherwise
+     */
+    boolean existsByName(String username);
+
+    /**
+     * Saves the user.
+     * @param user the user to save
+     */
+    void save(User user);
+
+    /**
+     * Returns the user with the given username.
+     * @param username the username to look up
+     * @return the user with the given username
+     */
+    User getUser(String username);
+
+    /**
+     * Legacy alias for getUser to support older implementations.
+     */
+    default User get(String username) {
+        return getUser(username);
+    }
+
+    void setCurrentUsername(String name);
+
+    String getCurrentUsername();
+}

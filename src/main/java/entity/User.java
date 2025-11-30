@@ -19,6 +19,18 @@ public class User {
     public static final USER_TYPE STUDENT = USER_TYPE.STUDENT;
     public static final USER_TYPE INSTRUCTOR = USER_TYPE.INSTRUCTOR;
 
+    public User(String name, String password) {
+        this(name, password, "", "", USER_TYPE.STUDENT, new ArrayList<>());
+    }
+
+    public User(String name, String password, USER_TYPE userType) {
+        this(name, password, "", "", userType, new ArrayList<>());
+    }
+
+    public User(String name, String password, USER_TYPE userType, List<String> courses) {
+        this(name, password, "", "", userType, courses);
+    }
+
     public User(String name, String password, String first, String last, USER_TYPE userType) {
         this(name, password, first, last, userType, new ArrayList<>());
     }
