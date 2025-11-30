@@ -18,14 +18,16 @@ import java.util.Map;
 
 public class FakeUserDataAccessObject implements SubmitUserDataAccessInterface, ResubmitUserDataAccessInterface,
                                                  LoginDataAccessInterface, SignupDataAccessInterface {
-    Assignment assignment;
-    boolean submitFailure;
+    private Assignment assignment;
+    private boolean submitFailure;
     private final Map<String, User> users = new HashMap<>();
     private String currentUsername = "";
-
+    private SessionDataAccessObject session;
 
     public FakeUserDataAccessObject(boolean deadlinePassed, boolean submitFails) {
         this.submitFailure = submitFails;
+
+        this.session =  new SessionDataAccessObject();
 
         LocalDateTime deadline;
 
@@ -76,7 +78,7 @@ public class FakeUserDataAccessObject implements SubmitUserDataAccessInterface, 
     public void setActiveUser(User user) {
         if (user != null) {
             save(user);
-            setActiveUser(user);
+            session.setUser(user);
         }
     }
 
