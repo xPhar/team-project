@@ -9,6 +9,7 @@ import usecase.login.*;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 class LoginInteractorTest {
@@ -23,7 +24,7 @@ class LoginInteractorTest {
 
         LoginOutputBoundary presenter = new LoginOutputBoundary() {
             @Override
-            public void switchToLoggedInView(LoginOutputData response) {
+            public void prepareSuccessView(LoginOutputData response) {
                 // assert that values are expected
                 assertEquals(username, response.getUsername(), "Usernames don't match.");
                 assertEquals("student", response.getUserType(), "User type is incorrect.");
@@ -45,6 +46,11 @@ class LoginInteractorTest {
             public void prepareFailView(String errorMessage) {
                 fail("Interactor gave error: " + errorMessage + "\nBut should have been successful.");
             }
+
+            @Override
+            public void switchToSignupView() {
+                fail("Interactor called switchToSignupView instead of prepareSuccessView.");
+            }
         };
 
         LoginInputBoundary interactor = new LoginInteractor(fakeDAO, presenter);
@@ -61,7 +67,7 @@ class LoginInteractorTest {
 
         LoginOutputBoundary presenter = new LoginOutputBoundary() {
             @Override
-            public void switchToLoggedInView(LoginOutputData response) {
+            public void prepareSuccessView(LoginOutputData response) {
                 // assert that values are expected
                 assertEquals(username, response.getUsername(), "Usernames don't match.");
                 assertEquals("student", response.getUserType(), "User type is incorrect.");
@@ -82,6 +88,11 @@ class LoginInteractorTest {
             @Override
             public void prepareFailView(String errorMessage) {
                 fail("Interactor gave error: " + errorMessage + "\nBut should have been successful.");
+            }
+
+            @Override
+            public void switchToSignupView() {
+                fail("Interactor called switchToSignupView instead of prepareSuccessView.");
             }
         };
 
@@ -99,7 +110,7 @@ class LoginInteractorTest {
 
         LoginOutputBoundary presenter = new LoginOutputBoundary() {
             @Override
-            public void switchToLoggedInView(LoginOutputData response) {
+            public void prepareSuccessView(LoginOutputData response) {
                 // assert that values are expected
                 assertEquals(username, response.getUsername(), "Usernames don't match.");
                 assertEquals("student", response.getUserType(), "User type is incorrect.");
@@ -121,83 +132,39 @@ class LoginInteractorTest {
             public void prepareFailView(String errorMessage) {
                 fail("Interactor gave error: " + errorMessage + "\nBut should have been successful.");
             }
+
+            @Override
+            public void switchToSignupView() {
+                fail("Interactor called switchToSignupView instead of prepareSuccessView.");
+            }
         };
 
         LoginInputBoundary interactor = new LoginInteractor(fakeDAO, presenter);
         interactor.execute(inputData);
     }
 
-//    @Test
-//    void deadlineFailCase() {
-//        @SuppressWarnings("ConstantConditions")
-//        File file = new File(getClass().getResource("/submitCaseTestFile1.txt").getPath());
-//
-//        SubmitInputData inputData = new SubmitInputData(LocalDateTime.now(), file);
-//        SubmitUserDataAccessInterface fakeDAO = new FakeUserDataAccessObject(true, false);
-//
-//        SubmitOutputBoundary presenter = new SubmitOutputBoundary() {
-//            @Override
-//            public void prepareSuccessView(SubmitOutputData pack) {
-//                fail(FailMsg);
-//            }
-//
-//            @Override
-//            public void prepareFailureView(SubmitOutputData pack) {
-//                assertEquals(SubmitInteractor.DDL_PASSED_MSG, pack.getOutputMsg());
-//            }
-//
-//        };
-//
-//        SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, presenter);
-//        interactor.execute(inputData);
-//    }
-//
-//    @Test
-//    void networkFailCase() {
-//        @SuppressWarnings("ConstantConditions")
-//        File file = new File(getClass().getResource("/submitCaseTestFile1.txt").getPath());
-//
-//        SubmitInputData inputData = new SubmitInputData(LocalDateTime.now(), file);
-//        SubmitUserDataAccessInterface fakeDAO = new FakeUserDataAccessObject(false, true);
-//
-//        SubmitOutputBoundary presenter = new SubmitOutputBoundary() {
-//            @Override
-//            public void prepareSuccessView(SubmitOutputData pack) {
-//                fail(FailMsg);
-//            }
-//
-//            @Override
-//            public void prepareFailureView(SubmitOutputData pack) {
-//                assertEquals(SubmitInteractor.NETWORK_ERROR_MSG, pack.getOutputMsg());
-//            }
-//
-//        };
-//
-//        SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, presenter);
-//        interactor.execute(inputData);
-//    }
-//
-//    @Test
-//    void FileTypeFailCase() {
-//        @SuppressWarnings("ConstantConditions")
-//        File file = new File(getClass().getResource("/submitCaseTestFile2.abcdefg").getPath());
-//        SubmitInputData inputData = new SubmitInputData(LocalDateTime.now(), file);
-//        SubmitUserDataAccessInterface fakeDAO = new FakeUserDataAccessObject(false, true);
-//
-//        SubmitOutputBoundary presenter = new SubmitOutputBoundary() {
-//            @Override
-//            public void prepareSuccessView(SubmitOutputData pack) {
-//                fail(FailMsg);
-//            }
-//
-//            @Override
-//            public void prepareFailureView(SubmitOutputData pack) {
-//                assertEquals(SubmitInteractor.WRONG_FILE_MSG, pack.getOutputMsg());
-//            }
-//
-//        };
-//
-//        SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, presenter);
-//        interactor.execute(inputData);
-//    }
+    @Test
+    void testSignupSwitch() {
+        LoginDataAccessInterface fakeDAO = new FakeUserDataAccessObject(LocalDateTime.now());
+        LoginOutputBoundary presenter = new LoginOutputBoundary() {
+
+            @Override
+            public void prepareSuccessView(LoginOutputData outputData) {
+                fail("Interactor called prepareSuccessView instead of switchToSignupView.");
+            }
+
+            @Override
+            public void prepareFailView(String errorMessage) {
+                fail("Interactor gave error: " + errorMessage + "\nBut should have been successful.");
+            }
+
+            @Override
+            public void switchToSignupView() {
+                assertTrue(true);
+            }
+        };
+
+        LoginInputBoundary interactor = new LoginInteractor(fakeDAO, presenter);
+        interactor.switchToSignupView();
+    }
 }
