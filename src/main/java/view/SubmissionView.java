@@ -37,20 +37,23 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
 
         final JButton downloadButton = new JButton("Download File");
         final JButton gradeButton = new JButton("Grade");
+        final JButton backButton = new JButton("Back");
 
         final JPanel gradePanel = new JPanel();
         final JPanel feedbackPanel = new JPanel();
         gradePanel.add(new JLabel("Grade"));
         gradePanel.add(gradeTextField);
         gradePanel.add(maxGradeLabel);
-        feedbackPanel.add(gradePanel);
-        feedbackPanel.add(new JLabel("Feedback:"));
-        feedbackPanel.add(feedbackTextArea);
-        feedbackPanel.add(gradeButton);
-        feedbackPanel.setLayout(new BoxLayout(feedbackPanel, BoxLayout.Y_AXIS));
+        gradePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        feedbackPanel.setLayout(new BorderLayout());
+        feedbackPanel.add(new JLabel("Feedback:"), BorderLayout.NORTH);
+        feedbackPanel.add(new JScrollPane(feedbackTextArea), BorderLayout.CENTER);
+//        feedbackPanel.setMaximumSize(new Dimension(500,feedbackPanel.getMaximumSize().height));
 
         gradeTextField.setColumns(8);
-        feedbackTextArea.setRows(5);
+        feedbackTextArea.setRows(3);
+        feedbackTextArea.setColumns(5);
+        feedbackTextArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         final JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
@@ -59,32 +62,30 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
         infoPanel.add(submittedDateLabel);
         infoPanel.add(submissionStatusLabel);
         infoPanel.add(downloadButton);
+        infoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        final JButton backButton = new JButton("Back");
         title = new JLabel("");
         title.setHorizontalAlignment(SwingConstants.CENTER);
-        title.setFont(new Font(title.getFont().getFontName(), Font.PLAIN, 20));
+        title.setFont(new Font("Helvetica", Font.BOLD, 20));
 
         final JPanel titlePanel = new JPanel();
-        titlePanel.setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+        titlePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        titlePanel.add(title);
 
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 0;
-        c.weightx = 0.05;
-        titlePanel.add(backButton, c);
-
-        c.gridx = 1;
-        c.gridy = 0;
-        c.weightx = 0.95;
-        c.anchor = GridBagConstraints.CENTER;
-        titlePanel.add(title, c);
+        final JPanel buttonPanel = new JPanel(new BorderLayout());
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        buttonPanel.setMaximumSize(new Dimension(buttonPanel.getMaximumSize().width, 80));
+        buttonPanel.add(backButton, BorderLayout.WEST);
+        buttonPanel.add(gradeButton, BorderLayout.EAST);
 
         this.setLayout(new BoxLayout(this,  BoxLayout.Y_AXIS));
         this.add(titlePanel);
         this.add(infoPanel);
+        this.add(gradePanel);
         this.add(feedbackPanel);
+        this.add(buttonPanel);
+        this.setFont(new Font("Helvetica", Font.PLAIN, 16));
 
         backButton.addActionListener(
                 new ActionListener() {
