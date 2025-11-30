@@ -25,7 +25,14 @@ public interface SignupDataAccessInterface {
      * @param username the username to look up
      * @return the user with the given username
      */
-    User get(String username);
+    User getUser(String username);
+
+    /**
+     * Legacy alias for getUser to support older implementations.
+     */
+    default User get(String username) {
+        return getUser(username);
+    }
 
     void setCurrentUsername(String name);
 

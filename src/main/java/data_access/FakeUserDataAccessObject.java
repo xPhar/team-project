@@ -7,16 +7,21 @@ import entity.User;
 import usecase.Resubmit.ResubmitUserDataAccessInterface;
 import usecase.Submit.SubmitUserDataAccessInterface;
 import usecase.login.LoginDataAccessInterface;
+import usecase.signup.SignupDataAccessInterface;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FakeUserDataAccessObject implements SubmitUserDataAccessInterface, ResubmitUserDataAccessInterface,
-                                                 LoginDataAccessInterface {
+                                                 LoginDataAccessInterface, SignupDataAccessInterface {
     Assignment assignment;
     boolean submitFailure;
+    private final Map<String, User> users = new HashMap<>();
+    private String currentUsername = "";
 
 
     public FakeUserDataAccessObject(boolean deadlinePassed, boolean submitFails) {
@@ -52,22 +57,47 @@ public class FakeUserDataAccessObject implements SubmitUserDataAccessInterface, 
 
     @Override
     public boolean existsByName(String username) {
-        return false;
+        return users.containsKey(username);
     }
 
     @Override
     public User getUser(String username) {
-        return null;
+        return users.get(username);
+    }
+
+    @Override
+    public void save(User user) {
+        if (user != null) {
+            users.put(user.getName(), user);
+        }
+    }
+
+    @Override
+    public User get(String username) {
+        return getUser(username);
+    }
+
+    @Override
+    public void setCurrentUsername(String name) {
+        this.currentUsername = name;
+    }
+
+    @Override
+    public String getCurrentUsername() {
+        return currentUsername;
     }
 
     @Override
     public void setActiveUser(User user) {
-        // Does nothing :D
+        if (user != null) {
+            save(user);
+            setCurrentUsername(user.getName());
+        }
     }
 
     @Override
     public List<Assignment> getAssignments() {
-        return List.of();
+        return List.of(assignment);
     }
 
     @Override

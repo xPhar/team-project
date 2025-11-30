@@ -114,7 +114,7 @@ class SignupInteractorTest {
         }
 
         @Override
-        public User get(String username) {
+        public User getUser(String username) {
             return users.get(username);
         }
 

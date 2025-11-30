@@ -230,7 +230,7 @@ public class FacadeDAO implements
                     courses
             );
         } catch (Exception e) {
-            throw new RuntimeException("Failed to load user " + username, e);
+            throw new DataAccessException("Failed to load user " + username, e);
         }
     }
 

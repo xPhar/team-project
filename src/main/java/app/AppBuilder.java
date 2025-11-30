@@ -299,9 +299,6 @@ public class AppBuilder {
         viewManagerModel.setState(loginView.getViewName());
         viewManagerModel.firePropertyChange();
 
-        application.pack();
-        application.setLocationRelativeTo(null);
-
         return application;
     }
 }
