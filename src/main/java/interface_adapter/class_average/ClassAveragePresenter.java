@@ -76,6 +76,10 @@ public class ClassAveragePresenter implements ClassAverageOutputBoundary {
                 dataset
         );
 
+        org.jfree.chart.plot.CategoryPlot plot = chart.getCategoryPlot();
+        org.jfree.chart.axis.NumberAxis rangeAxis = (org.jfree.chart.axis.NumberAxis) plot.getRangeAxis();
+        rangeAxis.setStandardTickUnits(org.jfree.chart.axis.NumberAxis.createIntegerTickUnits());
+
         return new ChartPanel(chart);
     }
 }
