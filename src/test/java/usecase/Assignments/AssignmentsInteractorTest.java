@@ -79,3 +79,158 @@ class AssignmentsInteractorTest {
         assertEquals("CSC207", presenter.outputData.getCourseName());
     }
 
+    @Test
+    void testExecute_Failure() {
+        dao.shouldThrowException = true;
+        dao.exceptionMessage = "Database connection failed";
+
+        interactor.execute(new AssignmentsInputData());
+
+        assertTrue(presenter.failCalled, "Failure view should be called.");
+        assertFalse(presenter.successCalled);
+        assertEquals("Error loading assignments: Database connection failed", presenter.failMessage);
+    }
+
+    @Test
+    void testSwitchToSubmissionListView_SubmissionsGradedAndPending() {
+        String assignmentName = "FinalProject";
+        Assignment assignment = Assignment.builder()
+                .name(assignmentName)
+                .supportedFileTypes(Collections.emptyList())
+                .build();
+        dao.assignmentToReturn = assignment;
+
+        LocalDateTime subTime = FIXED_TIME.minusHours(1);
+
+        Submission gradedSub = new Submission(assignmentName, "Alice", subTime, "file", "data", 95.55, Submission.Status.GRADED, "ok");
+        Submission pendingSub = new Submission(assignmentName, "Bob", subTime, "file", "data", 0.0, Submission.Status.UNDER_REVIEW, "");
+
+        dao.submissions = Arrays.asList(gradedSub, pendingSub);
+
+        interactor.switchToSubmissionListView(assignmentName);
+
+        assertTrue(presenter.switchToSubmissionListViewCalled);
+        assertEquals(assignment, dao.activeAssignmentSet, "Active assignment should be set in DAO.");
+
+        String[][] submissionTable = presenter.outputData.getSubmissions();
+        assertEquals(2, submissionTable.length);
+
+        String expectedTime = subTime.format(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss"));
+
+        assertEquals("Alice", submissionTable[0][0]);
+        assertEquals(expectedTime, submissionTable[0][1]);
+        assertEquals("95.6", submissionTable[0][2], "Graded score should be formatted to 1 decimal place (95.55 -> 95.6).");
+
+        assertEquals("Bob", submissionTable[1][0]);
+        assertEquals(expectedTime, submissionTable[1][1]);
+        assertEquals("pending", submissionTable[1][2], "Pending status should show 'pending'.");
+    }
+
+    @Test
+    void testSwitchToCreateAssignmentView() {
+        interactor.switchToCreateAssignmentView();
+        assertTrue(presenter.switchToCreateAssignmentViewCalled, "Presenter's method should be called.");
+    }
+
+    @Test
+    void testSwitchToSubmitView() {
+        interactor.switchToSubmitView();
+        assertTrue(presenter.switchToSubmitViewCalled, "Presenter's method should be called.");
+    }
+
+    @Test
+    void testSwitchToResubmitView() {
+        interactor.switchToResubmitView();
+        assertTrue(presenter.switchToResubmitViewCalled, "Presenter's method should be called.");
+    }
+
+    static class TestAssignmentsDAO implements AssignmentsDataAccessInterface {
+        List<Assignment> assignments = Collections.emptyList();
+        USER_TYPE currentUserType = USER_TYPE.STUDENT;
+        String courseCode = "";
+        boolean shouldThrowException = false;
+        String exceptionMessage = "";
+        Assignment assignmentToReturn = null;
+        Assignment activeAssignmentSet = null;
+        List<Submission> submissions = Collections.emptyList();
+
+
+        @Override
+        public List<Assignment> getAssignments() {
+            if (shouldThrowException) {
+                throw new RuntimeException(exceptionMessage);
+            }
+            return assignments;
+        }
+
+        @Override
+        public User getCurrentUser() {
+            return new User("testUser", "pass", currentUserType);
+        }
+
+        @Override
+        public String getCourseCode() {
+            return courseCode;
+        }
+
+        @Override
+        public Assignment getAssignment(String assignmentName) {
+            return assignmentToReturn;
+        }
+
+        @Override
+        public void setActiveAssignment(Assignment assignment) {
+            this.activeAssignmentSet = assignment;
+        }
+
+        @Override
+        public List<Submission> getSubmissionList(Assignment assignment) {
+            return submissions;
+        }
+    }
+
+    static class TestAssignmentsPresenter implements AssignmentsOutputBoundary {
+        boolean successCalled = false;
+        boolean failCalled = false;
+        boolean switchToCreateAssignmentViewCalled = false;
+        boolean switchToSubmitViewCalled = false;
+        boolean switchToResubmitViewCalled = false;
+        boolean switchToSubmissionListViewCalled = false;
+
+        String failMessage;
+        AssignmentsOutputData outputData;
+
+        @Override
+        public void prepareSuccessView(AssignmentsOutputData outputData) {
+            successCalled = true;
+            this.outputData = outputData;
+        }
+
+        @Override
+        public void prepareFailureView(String errorMessage) {
+            failCalled = true;
+            this.failMessage = errorMessage;
+        }
+
+        @Override
+        public void switchToCreateAssignmentView() {
+            switchToCreateAssignmentViewCalled = true;
+        }
+
+        @Override
+        public void switchToSubmitView() {
+            switchToSubmitViewCalled = true;
+        }
+
+        @Override
+        public void switchToResubmitView() {
+            switchToResubmitViewCalled = true;
+        }
+
+        @Override
+        public void switchToSubmissionListView(AssignmentsOutputData outputData) {
+            switchToSubmissionListViewCalled = true;
+            this.outputData = outputData;
+        }
+    }
+}
