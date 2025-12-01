@@ -20,41 +20,9 @@ public class LoginInteractor implements LoginInputBoundary {
         this.loginPresenter = loginOutputBoundary;
     }
 
-    @Override
-    public void execute(LoginInputData loginInputData) {
-        final String username = loginInputData.getUsername().trim();
-        final String password = loginInputData.getPassword().trim();
-
-        if (username.isEmpty()) {
-            loginPresenter.prepareFailView("Username cannot be empty.");
-            return;
-        }
-
-        if (password.isEmpty()) {
-            loginPresenter.prepareFailView("Password cannot be empty.");
-            return;
-        }
-
-        if (!userDataAccessObject.existsByName(username)) {
-            loginPresenter.prepareFailView("Account '" + username + "' does not exist.");
-            return;
-        }
-
-        final User user;
-        try {
-            user = userDataAccessObject.getUser(username);
-        } catch (DataAccessException e) {
-            loginPresenter.prepareFailView("An error has occurred, please try again.\n" +
-                    "Error message: " + e.getMessage());
-            return;
-        }
-
-        if (!user.getPassword().equals(password)) {
-            loginPresenter.prepareFailView("Incorrect password for \"" + username + "\".");
-            return;
-        }
-
-        userDataAccessObject.setActiveUser(user);
+    private LoginOutputData prepareOutputData(User user) {
+        String username = user.getName();
+        String userRole = user.getUserType() == User.INSTRUCTOR ? "instructor" : "student";
 
         Object[][] assignmentsArray = null;
         if (user.getUserType() == User.STUDENT) {
@@ -83,8 +51,45 @@ public class LoginInteractor implements LoginInputBoundary {
             }
         }
 
-        String userRole = user.getUserType() == User.INSTRUCTOR ? "instructor" : "student";
-        loginPresenter.prepareSuccessView(new LoginOutputData(username, userRole, assignmentsArray));
+        return new LoginOutputData(username, userRole, assignmentsArray);
+    }
+
+    @Override
+    public void execute(LoginInputData loginInputData) {
+        final String username = loginInputData.getUsername().trim();
+        final String password = loginInputData.getPassword().trim();
+
+        if (username.isEmpty()) {
+            loginPresenter.prepareFailView("Username cannot be empty.");
+            return;
+        }
+        if (password.isEmpty()) {
+            loginPresenter.prepareFailView("Password cannot be empty.");
+            return;
+        }
+
+        if (!userDataAccessObject.existsByName(username)) {
+            loginPresenter.prepareFailView("Account '" + username + "' does not exist.");
+            return;
+        }
+
+        final User user;
+        try {
+            user = userDataAccessObject.getUser(username);
+        } catch (DataAccessException e) {
+            loginPresenter.prepareFailView("An error has occurred, please try again.\n" +
+                    "Error message: " + e.getMessage());
+            return;
+        }
+
+        if (!user.getPassword().equals(password)) {
+            loginPresenter.prepareFailView("Incorrect password for \"" + username + "\".");
+            return;
+        }
+
+        userDataAccessObject.setActiveUser(user);
+
+        loginPresenter.prepareSuccessView(prepareOutputData(user));
     }
 
     @Override
