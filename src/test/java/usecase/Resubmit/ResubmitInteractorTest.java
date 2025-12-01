@@ -40,6 +40,12 @@ public class ResubmitInteractorTest {
             public void switchToSubmitView() {
                 assertTrue(true);
             }
+
+            /**
+             *
+             */
+            @Override
+            public void switchToLogginView() {}
         };
 
         FakeUserDataAccessObject dummyDAO = new FakeUserDataAccessObject(false, false);
@@ -78,6 +84,12 @@ public class ResubmitInteractorTest {
             public void switchToSubmitView() {
                 fail("ResubmitInteractor failed in success case!");
             }
+
+            /**
+             *
+             */
+            @Override
+            public void switchToLogginView() {}
         };
 
         FakeUserDataAccessObject dummyDAO = new FakeUserDataAccessObject(true, false);

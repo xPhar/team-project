@@ -32,6 +32,12 @@ class SubmitInteractorTest {
                 fail(FailMsg);
             }
 
+            /**
+             *
+             */
+            @Override
+            public void switchToLoggedInView() {}
+
         };
 
         SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, presenter);
@@ -55,6 +61,12 @@ class SubmitInteractorTest {
             public void prepareFailureView(SubmitOutputData pack) {
                 assertEquals(SubmitInteractor.DDL_PASSED_MSG, pack.getOutputMsg());
             }
+
+            /**
+             *
+             */
+            @Override
+            public void switchToLoggedInView() {}
 
         };
 
@@ -81,6 +93,12 @@ class SubmitInteractorTest {
                 assertEquals(SubmitInteractor.NETWORK_ERROR_MSG, pack.getOutputMsg());
             }
 
+            /**
+             *
+             */
+            @Override
+            public void switchToLoggedInView() {}
+
         };
 
         SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, presenter);
@@ -104,6 +122,12 @@ class SubmitInteractorTest {
             public void prepareFailureView(SubmitOutputData pack) {
                 assertEquals(SubmitInteractor.WRONG_FILE_MSG, pack.getOutputMsg());
             }
+
+            /**
+             *
+             */
+            @Override
+            public void switchToLoggedInView() {}
 
         };
 
