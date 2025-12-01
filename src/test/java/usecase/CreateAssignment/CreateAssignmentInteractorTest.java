@@ -97,3 +97,74 @@ class CreateAssignmentInteractorTest {
         assertFalse(presenter.successCalled);
     }
 
+    @Test
+    void testSwitchToAssignmentView() {
+        interactor.switchToAssignmentView();
+        assertTrue(presenter.switchToAssignmentViewCalled, "Presenter's switch view method should be called.");
+    }
+
+    static class TestAssignmentsInputBoundary implements AssignmentsInputBoundary {
+        public boolean executeCalled = false;
+        @Override
+        public void execute(AssignmentsInputData inputData) {
+            executeCalled = true;
+        }
+
+        @Override
+        public void switchToCreateAssignmentView() {
+        }
+
+        @Override
+        public void switchToSubmitView() {
+        }
+
+        @Override
+        public void switchToResubmitView() {
+        }
+
+        @Override
+        public void switchToSubmissionListView(String assignmentName) {
+        }
+    }
+
+    static class TestCreateAssignmentDAO implements CreateAssignmentDataAccessInterface {
+        public boolean saveCalled = false;
+        public Assignment savedAssignment = null;
+        public String courseCodePassed = null;
+        public boolean shouldThrowException = false;
+        public String exceptionMessage = "";
+
+        @Override
+        public void saveAssignment(String courseCode, Assignment assignment) {
+            saveCalled = true;
+            courseCodePassed = courseCode;
+            savedAssignment = assignment;
+            if (shouldThrowException) {
+                throw new RuntimeException(exceptionMessage);
+            }
+        }
+    }
+
+    static class TestCreateAssignmentPresenter implements CreateAssignmentOutputBoundary {
+        public boolean successCalled = false;
+        public boolean failCalled = false;
+        public String failMessage = null;
+        public boolean switchToAssignmentViewCalled = false;
+
+        @Override
+        public void prepareSuccessView(CreateAssignmentOutputData outputData) {
+            successCalled = true;
+        }
+
+        @Override
+        public void prepareFailureView(String errorMessage) {
+            failCalled = true;
+            failMessage = errorMessage;
+        }
+
+        @Override
+        public void switchToAssignmentView() {
+            switchToAssignmentViewCalled = true;
+        }
+    }
+}
