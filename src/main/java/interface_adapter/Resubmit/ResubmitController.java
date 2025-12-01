@@ -17,4 +17,8 @@ public class ResubmitController {
         ResubmitInputData inputData = new ResubmitInputData(time);
         resubmitInteractor.execute(inputData);
     }
+
+    public void goBack() {
+        resubmitInteractor.goBack();
+    }
 }

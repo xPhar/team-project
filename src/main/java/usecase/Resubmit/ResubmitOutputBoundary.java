@@ -18,5 +18,6 @@ public interface ResubmitOutputBoundary {
      */
     void switchToSubmitView();
 
+    void switchToLogginView();
 }
 

@@ -98,6 +98,7 @@ public class SubmitView extends JPanel implements PropertyChangeListener {
         backButton.addActionListener(e -> submitController.backExecute());
         return backButton;
     }
+
     @NotNull
     private JButton makeUploadButton() {
         JButton uploadButton = new JButton("Choose File");

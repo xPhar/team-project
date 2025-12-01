@@ -24,6 +24,12 @@ public class ResubmitInteractor implements ResubmitInputBoundary {
             resubmitOutputBoundary.prepareFailView(ERROR_MESSAGE);
         }
     }
+
+    @Override
+    public void goBack() {
+        resubmitOutputBoundary.switchToLogginView();
+    }
+
     public void switchToSubmitView() {
         resubmitOutputBoundary.prepareSuccessView();
     }

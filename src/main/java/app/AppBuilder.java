@@ -208,7 +208,7 @@ public class AppBuilder {
 
     public AppBuilder addResubmitUseCase() {
         final ResubmitOutputBoundary resubmitOutputBoundary = new ResubmitPresenter(
-                viewManagerModel, resubmitViewModel, submitViewModel);
+                viewManagerModel, resubmitViewModel, submitViewModel, loggedInViewModel);
         final ResubmitInputBoundary resubmitInteractor = new ResubmitInteractor(resubmitOutputBoundary,
                 userDataAccessObject);
         ResubmitController resubmitController = new ResubmitController(resubmitInteractor);
