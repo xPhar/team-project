@@ -1,8 +1,6 @@
 package usecase.signup;
 
 import entity.User;
-import entity.Student;
-import entity.Instructor;
 
 /**
  * The Signup Interactor.
@@ -20,8 +18,8 @@ public class SignupInteractor implements SignupInputBoundary {
     @Override
     public void execute(SignupInputData signupInputData) {
         final String username = signupInputData.getUsername().trim();
-        final String password = signupInputData.getPassword();
-        final String userRole = signupInputData.getUserRole();
+        final String password = signupInputData.getPassword().trim();
+        final String userRole = signupInputData.getUserRole().trim();
         final String fullName = signupInputData.getFullName().trim();
 
         // Validate input
@@ -35,7 +33,7 @@ public class SignupInteractor implements SignupInputBoundary {
             return;
         }
 
-        if (password == null || password.length() < 6) {
+        if (password.length() < 6) {
             presenter.prepareFailView("Password must be at least 6 characters long.");
             return;
         }
@@ -45,7 +43,7 @@ public class SignupInteractor implements SignupInputBoundary {
             return;
         }
 
-        if (userRole == null || (!userRole.equals("Student") && !userRole.equals("Instructor"))) {
+        if (!userRole.equals("Student") && !userRole.equals("Instructor")) {
             presenter.prepareFailView("Invalid user role. Must be 'Student' or 'Instructor'.");
             return;
         }
@@ -60,19 +58,18 @@ public class SignupInteractor implements SignupInputBoundary {
             // Create the appropriate user type - using basic 2-parameter constructors
             User newUser;
             if ("Instructor".equals(userRole)) {
-                newUser = new Instructor(username, password);
+                newUser = new User(username, password, fullName.substring(0, fullName.lastIndexOf(' ')),
+                        fullName.substring(fullName.lastIndexOf(' ')), User.INSTRUCTOR);
             } else {
-                newUser = new Student(username, password);
+                newUser = new User(username, password, fullName.substring(0, fullName.lastIndexOf(' ')),
+                        fullName.substring(fullName.lastIndexOf(' ')), User.STUDENT);
             }
 
             // Save the new user
             userDataAccessObject.save(newUser);
 
-            // Set as current user
-            userDataAccessObject.setCurrentUsername(username);
-
             // Prepare success response
-            final SignupOutputData signupOutputData = new SignupOutputData(username, userRole, fullName);
+            final SignupOutputData signupOutputData = new SignupOutputData(username);
             presenter.prepareSuccessView(signupOutputData);
 
         } catch (Exception e) {
