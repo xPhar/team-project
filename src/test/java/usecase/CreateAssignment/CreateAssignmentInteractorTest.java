@@ -55,3 +55,23 @@ class CreateAssignmentInteractorTest {
         assertNotNull(savedAssignment.getCreationDate(), "Creation date should be set.");
     }
 
+    @Test
+    void testExecute_Failure_EmptyName() {
+        CreateAssignmentInputData inputData = new CreateAssignmentInputData(
+                "",
+                "Description",
+                LocalDateTime.now().plusDays(7),
+                0.5,
+                List.of("pdf"),
+                "CSC207"
+        );
+
+        interactor.execute(inputData);
+
+        assertTrue(presenter.failCalled, "Presenter's failure view should be called for empty name.");
+        assertEquals("Assignment name cannot be empty.", presenter.failMessage);
+
+        assertFalse(dataAccess.saveCalled, "DAO save should NOT be called.");
+        assertFalse(assignmentsBoundary.executeCalled, "Assignments refresh should NOT be called.");
+    }
+
