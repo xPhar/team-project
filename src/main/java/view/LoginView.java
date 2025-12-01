@@ -73,8 +73,8 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         styleSecondaryButton(register);
         styleGhostButton(exit);
         buttons.add(logIn);
-        buttons.add(exit);
         buttons.add(register);
+        buttons.add(exit);
 
         logIn.addActionListener(this);
 
