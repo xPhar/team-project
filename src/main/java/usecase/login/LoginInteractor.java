@@ -1,5 +1,6 @@
 package usecase.login;
 
+import data_access.DataAccessException;
 import entity.Assignment;
 import entity.Submission;
 import entity.User;
@@ -39,7 +40,14 @@ public class LoginInteractor implements LoginInputBoundary {
             return;
         }
 
-        final User user = userDataAccessObject.getUser(username);
+        final User user;
+        try {
+            user = userDataAccessObject.getUser(username);
+        } catch (DataAccessException e) {
+            loginPresenter.prepareFailView("An error has occurred, please try again.\n" +
+                    "Error message: " + e.getMessage());
+            return;
+        }
 
         if (!user.getPassword().equals(password)) {
             loginPresenter.prepareFailView("Incorrect password for \"" + username + "\".");

@@ -34,13 +34,13 @@ public class LoginPresenter implements LoginOutputBoundary {
     public void prepareSuccessView(LoginOutputData response) {
         loginViewModel.setState(new LoginState());
 
-        if ("instructor".equalsIgnoreCase(response.getUserRole())) {
+        if ("instructor".equalsIgnoreCase(response.getUserType())) {
             viewManagerModel.setState(assignmentsViewModel.getViewName());
         } else {
             final LoggedInState loggedInState = loggedInViewModel.getState();
 
             loggedInState.setUsername(response.getUsername());
-            loggedInState.setUserType(response.getUserRole());
+            loggedInState.setUserType(response.getUserType());
             loggedInState.setAssignments(response.getAssignments());
             loggedInViewModel.setState(loggedInState);
             loggedInViewModel.firePropertyChange();

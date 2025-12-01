@@ -130,10 +130,8 @@ public class LoggedInPresenter implements LoggedInOutputBoundary {
 
     @Override
     public void prepareFailView(String error) {
-        // TODO: Maybe have an "error ocurred, please try again" popup?
-//        final LoggedInState loginState = loginViewModel.getState();
-//        loginState.setLoggedInError(error);
-//        loginViewModel.firePropertyChange();
-        throw new Error("LoggedInPresenter not implemented");
+        final LoggedInState loggedInState = loggedInViewModel.getState();
+        loggedInState.setError(error);
+        loginViewModel.firePropertyChange();
     }
 }
