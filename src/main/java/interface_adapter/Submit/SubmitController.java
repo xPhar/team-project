@@ -19,4 +19,8 @@ public class SubmitController {
         final SubmitInputData inputData = new SubmitInputData(time, selectedFile);
         submitUsecaseInteractor.execute(inputData);
     }
+
+    public void backExecute() {
+        submitUsecaseInteractor.backToLoggedInView();
+    }
 }

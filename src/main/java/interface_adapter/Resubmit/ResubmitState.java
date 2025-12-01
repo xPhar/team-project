@@ -4,8 +4,8 @@ import java.awt.*;
 
 public class ResubmitState {
 
-    private String message;
-    private Color msgColor;
+    private String message = "Are you sure you want to resubmit? Only the latest one will be marked";
+    private Color msgColor = Color.BLACK;
 
     public Color getMsgColor() {
         return msgColor;

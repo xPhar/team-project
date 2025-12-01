@@ -196,7 +196,8 @@ public class AppBuilder {
     }
 
     public AppBuilder addSubmitUseCase() {
-        final SubmitOutputBoundary submitOutputBoundary = new SubmitPresenter(submitViewModel);
+        final SubmitOutputBoundary submitOutputBoundary = new SubmitPresenter(
+                viewManagerModel, submitViewModel, loggedInViewModel);
         final SubmitInputBoundary submitInteractor = new SubmitInteractor(
                 userDataAccessObject, submitOutputBoundary);
 
@@ -207,7 +208,7 @@ public class AppBuilder {
 
     public AppBuilder addResubmitUseCase() {
         final ResubmitOutputBoundary resubmitOutputBoundary = new ResubmitPresenter(
-                viewManagerModel, resubmitViewModel, submitViewModel);
+                viewManagerModel, resubmitViewModel, submitViewModel, loggedInViewModel);
         final ResubmitInputBoundary resubmitInteractor = new ResubmitInteractor(resubmitOutputBoundary,
                 userDataAccessObject);
         ResubmitController resubmitController = new ResubmitController(resubmitInteractor);
