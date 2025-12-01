@@ -23,7 +23,7 @@ public class FakeUserDataAccessObject implements SubmitUserDataAccessInterface, 
     private final Map<String, User> users;
     private final List<Assignment> assignments;
     Map<Assignment, Map<String, Submission>> submissionMap;
-    private SessionDataAccessObject session;
+    private final SessionDataAccessObject session;
 
     // For Submit/Resubmit Testing
     public FakeUserDataAccessObject(boolean deadlinePassed, boolean submitFails) {
@@ -52,6 +52,7 @@ public class FakeUserDataAccessObject implements SubmitUserDataAccessInterface, 
     // For Login Testing
     public FakeUserDataAccessObject(LocalDateTime baseTime) {
         this.users = new HashMap<>();
+        this.session = new  SessionDataAccessObject();
         users.put("FakeStudent1", new User("FakeStudent1", "password", "fake", "one", User.STUDENT));
         users.put("FakeStudent2", new User("FakeStudent2", "password", "fake", "two", User.STUDENT));
         users.put("FakeInstructor", new User("FakeInstructor", "password", "fake", "instructor", User.INSTRUCTOR));
