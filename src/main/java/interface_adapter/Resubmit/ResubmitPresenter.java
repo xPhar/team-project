@@ -31,7 +31,7 @@ public class ResubmitPresenter implements ResubmitOutputBoundary {
 
     @Override
     public void prepareFailView(String errorMessage) {
-        ResubmitState resubmitState = new ResubmitState();
+        ResubmitState resubmitState = resubmitViewModel.getState();
         resubmitState.setMessage(errorMessage);
         resubmitState.setMsgColor(Color.RED);
         resubmitViewModel.setState(resubmitState);

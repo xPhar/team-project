@@ -22,7 +22,7 @@ public class SubmitPresenter implements SubmitOutputBoundary {
 
     @Override
     public void prepareSuccessView(SubmitOutputData submitOutputData) {
-        SubmitState newSubmitState = new SubmitState();
+        SubmitState newSubmitState = submitViewModel.getState();
         newSubmitState.setMessage(submitOutputData.getOutputMsg());
         newSubmitState.setMsgColor(Color.GREEN);
         submitViewModel.setState(newSubmitState);
@@ -31,7 +31,7 @@ public class SubmitPresenter implements SubmitOutputBoundary {
 
     @Override
     public void prepareFailureView(SubmitOutputData submitOutputData) {
-        SubmitState newSubmitState = new SubmitState();
+        SubmitState newSubmitState = submitViewModel.getState();
         String errorMsg = submitOutputData.getOutputMsg();
         newSubmitState.setMessage(errorMsg);
         newSubmitState.setMsgColor(Color.RED);
