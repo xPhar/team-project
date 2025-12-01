@@ -196,7 +196,7 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
 
         if (currentAssignments != null) {
             for (int i = 0; i < currentAssignments.size(); i++) {
-                addAssignmentRow(currentAssignments.get(i), i);
+                addAssignmentRow(currentAssignments.get(i));
             }
         }
 
@@ -208,7 +208,7 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
     }
 
 
-    private void addAssignmentRow(AssignmentDTO assignment, int index) {
+    private void addAssignmentRow(AssignmentDTO assignment) {
         String name = (assignment.getName() != null && !assignment.getName().isEmpty())
                 ? assignment.getName()
                 : "(unnamed)";
