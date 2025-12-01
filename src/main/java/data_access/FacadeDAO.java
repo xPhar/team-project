@@ -3,6 +3,7 @@ package data_access;
 import entity.*;
 import interface_adapter.submission_list.SubmissionTableModel;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import usecase.Assignments.AssignmentsDataAccessInterface;
 import usecase.CreateAssignment.CreateAssignmentDataAccessInterface;
@@ -41,7 +42,6 @@ public class FacadeDAO implements
     private final GradeAPIDataAccessObject gradeDA;
     private final SessionDataAccessObject sessionDA;
 
-    // TODO course password?
     private final String COURSE_PASSWORD = "COURSE";
 
     public FacadeDAO() {
@@ -51,11 +51,9 @@ public class FacadeDAO implements
     }
 
     private String getCourseUserName(Course course) {
-        // TODO course username
         return course.getCourseName();
     }
     private String getCourseUserName() {
-        // TODO course username
         return "course-course-CSC207";
     }
 
@@ -206,37 +204,36 @@ public class FacadeDAO implements
     }
 
     @Override
-    public User getUser(String username) {
+    public User getUser(String username) throws DataAccessException {
+        // Get the whole object first to allow us to get their password
+        JSONObject userObj = gradeDA.getUserObject(username);
+        String password = userObj.getString("password");
+        String userType;
         try {
-            JSONObject userObj = gradeDA.getUserObject(username);
-            String password = userObj.getString("password");
+            // Everything else we need is in the info object
             userObj = userObj.getJSONObject("info");
-            String userType = userObj.getString("type").toUpperCase();
+            userType =  userObj.getString("type").toUpperCase();
+            // The rest of the info is in the userData object... in hindsight we don't really need this anymore... :|
             userObj = userObj.getJSONObject("userData");
-            String firstName = userObj.getString("firstName");
-            String lastName = userObj.getString("lastName");
-
-            JSONArray courseList = userObj.getJSONArray("courses");
-            ArrayList<String> courses = new ArrayList<>();
-            for (int i = 0; i < courseList.length(); i++) {
-                courses.add(courseList.getString(i));
-            }
-
-            return new User(username,
-                    password,
-                    firstName,
-                    lastName,
-                    User.USER_TYPE.valueOf(userType),
-                    courses
-            );
-        } catch (Exception e) {
-            throw new DataAccessException("Failed to load user " + username, e);
+        } catch (JSONException e) {
+            throw new DataAccessException("User data is mangled. Please try a different account.");
         }
-    }
+        String firstName = userObj.getString("firstName");
+        String lastName = userObj.getString("lastName");
 
-    @Override
-    public User get(String username) {
-        return getUser(username);
+        JSONArray courseList = userObj.getJSONArray("courses");
+        ArrayList<String> courses = new ArrayList<>();
+        for (int i = 0; i < courseList.length(); i++) {
+            courses.add(courseList.getString(i));
+        }
+
+        return new User(username,
+                password,
+                firstName,
+                lastName,
+                User.USER_TYPE.valueOf(userType),
+                courses
+        );
     }
 
     @Override
@@ -252,20 +249,8 @@ public class FacadeDAO implements
     }
 
     @Override
-    public void setCurrentUsername(String name) {
-        if (name == null || name.isEmpty()) {
-            return;
-        }
-        User user = getUser(name);
-        if (user != null) {
-            setActiveUser(user);
-        }
-    }
-
-    @Override
     public String getCurrentUsername() {
-        User user = sessionDA.getUser();
-        return user == null ? "" : user.getName();
+        return sessionDA.getUser().getName();
     }
 
     public void setActiveUser(User user) {
@@ -384,31 +369,27 @@ public class FacadeDAO implements
     // Some method I think we need (Indy)
 
     public List<Assignment> getAssignments() {
-        Course course = sessionDA.getCourse();
-        if (course == null) {
-            return List.of();
-        }
-        return course.getAssignments() == null ? List.of() : course.getAssignments();
+        return sessionDA.getCourse().getAssignments();
 
         // I believe this is unnecessary?
-//      Course course = sessionDA.getCourse();
-//      List<Assignment> assignments = new ArrayList<>();
-//      JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
-//      courseObject = courseObject.getJSONObject("courseData");
-//      JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
-//      Iterator<String> keyIt = assignmentDictionary.keys();
- //     while (keyIt.hasNext()) {
- //         String assignmentName = keyIt.next();
- //         JSONObject assignmentObj = assignmentDictionary.getJSONObject(assignmentName);
- //         Assignment.AssignmentBuilder builder = Assignment.builder();
- //         builder.name(assignmentName)
- //                 .description(assignmentObj.getString("description"))
- //                 .creationDate(LocalDateTime.parse(assignmentObj.getString("creationDate")))
- //                 .dueDate(LocalDateTime.parse(assignmentObj.getString("dueDate")))
-  //                .gracePeriod(assignmentObj.getDouble("gracePeriod"));
-//                    // TODO add supported file types
-  //        assignments.add(builder.build());
-  //    }
+//        Course course = sessionDA.getCourse();
+//        List<Assignment> assignments = new ArrayList<>();
+//
+//        JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
+//        courseObject = courseObject.getJSONObject("courseData");
+//        JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
+//        Iterator<String> keyIt = assignmentDictionary.keys();
+//        while (keyIt.hasNext()) {
+//            String assignmentName = keyIt.next();
+//            JSONObject assignmentObj = assignmentDictionary.getJSONObject(assignmentName);
+//            Assignment.AssignmentBuilder builder = Assignment.builder();
+//            builder.name(assignmentName)
+//                    .description(assignmentObj.getString("description"))
+//                    .creationDate(LocalDateTime.parse(assignmentObj.getString("creationDate")))
+//                    .dueDate(LocalDateTime.parse(assignmentObj.getString("dueDate")))
+//                    .gracePeriod(assignmentObj.getDouble("gracePeriod"));
+//            assignments.add(builder.build());
+//        }
 //
    //    return assignments;
     }
@@ -437,21 +418,23 @@ public class FacadeDAO implements
 
     public Assignment getAssignment(String assignmentName) {
         Course course = sessionDA.getCourse();
-        if (course == null) {
-            return null;
-        }
         JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
         courseObject = courseObject.getJSONObject("courseData");
         JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
         JSONObject assignmentObj =  assignmentDictionary.getJSONObject(assignmentName);
 
-        AssignmentBuilder builder = Assignment.builder();
+        var builder = Assignment.builder();
         return builder.name(assignmentName)
                 .description(assignmentObj.getString("description"))
                 .creationDate(LocalDateTime.parse(assignmentObj.getString("creationDate")))
                 .dueDate(LocalDateTime.parse(assignmentObj.getString("dueDate")))
                 .gracePeriod(assignmentObj.getDouble("gracePeriod"))
-                // TODO add supported file types
+                .supportedFileTypes(assignmentObj.getJSONArray("supportedFileTypes")
+                        .toList().stream()
+                        .filter(s -> s instanceof String)
+                        .map(s -> (String) s)
+                        .toList()
+                )
                 .build();
     }
 

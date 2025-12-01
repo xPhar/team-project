@@ -6,12 +6,12 @@ package usecase.login;
 public class LoginOutputData {
 
     private final String username;
-    private final String userRole;
+    private final String userType;
     private final Object[][] assignments;
 
     public LoginOutputData(String username, String userRole, Object[][] assignments) {
         this.username = username;
-        this.userRole = userRole;
+        this.userType = userRole;
         this.assignments = assignments;
     }
 
@@ -19,8 +19,8 @@ public class LoginOutputData {
         return username;
     }
 
-    public String getUserRole() {
-        return userRole;
+    public String getUserType() {
+        return userType;
     }
 
     public Object[][] getAssignments() {

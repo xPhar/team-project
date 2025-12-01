@@ -17,20 +17,18 @@ import java.beans.PropertyChangeListener;
  * The View for when the user is logging in to the program.
  */
 public class LoginView extends JPanel implements ActionListener, PropertyChangeListener {
-
     private final String viewName = "login";
     private final LoginViewModel loginViewModel;
 
     private final JTextField usernameInputField = new JTextField(24);
-    private final JLabel usernameErrorField = new JLabel();
 
     private final JPasswordField passwordInputField = new JPasswordField(24);
-    private final JLabel passwordErrorField = new JLabel();
+    private final JLabel errorField = new JLabel();
 
-    private final JButton logIn = new JButton("Log In");
+    private final JButton logIn = new JButton("Log in");
     private final JButton register = new JButton("Register");
-    private final JButton cancel = new JButton("Cancel");
-    private LoginController loginController;
+    private final JButton exit = new JButton("Exit");;
+    private LoginController loginController = null;
 
     public LoginView(LoginViewModel loginViewModel) {
         this.loginViewModel = loginViewModel;
@@ -55,18 +53,17 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         final JPanel textEntryPanel = new JPanel();
         textEntryPanel.setLayout(new BoxLayout(textEntryPanel, BoxLayout.Y_AXIS));
         textEntryPanel.setOpaque(false);
+        textEntryPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         final LabelTextPanel usernameInfo = new LabelTextPanel(
                 new JLabel("Username"), usernameInputField);
         final LabelTextPanel passwordInfo = new LabelTextPanel(
                 new JLabel("Password"), passwordInputField);
-        usernameErrorField.setForeground(Color.RED);
-        passwordErrorField.setForeground(Color.RED);
+        errorField.setForeground(Color.RED);
         textEntryPanel.add(usernameInfo);
-        textEntryPanel.add(usernameErrorField);
         textEntryPanel.add(Box.createVerticalStrut(8));
         textEntryPanel.add(passwordInfo);
-        textEntryPanel.add(passwordErrorField);
+        textEntryPanel.add(errorField);
 
         textEntryPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 140));
 
@@ -74,31 +71,14 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         buttons.setOpaque(false);
         stylePrimaryButton(logIn);
         styleSecondaryButton(register);
-        styleGhostButton(cancel);
+        styleGhostButton(exit);
         buttons.add(logIn);
+        buttons.add(exit);
         buttons.add(register);
-        buttons.add(cancel);
 
-        logIn.addActionListener(
-                evt -> {
-                    if (evt.getSource().equals(logIn)) {
-                        final LoginState currentState = loginViewModel.getState();
+        logIn.addActionListener(this);
 
-                        loginController.execute(
-                                currentState.getUsername(),
-                                currentState.getPassword()
-                        );
-                    }
-                }
-        );
-
-        register.addActionListener(
-                evt -> {
-                    loginController.switchToSignupView();
-                }
-        );
-
-        cancel.addActionListener(this);
+        exit.addActionListener(this);
 
         usernameInputField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -192,11 +172,20 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
      * @param evt the ActionEvent to react to
      */
     public void actionPerformed(ActionEvent evt) {
-        if (evt.getSource() == cancel) {
-            usernameInputField.setText("");
-            passwordInputField.setText("");
-            usernameErrorField.setText("");
-            passwordErrorField.setText("");
+        if (evt.getSource().equals(logIn)) {
+            final LoginState currentState = loginViewModel.getState();
+
+            loginController.execute(
+                    currentState.getUsername(),
+                    currentState.getPassword()
+            );
+        }
+        else if (evt.getSource().equals(exit)) {
+            // Close program
+            if (this.getParent() instanceof JFrame frame) {
+                frame.dispose();
+            }
+            System.exit(0);
         }
     }
 
@@ -204,7 +193,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
     public void propertyChange(PropertyChangeEvent evt) {
         final LoginState state = (LoginState) evt.getNewValue();
         setFields(state);
-        usernameErrorField.setText(state.getLoginError());
+        errorField.setText(state.getLoginError());
     }
 
     private void setFields(LoginState state) {

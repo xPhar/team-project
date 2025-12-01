@@ -64,7 +64,7 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
                 int row = assignmentTable.rowAtPoint(e.getPoint());
                 int col = assignmentTable.columnAtPoint(e.getPoint());
 
-                if (col == 0) {
+                if (col == 0 && row <= assignmentTable.getRowCount() - 1) {
                     String assignmentName =
                             assignmentTable.getValueAt(row, col).toString();
                     loggedInController.execute(false, assignmentName);
@@ -104,6 +104,11 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
     public void propertyChange(PropertyChangeEvent evt) {
         if ("state".equals(evt.getPropertyName())) {
             LoggedInState state = (LoggedInState) evt.getNewValue();
+
+            if (!state.getError().isEmpty()) {
+                JOptionPane.showMessageDialog(this, state.getError());
+                return;
+            }
 
             nameLabel.setText(state.getUsername());
 

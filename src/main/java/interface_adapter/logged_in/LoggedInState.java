@@ -2,19 +2,17 @@ package interface_adapter.logged_in;
 
 public class LoggedInState {
 
-    private String username = "";
-    private String userType = "";
-    private Object[][] assignments = new Object[0][0];
+    private String username;
+    private String userType;
+    private Object[][] assignments;
     private String welcomeMessage = "";
+    private String error;
 
     public LoggedInState() {
-    }
-
-    public LoggedInState(LoggedInState copy) {
-        this.username = copy.username;
-        this.userType = copy.userType;
-        this.assignments = copy.assignments;
-        this.welcomeMessage = copy.welcomeMessage;
+        this.username = "";
+        this.userType = "";
+        this.assignments = new Object[0][0];
+        this.error = "";
     }
 
     public String getUsername() {
@@ -41,6 +39,14 @@ public class LoggedInState {
 
     public void setAssignments(Object[][] assignments) {
         this.assignments = assignments;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 
     public String getWelcomeMessage() {
