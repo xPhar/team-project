@@ -303,7 +303,7 @@ public class AppBuilder {
     }
 
     public JFrame build() {
-        final JFrame application = new JFrame("This is a title");
+        final JFrame application = new JFrame("Coursework Submission Platform");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         application.setPreferredSize(new Dimension(1280, 720));
 

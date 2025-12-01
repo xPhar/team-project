@@ -174,33 +174,52 @@ public class FacadeDAO implements
     }
 
     public void save(User user) {
+        // Create user with the API
         gradeDA.createUser(user.getName(), user.getPassword());
+
+        // Update user and course data to enroll them into the default course
+        enrollUser(user, "course-course-CSC207");
+    }
+
+    private void enrollUser(User user, String course) {
+        user.getCourses().add(course);
+
+        // Save user to DB
+        JSONObject info = userToJSON(user);
+        gradeDA.modifyUserInfoEndpoint(user.getName(), user.getPassword(), info);
+
+        // Update course list
+        JSONObject courseInfo = gradeDA.getUserInfo(course);
+        JSONObject courseData = courseInfo.getJSONObject("courseData");
+        if (user.getUserType() == User.INSTRUCTOR) {
+            courseData.getJSONArray("instructors").put(user.getName());
+        }
+        else if (user.getUserType() == User.STUDENT) {
+            courseData.getJSONArray("students").put(user.getName());
+        }
+
+        gradeDA.modifyUserInfoEndpoint(course, COURSE_PASSWORD, courseInfo);
+    }
+
+    private JSONObject userToJSON(User user) {
         String userType;
-        if (user.getUserType() == user.STUDENT) {
+        if (user.getUserType() == User.STUDENT) {
             userType = "student";
         }
         else {
             userType = "instructor";
         }
-        JSONObject info = new JSONObject(
-                new StringBuilder()
-                        .append("{\n")
-                            .append("\t\"type\": \"")
-                            .append(userType)
-                            .append("\", \n")
-                            .append("\t\"userData\": {\n")
-                                .append("\t\t\"firstName\": \"")
-                                .append(user.getFirstName())
-                                .append("\", \n")
-                                .append("\t\t\"lastName\": \"")
-                                .append(user.getLastName())
-                                .append("\", \n")
-                                .append("\t\t\"courses\": []\n")
-                            .append("\t}\n")
-                        .append("}")
-                        .toString()
-        );
-        gradeDA.modifyUserInfoEndpoint(user.getName(), user.getPassword(), info);
+
+        JSONObject info = new JSONObject();
+        info.put("type", userType);
+
+        JSONObject userData = new JSONObject();
+        userData.put("firstName", user.getFirstName());
+        userData.put("lastName", user.getLastName());
+        userData.put("courses", user.getCourses());
+        info.put("userData", userData);
+
+        return info;
     }
 
     @Override
