@@ -30,9 +30,14 @@ public class EditAssignmentInteractor implements EditAssignmentInputBoundary {
                 .supportedFileTypes(inputData.getSupportedFileTypes())
                 .build();
 
-        dataAccessObject.updateAssignment(inputData.getCourseCode(), originalName, assignment);
+        try {
+            dataAccessObject.updateAssignment(inputData.getCourseCode(), originalName, assignment);
 
-        outputBoundary.prepareSuccessView();
-        assignmentsInputBoundary.execute(new AssignmentsInputData());
+            outputBoundary.prepareSuccessView();
+            assignmentsInputBoundary.execute(new AssignmentsInputData());
+
+        } catch (RuntimeException e) {
+            outputBoundary.prepareFailureView(e.getMessage());
+        }
     }
 }
