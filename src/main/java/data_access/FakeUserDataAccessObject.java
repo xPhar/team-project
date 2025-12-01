@@ -19,21 +19,19 @@ import java.util.HashMap;
 
 public class FakeUserDataAccessObject implements SubmitUserDataAccessInterface, ResubmitUserDataAccessInterface,
                                                  LoginDataAccessInterface, SignupDataAccessInterface {
-    Assignment assignment;
-    boolean submitFailure;
-    // Login
+    private boolean submitFailure;
     private final Map<String, User> users;
-    List<Assignment> assignments;
+    private final List<Assignment> assignments;
     Map<Assignment, Map<String, Submission>> submissionMap;
-    User activeUser;
+    private SessionDataAccessObject session;
 
     // For Submit/Resubmit Testing
     public FakeUserDataAccessObject(boolean deadlinePassed, boolean submitFails) {
-        users = new HashMap<>();
-        assignments = new ArrayList<>();
-        submissionMap = new HashMap<>();
-
+        this.users = new HashMap<>();
+        this.assignments = new ArrayList<>();
+        this.submissionMap = new HashMap<>();
         this.submitFailure = submitFails;
+        this.session =  new SessionDataAccessObject();
 
         LocalDateTime deadline;
 
@@ -43,12 +41,12 @@ public class FakeUserDataAccessObject implements SubmitUserDataAccessInterface, 
             deadline = LocalDateTime.MAX.minusHours(10000);
         }
 
-        assignment = Assignment.builder()
+        session.setAssignment(Assignment.builder()
                 .name("dummyAssignment")
                 .dueDate(deadline)
                 .gracePeriod(1) // 1 hour
                 .supportedFileTypes(List.of("txt", "java"))
-                .build();
+                .build());
     }
 
     // For Login Testing
@@ -108,7 +106,7 @@ public class FakeUserDataAccessObject implements SubmitUserDataAccessInterface, 
 
     @Override
     public Assignment getAssignment() {
-        return this.assignment;
+        return this.session.getAssignment();
     }
 
     @Override
@@ -134,7 +132,8 @@ public class FakeUserDataAccessObject implements SubmitUserDataAccessInterface, 
 
     @Override
     public void setActiveUser(User user) {
-        this.activeUser = user;
+        save(user);
+        session.setUser(user);
     }
 
     @Override
@@ -146,7 +145,7 @@ public class FakeUserDataAccessObject implements SubmitUserDataAccessInterface, 
     public Submission getSubmission(Assignment assignment) {
         if (this.submissionMap.containsKey(assignment)) {
             Map<String, Submission> assignmentSubmissions = this.submissionMap.get(assignment);
-            String username = activeUser.getName();
+            String username = session.getUser().getName();
             if (assignmentSubmissions.containsKey(username)) {
                 return assignmentSubmissions.get(username);
             }
