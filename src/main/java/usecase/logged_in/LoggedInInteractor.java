@@ -45,7 +45,8 @@ public class LoggedInInteractor implements LoggedInInputBoundary {
             userDataAccessObject.setActiveAssignment(assignment);
 
             if (userDataAccessObject.getUserType() == User.STUDENT) {
-                LoggedInOutputData outputData = new LoggedInOutputData(null, assignment.getName(), null, null);
+                LoggedInOutputData outputData = new LoggedInOutputData(assignment.getName(), assignment.getDescription(),
+                        assignment.getDueDate());
                 if (userDataAccessObject.userHasSubmitted(assignment)) {
                     loginPresenter.switchToResubmitView(outputData);
                 }

@@ -2,6 +2,7 @@ package interface_adapter.logged_in;
 
 import interface_adapter.CreateAssignment.CreateAssignmentViewModel;
 import interface_adapter.Resubmit.ResubmitViewModel;
+import interface_adapter.Submit.SubmitState;
 import interface_adapter.Submit.SubmitViewModel;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.class_average.ClassAverageState;
@@ -63,6 +64,11 @@ public class LoggedInPresenter implements LoggedInOutputBoundary {
 
     @Override
     public void switchToSubmitView(LoggedInOutputData response) {
+        final SubmitState state = submitViewModel.getState();
+        state.setAssignmentName(response.getAssignmentName());
+        state.setAssignmentDescription(response.getAssignmentDescription());
+        state.setDueDate(response.getAssignmentDueDate());
+        submitViewModel.firePropertyChange();
         // On success, update the submitViewModel's state
         // TODO: Fill this in once the submit view has been updated to display assignment information.
 
