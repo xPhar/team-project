@@ -75,3 +75,25 @@ class CreateAssignmentInteractorTest {
         assertFalse(assignmentsBoundary.executeCalled, "Assignments refresh should NOT be called.");
     }
 
+    @Test
+    void testExecute_Failure_DataAccessError() {
+        dataAccess.shouldThrowException = true;
+        dataAccess.exceptionMessage = "Database write failed.";
+
+        CreateAssignmentInputData inputData = new CreateAssignmentInputData(
+                "Valid Name", // name
+                "Description",
+                LocalDateTime.now().plusDays(7),
+                0.5, // gracePeriod
+                List.of("pdf"), // supportedFileTypes
+                "CSC207" // courseCode
+        );
+
+        interactor.execute(inputData);
+
+        assertTrue(presenter.failCalled, "Presenter's failure view should be called due to exception.");
+        assertEquals("Failed to create assignment: Database write failed.", presenter.failMessage);
+
+        assertFalse(presenter.successCalled);
+    }
+
