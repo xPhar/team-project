@@ -27,7 +27,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
     private final JButton logIn = new JButton("Log in");
     private final JButton register = new JButton("Register");
-    private final JButton exit = new JButton("Exit");;
+    private final JButton exit = new JButton("Exit");
     private LoginController loginController = null;
 
     public LoginView(LoginViewModel loginViewModel) {
@@ -77,6 +77,8 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         buttons.add(register);
 
         logIn.addActionListener(this);
+
+        register.addActionListener(this);
 
         exit.addActionListener(this);
 
