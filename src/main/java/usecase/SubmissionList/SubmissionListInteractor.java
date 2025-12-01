@@ -32,7 +32,7 @@ public class SubmissionListInteractor implements SubmissionListInputBoundary {
                             DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss")
                     ),
                     submission.getStatus() == Submission.Status.GRADED ? String.format("%.1f", submission.getGrade()) : "",
-                    submission.getFeedback(),
+                    submission.getFeedback() == null ? "" : submission.getFeedback(),
                     submission.getSubmissionName(),
                     "100" // Hardcoded
             );

@@ -31,9 +31,9 @@ class SubmissionListInteractorTest {
                                 LocalDateTime.of(2025,11,29, 16, 47, 0),
                                 "submission.java",
                                 "123456\naabbcc",
-                                0,
+                                -1,
                                 Submission.ON_TIME,
-                                ""
+                                null
                         );
                     }
                     else {

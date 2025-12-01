@@ -127,9 +127,18 @@ public class FacadeDAO implements
                     .submissionTime(LocalDateTime.parse(submissionObj.getString("submittedAt")))
                     .submissionName(submissionObj.getString("fileName"))
                     .submissionData(submissionObj.getString("fileData"))
-                    .status(Submission.Status.valueOf(submissionObj.getString("status").toUpperCase()))
-                    .grade(submissionObj.getDouble("grade"))
-                    .feedback(submissionObj.getString("feedback"));
+                    .status(Submission.Status.valueOf(submissionObj.getString("status").toUpperCase()));
+//                    .grade(submissionObj.getDouble("grade"))
+//                    .feedback(submissionObj.getString("feedback"));
+            if (submissionObj.has("grade")) {
+                builder.grade(submissionObj.getDouble("grade"));
+            } else {
+                builder.grade(-1);
+            }
+
+            if (submissionObj.has("feedback")) {
+                builder.feedback(submissionObj.getString("feedback"));
+            }
 
             submissions.add(builder.build());
         }
