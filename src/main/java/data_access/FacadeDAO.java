@@ -72,10 +72,11 @@ public class FacadeDAO implements
                 .submissionTime(LocalDateTime.now())
                 .submissionName(studentFile.getName())
                 .submissionData(fsDA.readFileToString(studentFile))
-                .status(Submission.Status.ON_TIME)
                 .feedback("");
         if (assignment.getDueDate().isBefore(LocalDateTime.now())) {
             builder.status(Submission.Status.LATE);
+        } else {
+            builder.status(Submission.Status.ON_TIME);
         }
 
         Submission submission = builder.build();
@@ -105,6 +106,7 @@ public class FacadeDAO implements
         jobj.put("fileData", submission.getSubmissionData());
         jobj.put("status", submission.getStatus().toString());
         jobj.put("feedback", submission.getFeedback());
+        jobj.put("grade",  submission.getGrade());
 
         return jobj;
     }

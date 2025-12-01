@@ -74,7 +74,11 @@ public class Submission {
         private Status status;
         private String feedback;
 
-        SubmissionBuilder() {}
+        SubmissionBuilder() {
+            // Default values for grade and feedback
+            this.grade = 0;
+            this.feedback = "";
+        }
 
         public SubmissionBuilder submitter(String submitter) {
             this.submitter = submitter;
