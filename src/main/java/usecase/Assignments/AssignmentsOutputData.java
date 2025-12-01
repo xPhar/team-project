@@ -1,7 +1,5 @@
 package usecase.Assignments;
 
-import interface_adapter.Assignments.AssignmentDTO;
-
 import java.util.List;
 
 public class AssignmentsOutputData {

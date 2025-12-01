@@ -258,7 +258,7 @@ public class FacadeDAO implements
 
         // TODO: Implement course selecting if we get time
         // Since we're currently going under the assumption of a single course, make that course active as well
-        sessionDA.setCourse(getCourse(user.getCourses().get(0)));
+        sessionDA.setCourse(getCourse("course-course-CSC207"));
     }
 
     public Course getCourse(String courseName) {
@@ -391,7 +391,7 @@ public class FacadeDAO implements
 //            assignments.add(builder.build());
 //        }
 //
-//        return assignments;
+   //    return assignments;
     }
 
     @Override
@@ -459,6 +459,7 @@ public class FacadeDAO implements
         assignmentsObject.put(assignment.getName(), assignmentToJSON(assignment));
 
         gradeDA.modifyUserInfoEndpoint(courseName, COURSE_PASSWORD, courseObject);
+        sessionDA.setCourse(getCourse(courseName));
     }
 
     @Override
@@ -483,6 +484,7 @@ public class FacadeDAO implements
             assignmentsObject.put(assignment.getName(), assignmentToJSON(assignment));
 
             gradeDA.modifyUserInfoEndpoint(courseName, COURSE_PASSWORD, courseObject);
+            sessionDA.setCourse(getCourse(courseName));
         }
     }
 

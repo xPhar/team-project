@@ -11,8 +11,8 @@ public class CreateAssignmentPresenter implements CreateAssignmentOutputBoundary
     private final ViewManagerModel viewManagerModel;
 
     public CreateAssignmentPresenter(CreateAssignmentViewModel createAssignmentViewModel,
-            AssignmentsViewModel assignmentViewModel,
-            ViewManagerModel viewManagerModel) {
+                                     AssignmentsViewModel assignmentViewModel,
+                                     ViewManagerModel viewManagerModel) {
         this.createAssignmentViewModel = createAssignmentViewModel;
         this.assignmentViewModel = assignmentViewModel;
         this.viewManagerModel = viewManagerModel;

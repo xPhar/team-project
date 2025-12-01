@@ -1,5 +1,7 @@
 package interface_adapter.Assignments;
 
+import usecase.Assignments.AssignmentDTO;
+
 import java.util.List;
 
 public class AssignmentsState {
