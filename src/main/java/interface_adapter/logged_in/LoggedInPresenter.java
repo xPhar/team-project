@@ -1,6 +1,7 @@
 package interface_adapter.logged_in;
 
 import interface_adapter.CreateAssignment.CreateAssignmentViewModel;
+import interface_adapter.Resubmit.ResubmitState;
 import interface_adapter.Resubmit.ResubmitViewModel;
 import interface_adapter.Submit.SubmitState;
 import interface_adapter.Submit.SubmitViewModel;
@@ -64,13 +65,17 @@ public class LoggedInPresenter implements LoggedInOutputBoundary {
 
     @Override
     public void switchToSubmitView(LoggedInOutputData response) {
-        final SubmitState state = submitViewModel.getState();
-        state.setAssignmentName(response.getAssignmentName());
-        state.setAssignmentDescription(response.getAssignmentDescription());
-        state.setDueDate(response.getAssignmentDueDate());
-        submitViewModel.firePropertyChange();
         // On success, update the submitViewModel's state
-        // TODO: Fill this in once the submit view has been updated to display assignment information.
+        // Should not use the old state since each assignment subimit page is independent of each other,
+        // better to initialize a new one
+        final SubmitState newState = new SubmitState();
+        newState.setAssignmentName(response.getAssignmentName());
+        newState.setAssignmentDescription(response.getAssignmentDescription());
+        newState.setDueDate(response.getAssignmentDueDate());
+
+        // set state to submitViewModel
+        submitViewModel.setState(newState);
+        submitViewModel.firePropertyChange();
 
         // and clear everything from LoggedInViewModel's state
         loggedInViewModel.setState(new LoggedInState());
@@ -83,8 +88,10 @@ public class LoggedInPresenter implements LoggedInOutputBoundary {
     @Override
     public void switchToResubmitView(LoggedInOutputData response) {
         // On success, update the resubmitViewModel's state
-        // TODO: Fill this in once the submit view has been updated to display assignment information.
-
+        final ResubmitState newState = new ResubmitState();
+        // set state to resubmitViewModel
+        resubmitViewModel.setState(newState);
+        resubmitViewModel.firePropertyChange();
         // and clear everything from LoggedInViewModel's state
         loggedInViewModel.setState(new LoggedInState());
 

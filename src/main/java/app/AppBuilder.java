@@ -196,7 +196,8 @@ public class AppBuilder {
     }
 
     public AppBuilder addSubmitUseCase() {
-        final SubmitOutputBoundary submitOutputBoundary = new SubmitPresenter(submitViewModel);
+        final SubmitOutputBoundary submitOutputBoundary = new SubmitPresenter(
+                viewManagerModel, submitViewModel, loggedInViewModel);
         final SubmitInputBoundary submitInteractor = new SubmitInteractor(
                 userDataAccessObject, submitOutputBoundary);
 

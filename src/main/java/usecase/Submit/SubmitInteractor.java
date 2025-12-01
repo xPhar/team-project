@@ -37,6 +37,11 @@ public class SubmitInteractor implements SubmitInputBoundary {
         submitPresenter.prepareSuccessView(new SubmitOutputData(SUCCESS_MSG));
     }
 
+    @Override
+    public void backToLoggedInView() {
+        submitPresenter.switchToLoggedInView();
+    }
+
 
     private boolean netWorkError(File studentWork) {
         try {

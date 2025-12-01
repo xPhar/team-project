@@ -3,7 +3,7 @@ package view;
 import interface_adapter.Submit.SubmitController;
 import interface_adapter.Submit.SubmitState;
 import interface_adapter.Submit.SubmitViewModel;
-import interface_adapter.ViewManagerModel;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +23,6 @@ public class SubmitView extends JPanel implements PropertyChangeListener {
 
 
     private SubmitController submitController = null;
-    private ViewManagerModel viewManagerModel = null;
 
     /**
      * Initialize SubmitView (Subclass of JPanel)
@@ -34,6 +33,73 @@ public class SubmitView extends JPanel implements PropertyChangeListener {
 
         submitViewModel.addPropertyChangeListener(this);
 
+        final JButton uploadButton = makeUploadButton();
+
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
+                BorderFactory.createEmptyBorder(25, 30, 25, 30)));
+        this.setBackground(Color.WHITE);
+
+        assignmentNameLabel.setAlignmentX(CENTER_ALIGNMENT);
+        AssignmentDescriptionLabel.setAlignmentX(CENTER_ALIGNMENT);
+        dueDateLabel.setAlignmentX(CENTER_ALIGNMENT);
+        messageField.setAlignmentX(CENTER_ALIGNMENT);
+        uploadButton.setAlignmentX(CENTER_ALIGNMENT);
+
+        Font titleFont = new Font("Segoe UI", Font.BOLD, 18);
+        Font labelFont = new Font("Segoe UI", Font.PLAIN, 14);
+        Font messageFont = new Font("Segoe UI", Font.PLAIN, 16);
+
+        assignmentNameLabel.setFont(titleFont);
+        AssignmentDescriptionLabel.setFont(labelFont);
+        dueDateLabel.setFont(labelFont);
+        messageField.setFont(messageFont);
+
+        uploadButton.setFont(labelFont);
+        uploadButton.setBackground(new Color(66, 139, 202));
+        uploadButton.setForeground(Color.WHITE);
+        uploadButton.setBorder(BorderFactory.createEmptyBorder(8, 20, 8, 20));
+        uploadButton.setFocusPainted(false);
+
+        JButton backButton = makeBackButton();
+        backButton.setFont(labelFont);
+        backButton.setBackground(new Color(108, 117, 125));
+        backButton.setForeground(Color.WHITE);
+        backButton.setBorder(BorderFactory.createEmptyBorder(8, 20, 8, 20));
+        backButton.setFocusPainted(false);
+        backButton.setAlignmentX(CENTER_ALIGNMENT);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+        buttonPanel.setBackground(Color.WHITE);
+        buttonPanel.add(uploadButton);
+        buttonPanel.add(Box.createHorizontalStrut(10));
+        buttonPanel.add(backButton);
+
+        JPanel messageAndButtonPanel = new JPanel();
+        messageAndButtonPanel.setLayout(new BoxLayout(messageAndButtonPanel, BoxLayout.Y_AXIS));
+        messageAndButtonPanel.setBackground(Color.WHITE);
+        messageAndButtonPanel.add(messageField);
+        messageAndButtonPanel.add(buttonPanel);
+
+        this.add(Box.createVerticalStrut(15));
+        this.add(assignmentNameLabel);
+        this.add(Box.createVerticalStrut(20));
+        this.add(AssignmentDescriptionLabel);
+        this.add(Box.createVerticalStrut(15));
+        this.add(dueDateLabel);
+        this.add(Box.createVerticalStrut(25));
+        this.add(messageAndButtonPanel);
+    }
+    
+    private JButton makeBackButton() {
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(e -> submitController.backExecute());
+        return backButton;
+    }
+    @NotNull
+    private JButton makeUploadButton() {
         JButton uploadButton = new JButton("Choose File");
         uploadButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
@@ -52,43 +118,7 @@ public class SubmitView extends JPanel implements PropertyChangeListener {
                 JOptionPane.showMessageDialog(this, "No file selected");
             }
         });
-
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
-                BorderFactory.createEmptyBorder(25, 30, 25, 30)));
-        this.setBackground(Color.WHITE);
-
-        assignmentNameLabel.setAlignmentX(CENTER_ALIGNMENT);
-        AssignmentDescriptionLabel.setAlignmentX(CENTER_ALIGNMENT);
-        dueDateLabel.setAlignmentX(CENTER_ALIGNMENT);
-        messageField.setAlignmentX(CENTER_ALIGNMENT);
-        uploadButton.setAlignmentX(CENTER_ALIGNMENT);
-
-        Font titleFont = new Font("Segoe UI", Font.BOLD, 16);
-        Font labelFont = new Font("Segoe UI", Font.PLAIN, 14);
-
-        assignmentNameLabel.setFont(titleFont);
-        AssignmentDescriptionLabel.setFont(labelFont);
-        dueDateLabel.setFont(labelFont);
-        messageField.setFont(labelFont);
-
-        uploadButton.setFont(labelFont);
-        uploadButton.setBackground(new Color(66, 139, 202));
-        uploadButton.setForeground(Color.WHITE);
-        uploadButton.setBorder(BorderFactory.createEmptyBorder(8, 20, 8, 20));
-        uploadButton.setFocusPainted(false);
-
-        this.add(Box.createVerticalStrut(15));
-        this.add(assignmentNameLabel);
-        this.add(Box.createVerticalStrut(20));
-        this.add(AssignmentDescriptionLabel);
-        this.add(Box.createVerticalStrut(15));
-        this.add(dueDateLabel);
-        this.add(Box.createVerticalStrut(25));
-        this.add(messageField);
-        this.add(Box.createVerticalStrut(25));
-        this.add(uploadButton);
+        return uploadButton;
     }
 
     /**
@@ -98,10 +128,6 @@ public class SubmitView extends JPanel implements PropertyChangeListener {
      */
     public void setSubmitController(final SubmitController submitController) {
         this.submitController = submitController;
-    }
-
-    public void setViewManagerModel(ViewManagerModel viewManagerModel) {
-        this.viewManagerModel = viewManagerModel;
     }
 
     @Override
