@@ -180,6 +180,9 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
                     currentState.getPassword()
             );
         }
+        else if (evt.getSource().equals(register)) {
+            loginController.switchToSignupView();
+        }
         else if (evt.getSource().equals(exit)) {
             // Close program
             if (this.getParent() instanceof JFrame frame) {
