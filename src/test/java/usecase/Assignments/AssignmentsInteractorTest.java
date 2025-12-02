@@ -102,9 +102,8 @@ class AssignmentsInteractorTest {
 
         LocalDateTime subTime = FIXED_TIME.minusHours(1);
 
-        Submission gradedSub = new Submission(assignmentName, "Alice", subTime, "file", "data", 95.55, Submission.Status.GRADED, "ok");
-        Submission pendingSub = new Submission(assignmentName, "Bob", subTime, "file", "data", 0.0, Submission.Status.UNDER_REVIEW, "");
-
+        Submission gradedSub = new Submission( "Alice", subTime, "file", "data", 95.55, Submission.Status.GRADED, "ok");
+        Submission pendingSub = new Submission("Bob", subTime, "file", "data", 0.0, Submission.Status.UNDER_REVIEW, "");
         dao.submissions = Arrays.asList(gradedSub, pendingSub);
 
         interactor.switchToSubmissionListView(assignmentName);
@@ -165,7 +164,7 @@ class AssignmentsInteractorTest {
 
         @Override
         public User getCurrentUser() {
-            return new User("testUser", "pass", currentUserType);
+            return new User("testUser", "pass", "test", "user", currentUserType);
         }
 
         @Override

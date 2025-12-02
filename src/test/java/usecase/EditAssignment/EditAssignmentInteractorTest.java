@@ -15,7 +15,6 @@ class EditAssignmentInteractorTest {
 
     private TestEditAssignmentDAO dataAccess;
     private TestEditAssignmentPresenter presenter;
-    private TestAssignmentsInputBoundary assignmentsBoundary;
     private EditAssignmentInteractor interactor;
 
 
@@ -23,8 +22,7 @@ class EditAssignmentInteractorTest {
     void setup() {
         dataAccess = new TestEditAssignmentDAO();
         presenter = new TestEditAssignmentPresenter();
-        assignmentsBoundary = new TestAssignmentsInputBoundary();
-        interactor = new EditAssignmentInteractor(dataAccess, presenter, assignmentsBoundary);
+        interactor = new EditAssignmentInteractor(dataAccess, presenter);
     }
     @Test
     void testExecute_Success() {
@@ -47,8 +45,6 @@ class EditAssignmentInteractorTest {
 
         assertTrue(presenter.successCalled, "Presenter's success view should be called.");
         assertFalse(presenter.failCalled, "Failure view should NOT be called.");
-
-        assertTrue(assignmentsBoundary.executeCalled, "Assignments view refresh should be triggered.");
 
         assertTrue(dataAccess.updateCalled, "DAO update method should be called.");
 
@@ -83,7 +79,6 @@ class EditAssignmentInteractorTest {
         assertEquals("Assignment not found in database.", presenter.failMessage);
 
         assertFalse(presenter.successCalled);
-        assertFalse(assignmentsBoundary.executeCalled, "Assignments refresh should NOT be called.");
     }
 
     static class TestAssignmentsInputBoundary implements AssignmentsInputBoundary {
