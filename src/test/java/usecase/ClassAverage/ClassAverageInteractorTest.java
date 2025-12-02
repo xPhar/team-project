@@ -1,7 +1,6 @@
 package usecase.ClassAverage;
 
 import entity.Submission;
-import usecase.class_average.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

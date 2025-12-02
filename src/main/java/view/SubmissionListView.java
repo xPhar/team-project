@@ -19,10 +19,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 
-import interface_adapter.submission_list.SubmissionListController;
-import interface_adapter.submission_list.SubmissionListState;
-import interface_adapter.submission_list.SubmissionListViewModel;
-import interface_adapter.submission_list.SubmissionTableModel;
+import interfaceadapter.submission_list.SubmissionListController;
+import interfaceadapter.submission_list.SubmissionListState;
+import interfaceadapter.submission_list.SubmissionListViewModel;
+import interfaceadapter.submission_list.SubmissionTableModel;
 
 /**
  * View to show a list of submissions for a given assignment.

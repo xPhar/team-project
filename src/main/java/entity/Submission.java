@@ -17,6 +17,7 @@ public class Submission {
         GRADED,
         UNDER_REVIEW
     }
+
     public static final Status ON_TIME = Status.ON_TIME;
     public static final Status LATE = Status.LATE;
     public static final Status GRADED = Status.GRADED;

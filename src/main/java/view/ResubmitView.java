@@ -1,8 +1,8 @@
 package view;
 
-import interface_adapter.Resubmit.ResubmitController;
-import interface_adapter.Resubmit.ResubmitState;
-import interface_adapter.Resubmit.ResubmitViewModel;
+import interfaceadapter.Resubmit.ResubmitController;
+import interfaceadapter.Resubmit.ResubmitState;
+import interfaceadapter.Resubmit.ResubmitViewModel;
 
 import javax.swing.*;
 import java.awt.*;

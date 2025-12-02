@@ -2,7 +2,7 @@ package usecase.Assignments;
 
 import entity.Assignment;
 import entity.Submission;
-import entity.User.USER_TYPE;
+import entity.User.UserType;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -23,7 +23,7 @@ public class AssignmentsInteractor implements AssignmentsInputBoundary {
         try {
             List<Assignment> assignments = dataAccess.getAssignments();
 
-            boolean isInstructor = dataAccess.getCurrentUser().getUserType() == USER_TYPE.INSTRUCTOR;
+            boolean isInstructor = dataAccess.getCurrentUser().getUserType() == UserType.INSTRUCTOR;
 
             // Map Assignment entities to AssignmentDTOs
             List<AssignmentDataTransferObject> assignmentDataTransferObjects = assignments.stream()

@@ -3,7 +3,7 @@ package usecase.Assignments;
 import entity.Assignment;
 import entity.Submission;
 import entity.User;
-import entity.User.USER_TYPE;
+import entity.User.UserType;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,7 +50,7 @@ class AssignmentsInteractorTest {
                 .build();
 
         dao.assignments = Arrays.asList(a1_dueLater, a3_dueNull, a2_dueFirst);
-        dao.currentUserType = USER_TYPE.INSTRUCTOR;
+        dao.currentUserType = UserType.INSTRUCTOR;
 
         interactor.execute(new AssignmentsInputData());
 
@@ -70,7 +70,7 @@ class AssignmentsInteractorTest {
     @Test
     void testExecute_SuccessAsStudent() {
         dao.assignments = Collections.emptyList();
-        dao.currentUserType = USER_TYPE.STUDENT;
+        dao.currentUserType = UserType.STUDENT;
 
         interactor.execute(new AssignmentsInputData());
 
@@ -145,7 +145,7 @@ class AssignmentsInteractorTest {
 
     static class TestAssignmentsDAO implements AssignmentsDataAccessInterface {
         List<Assignment> assignments = Collections.emptyList();
-        USER_TYPE currentUserType = USER_TYPE.STUDENT;
+        UserType currentUserType = UserType.STUDENT;
         String courseCode = "";
         boolean shouldThrowException = false;
         String exceptionMessage = "";

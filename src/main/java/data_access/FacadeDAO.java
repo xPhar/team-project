@@ -1,7 +1,6 @@
 package data_access;
 
 import entity.*;
-import interface_adapter.submission_list.SubmissionTableModel;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,8 +12,8 @@ import usecase.Resubmit.ResubmitUserDataAccessInterface;
 import usecase.Submission.SubmissionDataAccessInterface;
 import usecase.SubmissionList.SubmissionListDataAccessInterface;
 import usecase.Submit.SubmitUserDataAccessInterface;
-import usecase.class_average.ClassAverageUserDataAccessInterface;
-import usecase.logged_in.LoggedInDataAccessInterface;
+import usecase.ClassAverage.ClassAverageUserDataAccessInterface;
+import usecase.LoggedIn.LoggedInDataAccessInterface;
 import usecase.login.LoginDataAccessInterface;
 import usecase.signup.SignupDataAccessInterface;
 
@@ -252,7 +251,7 @@ public class FacadeDAO implements
                 password,
                 firstName,
                 lastName,
-                User.USER_TYPE.valueOf(userType),
+                User.UserType.valueOf(userType),
                 courses
         );
     }
@@ -421,7 +420,7 @@ public class FacadeDAO implements
     }
 
     @Override
-    public User.USER_TYPE getUserType() {
+    public User.UserType getUserType() {
         return sessionDA.getUser().getUserType();
     }
 

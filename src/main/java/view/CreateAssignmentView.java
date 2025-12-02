@@ -1,8 +1,8 @@
 package view;
 
-import interface_adapter.CreateAssignment.CreateAssignmentController;
-import interface_adapter.CreateAssignment.CreateAssignmentState;
-import interface_adapter.CreateAssignment.CreateAssignmentViewModel;
+import interfaceadapter.CreateAssignment.CreateAssignmentController;
+import interfaceadapter.CreateAssignment.CreateAssignmentState;
+import interfaceadapter.CreateAssignment.CreateAssignmentViewModel;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;

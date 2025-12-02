@@ -141,21 +141,28 @@ public class Assignment {
             return this;
         }
 
-        public AssignmentBuilder latePenalty(String latePenalty) {
-            this.latePenalty = latePenalty;
+        /**
+         * Sets the late penalty policy for the assignment being built.
+         *
+         * @param LatePenalty a description of how late submissions are penalized
+         *                    (e.g., "10% per day", "no late submissions allowed").
+         * @return this builder instance, to allow method chaining
+         */
+        public AssignmentBuilder latePenalty(String LatePenalty) {
+            this.latePenalty = LatePenalty;
             return this;
         }
 
-        public AssignmentBuilder supportedFileTypes(List<String> supportedFileTypes) {
-            this.supportedFileTypes = supportedFileTypes;
-            return this;
-        }
         /**
          * Sets the supported file types for the assignment being built.
          *
-         * @param newSupportedFileTypes the list of supported file types for the assignment
+         * @param SupportedFileTypes the list of supported file types for the assignment
          * @return the builder instance for method chaining
          */
+        public AssignmentBuilder supportedFileTypes(List<String> SupportedFileTypes) {
+            this.supportedFileTypes = SupportedFileTypes;
+            return this;
+        }
 
         /**
          * Builds and returns a new instance of the Assignment class using the properties
