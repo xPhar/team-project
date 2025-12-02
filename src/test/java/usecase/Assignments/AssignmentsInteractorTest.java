@@ -54,7 +54,7 @@ class AssignmentsInteractorTest {
 
         interactor.execute(new AssignmentsInputData());
 
-        assertTrue(presenter.successCalled, "Success view should be called.");
+        assertTrue(presenter.successCalled);
         assertTrue(presenter.outputData.isInstructor());
 
         assertEquals("CSC207", presenter.outputData.getCourseName());
@@ -62,9 +62,9 @@ class AssignmentsInteractorTest {
         List<AssignmentDTO> dtos = presenter.outputData.getAssignments();
         assertEquals(3, dtos.size());
 
-        assertEquals("A_First", dtos.get(0).getName(), "Earliest DDL should be first.");
+        assertEquals("A_First", dtos.get(0).getName());
         assertEquals("Z_Last", dtos.get(1).getName());
-        assertEquals("C_Null", dtos.get(2).getName(), "Null DDL should be last.");
+        assertEquals("C_Null", dtos.get(2).getName());
     }
 
     @Test
@@ -75,7 +75,7 @@ class AssignmentsInteractorTest {
         interactor.execute(new AssignmentsInputData());
 
         assertTrue(presenter.successCalled);
-        assertFalse(presenter.outputData.isInstructor(), "User type should be Student.");
+        assertFalse(presenter.outputData.isInstructor());
         assertEquals("CSC207", presenter.outputData.getCourseName());
     }
 
@@ -86,7 +86,7 @@ class AssignmentsInteractorTest {
 
         interactor.execute(new AssignmentsInputData());
 
-        assertTrue(presenter.failCalled, "Failure view should be called.");
+        assertTrue(presenter.failCalled);
         assertFalse(presenter.successCalled);
         assertEquals("Error loading assignments: Database connection failed", presenter.failMessage);
     }
@@ -109,7 +109,7 @@ class AssignmentsInteractorTest {
         interactor.switchToSubmissionListView(assignmentName);
 
         assertTrue(presenter.switchToSubmissionListViewCalled);
-        assertEquals(assignment, dao.activeAssignmentSet, "Active assignment should be set in DAO.");
+        assertEquals(assignment, dao.activeAssignmentSet);
 
         String[][] submissionTable = presenter.outputData.getSubmissions();
         assertEquals(2, submissionTable.length);
@@ -118,40 +118,54 @@ class AssignmentsInteractorTest {
 
         assertEquals("Alice", submissionTable[0][0]);
         assertEquals(expectedTime, submissionTable[0][1]);
-        assertEquals("95.6", submissionTable[0][2], "Graded score should be formatted to 1 decimal place (95.55 -> 95.6).");
+        assertEquals("95.6", submissionTable[0][2]);
 
         assertEquals("Bob", submissionTable[1][0]);
         assertEquals(expectedTime, submissionTable[1][1]);
-        assertEquals("pending", submissionTable[1][2], "Pending status should show 'pending'.");
+        assertEquals("pending", submissionTable[1][2]);
     }
 
     @Test
     void testSwitchToCreateAssignmentView() {
         interactor.switchToCreateAssignmentView();
-        assertTrue(presenter.switchToCreateAssignmentViewCalled, "Presenter's method should be called.");
+        assertTrue(presenter.switchToCreateAssignmentViewCalled);
     }
 
     @Test
     void testSwitchToSubmitView() {
         interactor.switchToSubmitView();
-        assertTrue(presenter.switchToSubmitViewCalled, "Presenter's method should be called.");
+        assertTrue(presenter.switchToSubmitViewCalled);
     }
 
     @Test
     void testSwitchToResubmitView() {
         interactor.switchToResubmitView();
-        assertTrue(presenter.switchToResubmitViewCalled, "Presenter's method should be called.");
+        assertTrue(presenter.switchToResubmitViewCalled);
+    }
+
+    @Test
+    void testSwitchToLoginView() {
+        dao.currentUserType = USER_TYPE.STUDENT;
+        dao.currentUserName = "LoggedInStudent";
+
+        interactor.switchToLoginView();
+
+        assertTrue(presenter.switchToLoginViewCalled);
+        assertEquals("LoggedInStudent", presenter.usernameForLogin, "Username should be passed and stored in presenter.");
+        assertTrue(dao.sessionReset);
     }
 
     static class TestAssignmentsDAO implements AssignmentsDataAccessInterface {
         List<Assignment> assignments = Collections.emptyList();
         USER_TYPE currentUserType = USER_TYPE.STUDENT;
+        String currentUserName = "TestUser";
         String courseCode = "";
         boolean shouldThrowException = false;
         String exceptionMessage = "";
         Assignment assignmentToReturn = null;
         Assignment activeAssignmentSet = null;
         List<Submission> submissions = Collections.emptyList();
+        boolean sessionReset = false;
 
 
         @Override
@@ -164,7 +178,7 @@ class AssignmentsInteractorTest {
 
         @Override
         public User getCurrentUser() {
-            return new User("testUser", "pass", "test", "user", currentUserType);
+            return new User(currentUserName, "pass", "test", "user", currentUserType);
         }
 
         @Override
@@ -189,6 +203,7 @@ class AssignmentsInteractorTest {
 
         @Override
         public void resetSession() {
+            this.sessionReset = true;
             activeAssignmentSet = null;
         }
     }
@@ -204,6 +219,7 @@ class AssignmentsInteractorTest {
 
         String failMessage;
         AssignmentsOutputData outputData;
+        String usernameForLogin;
 
         @Override
         public void prepareSuccessView(AssignmentsOutputData outputData) {
@@ -242,6 +258,7 @@ class AssignmentsInteractorTest {
         public void switchToLoginView(AssignmentsOutputData outputData) {
             switchToLoginViewCalled = true;
             this.outputData = outputData;
+            this.usernameForLogin = outputData.getUsername();
         }
     }
 }
