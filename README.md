@@ -17,7 +17,7 @@ A desktop coursework submission and feedback application for windows system that
 | Lead              | Use Case                   | User Story       |
 | :---------------- | :------------------------  | :--------------- |
 | Aiden             | Login                      | User Story #7    |
-| Gracie            | Create/Edit Assignment     | User Story #4，5 ｜  
+| Gracie            | Create/Edit Assignment     | User Story #4，5 | 
 | Wuqingyi (Cherie) | Show Grade Average         | User Story #3    |
 | Jiazheng (Indy)   | Mark Assignment            | User Story #6    |
 | Xihang	          | Submit/Resubmit Assignment | User Story #1，2 |
