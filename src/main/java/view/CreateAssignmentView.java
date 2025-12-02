@@ -403,6 +403,9 @@ public class CreateAssignmentView extends JPanel implements PropertyChangeListen
                 else if (text.contains("java")) {
                     out.add(".java");
                 }
+                else if (text.contains("text")) {
+                    out.add(".txt");
+                }
                 else {
                     out.add("." + text);
                 }
