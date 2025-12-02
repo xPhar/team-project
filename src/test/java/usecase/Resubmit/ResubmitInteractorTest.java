@@ -96,4 +96,46 @@ public class ResubmitInteractorTest {
         ResubmitInputBoundary interactor = new ResubmitInteractor(presenter, dummyDAO);
         interactor.execute(inputData);
     }
+    @Test
+    void backCase(){
+        ResubmitOutputBoundary presenter = new ResubmitOutputBoundary() {
+            /**
+             * Prepares the success view for the Resubmit Use Case. This is expected
+             */
+            @Override
+            public void prepareSuccessView() {
+                switchToSubmitView();
+            }
+
+            /**
+             * Prepares the failure view for the Resubmit Use Case. This should not be reached
+             *
+             * @param errorMessage the explanation of the failure
+             */
+            @Override
+            public void prepareFailView(String errorMessage) {
+                fail("ResubmitInteractor failed in fail case!");
+            }
+
+            /**
+             * Switches to the Submit View. Here just assert true
+             */
+            @Override
+            public void switchToSubmitView() {
+                fail("ResubmitInteractor failed in success case!");
+            }
+
+            /**
+             * Switches to the Login View. Here just assert true
+             */
+            @Override
+            public void switchToLogginView() {
+                assertTrue(true);
+            }
+        };
+
+        FakeUserDataAccessObject dummyDAO = new FakeUserDataAccessObject(true, false);
+        ResubmitInputBoundary interactor = new ResubmitInteractor(presenter, dummyDAO);
+        interactor.goBack();
+    }
 }
