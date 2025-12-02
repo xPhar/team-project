@@ -38,7 +38,7 @@ public class AssignmentsInteractor implements AssignmentsInputBoundary {
                     .collect(Collectors.toList());
 
             AssignmentsOutputData outputData = new AssignmentsOutputData(
-                    assignmentDTOs,
+                    assignmentDataTransferObjects,
                     dataAccess.getCourseCode(),
                     isInstructor);
 

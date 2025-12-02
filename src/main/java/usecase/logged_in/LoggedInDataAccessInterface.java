@@ -4,7 +4,6 @@ package usecase.logged_in;
 import entity.Assignment;
 import entity.Submission;
 import entity.User;
-import interface_adapter.submission_list.SubmissionTableModel;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ public interface LoggedInDataAccessInterface {
      * Gets the user type of the current user.
      * @return the user type for the current user
      */
-    User.UserType getUserType();
+    User.USER_TYPE getUserType();
 
     /**
      * Gets a list of submissions for the given assignment.

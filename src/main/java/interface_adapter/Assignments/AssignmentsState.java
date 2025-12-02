@@ -1,6 +1,6 @@
 package interface_adapter.Assignments;
 
-import usecase.Assignments.AssignmentDTO;
+import usecase.Assignments.AssignmentDataTransferObject;
 
 import java.util.List;
 

@@ -103,7 +103,7 @@ public class Course {
          * @param instructor the instructor to be added to the course
          * @return the current instance of {@code CourseBuilder} for method chaining
          */
-        public CourseBuilder instructor(String instructor) {
+        public CourseBuilder addInstructor(String instructor) {
             instructors.add(instructor);
             return this;
         }
@@ -125,7 +125,7 @@ public class Course {
          * @param assignment the assignment to be added to the course
          * @return the current instance of {@code CourseBuilder} for method chaining
          */
-        public CourseBuilder assignment(Assignment assignment) {
+        public CourseBuilder addAssignment(Assignment assignment) {
             assignments.add(assignment);
             return this;
         }
