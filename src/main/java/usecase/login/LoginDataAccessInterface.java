@@ -1,10 +1,10 @@
 package usecase.login;
 
+import java.util.List;
+
 import entity.Assignment;
 import entity.Submission;
 import entity.User;
-
-import java.util.List;
 
 /**
  * DAO interface for the Login Use Case.
