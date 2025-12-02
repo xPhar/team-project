@@ -24,7 +24,7 @@ class CreateAssignmentInteractorTest {
         dataAccess = new TestCreateAssignmentDAO();
         presenter = new TestCreateAssignmentPresenter();
         assignmentsBoundary = new TestAssignmentsInputBoundary();
-        interactor = new CreateAssignmentInteractor(dataAccess, presenter, assignmentsBoundary);
+        interactor = new CreateAssignmentInteractor(dataAccess, presenter);
     }
 
     @Test
@@ -42,8 +42,6 @@ class CreateAssignmentInteractorTest {
         interactor.execute(inputData);
 
         assertTrue(presenter.successCalled, "Presenter's success view should be called.");
-
-        assertTrue(assignmentsBoundary.executeCalled, "Assignments view refresh should be triggered.");
 
         assertTrue(dataAccess.saveCalled, "DAO save method should be called.");
 
