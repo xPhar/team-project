@@ -55,7 +55,7 @@ public class SubmitInteractor implements SubmitInputBoundary {
 
     private boolean wrongFileType(Assignment assignment, File studentWork) {
         for (String suffix : assignment.getSupportedFileTypes()) {
-            if (studentWork.getName().toLowerCase().endsWith("." + suffix.toLowerCase())) {
+            if (studentWork.getName().toLowerCase().endsWith(suffix.toLowerCase())) {
                 return false;
             }
         }

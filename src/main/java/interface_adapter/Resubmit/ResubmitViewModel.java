@@ -5,7 +5,7 @@ import interface_adapter.ViewModel;
 public class ResubmitViewModel extends ViewModel<ResubmitState> {
 
     public ResubmitViewModel() {
-        super("Resubmit");
+        super("resubmit");
         setState(new ResubmitState());
     }
 }
