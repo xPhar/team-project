@@ -18,4 +18,6 @@ public interface AssignmentsDataAccessInterface {
     Assignment getAssignment(String assignment);
 
     void setActiveAssignment(Assignment assignment);
+
+    void resetSession();
 }

@@ -159,4 +159,9 @@ public class TestDAO implements
     public Submission getSubmissionForSubmissionView(String submitter) {
         return null;
     }
+
+    @Override
+    public void resetSession() {
+        // Do nothing :)
+    }
 }

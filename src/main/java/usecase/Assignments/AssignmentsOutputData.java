@@ -11,12 +11,16 @@ public class AssignmentsOutputData {
     private final String assignmentName;
     private final String[][] submissions;
 
+    // For switching to login view
+    private final String username;
+
     public AssignmentsOutputData(List<AssignmentDTO> assignments, String courseName, boolean isInstructor) {
         this.assignments = assignments;
         this.courseName = courseName;
         this.isInstructor = isInstructor;
         this.assignmentName = null;
         this.submissions = null;
+        this.username = null;
     }
 
     public AssignmentsOutputData(String assignmentName, String[][] submissions) {
@@ -26,6 +30,21 @@ public class AssignmentsOutputData {
         assignments = null;
         courseName = null;
         isInstructor = false;
+        username = null;
+    }
+
+    public AssignmentsOutputData(String username) {
+        this.username = null;
+
+        assignments = null;
+        courseName = null;
+        isInstructor = false;
+        assignmentName = null;
+        submissions = null;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public List<AssignmentDTO> getAssignments() {
