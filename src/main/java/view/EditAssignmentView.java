@@ -328,6 +328,9 @@ public class EditAssignmentView extends JPanel implements PropertyChangeListener
                 else if (text.contains("java")) {
                     out.add(".java");
                 }
+                else if (text.contains("text")) {
+                    out.add(".txt");
+                }
                 else {
                     out.add("." + text);
                 }
