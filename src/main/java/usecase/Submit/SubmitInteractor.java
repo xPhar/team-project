@@ -1,10 +1,10 @@
 package usecase.Submit;
 
-import entity.Assignment;
-
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+
+import entity.Assignment;
 
 public class SubmitInteractor implements SubmitInputBoundary {
 
@@ -29,12 +29,12 @@ public class SubmitInteractor implements SubmitInputBoundary {
         final File studentWork = inputData.getSelectedFile();
         final LocalDateTime curTime = inputData.getTime();
 
-        if (deadLinePassed(assignment, curTime)) return;
-        if (wrongFileType(assignment, studentWork)) return;
-        if (netWorkError(studentWork)) return;
+        if (!deadLinePassed(assignment, curTime)
+            && !wrongFileType(assignment, studentWork)
+            && !netWorkError(studentWork)) {
 
-        //go success
-        submitPresenter.prepareSuccessView(new SubmitOutputData(SUCCESS_MSG));
+            submitPresenter.prepareSuccessView(new SubmitOutputData(SUCCESS_MSG));
+        }
     }
 
     @Override
@@ -46,7 +46,8 @@ public class SubmitInteractor implements SubmitInputBoundary {
     private boolean netWorkError(File studentWork) {
         try {
             submitUserDataAccess.submit(studentWork);
-        } catch (IOException e) {
+        }
+        catch (IOException exception) {
             goFailure(NETWORK_ERROR_MSG);
             return true;
         }
@@ -65,8 +66,8 @@ public class SubmitInteractor implements SubmitInputBoundary {
     }
 
     private boolean deadLinePassed(Assignment assignment, LocalDateTime curTime) {
-        LocalDateTime deadline = assignment.getDueDate();
-        LocalDateTime gracedDeadline = deadline.plusHours((int) assignment.getGracePeriod());
+        final LocalDateTime deadline = assignment.getDueDate();
+        final LocalDateTime gracedDeadline = deadline.plusHours((int) assignment.getGracePeriod());
         if (curTime.isAfter(gracedDeadline)) {
             goFailure(DDL_PASSED_MSG);
             return true;
@@ -75,7 +76,7 @@ public class SubmitInteractor implements SubmitInputBoundary {
     }
 
     private void goFailure(String errMsg) {
-        SubmitOutputData outputData = new SubmitOutputData(errMsg);
+        final SubmitOutputData outputData = new SubmitOutputData(errMsg);
         submitPresenter.prepareFailureView(outputData);
     }
 }

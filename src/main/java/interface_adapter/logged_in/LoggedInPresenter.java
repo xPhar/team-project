@@ -38,7 +38,7 @@ public class LoggedInPresenter implements LoggedInOutputBoundary {
                              ClassAverageViewModel classAverageViewModel,
                              CreateAssignmentViewModel createAssignmentViewModel) {
         this.viewManagerModel = viewManagerModel;
-        this.loggedInViewModel =  loggedInViewModel;
+        this.loggedInViewModel = loggedInViewModel;
         this.loginViewModel = loginViewModel;
         this.submitViewModel = submitViewModel;
         this.resubmitViewModel = resubmitViewModel;

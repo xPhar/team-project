@@ -15,7 +15,6 @@ public class SubmissionListInputData {
         this.assignmentName = assignmentName;
     }
 
-
     public boolean isBack() {
         return back;
     }

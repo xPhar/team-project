@@ -1,11 +1,11 @@
 package interface_adapter.Submit;
 
+import java.awt.Color;
+
 import interface_adapter.ViewManagerModel;
 import interface_adapter.logged_in.LoggedInViewModel;
 import usecase.Submit.SubmitOutputBoundary;
 import usecase.Submit.SubmitOutputData;
-
-import java.awt.*;
 
 public class SubmitPresenter implements SubmitOutputBoundary {
 
@@ -22,7 +22,7 @@ public class SubmitPresenter implements SubmitOutputBoundary {
 
     @Override
     public void prepareSuccessView(SubmitOutputData submitOutputData) {
-        SubmitState newSubmitState = submitViewModel.getState();
+        final SubmitState newSubmitState = submitViewModel.getState();
         newSubmitState.setMessage(submitOutputData.getOutputMsg());
         newSubmitState.setMsgColor(Color.GREEN);
         submitViewModel.setState(newSubmitState);
@@ -31,8 +31,8 @@ public class SubmitPresenter implements SubmitOutputBoundary {
 
     @Override
     public void prepareFailureView(SubmitOutputData submitOutputData) {
-        SubmitState newSubmitState = submitViewModel.getState();
-        String errorMsg = submitOutputData.getOutputMsg();
+        final SubmitState newSubmitState = submitViewModel.getState();
+        final String errorMsg = submitOutputData.getOutputMsg();
         newSubmitState.setMessage(errorMsg);
         newSubmitState.setMsgColor(Color.RED);
         submitViewModel.setState(newSubmitState);

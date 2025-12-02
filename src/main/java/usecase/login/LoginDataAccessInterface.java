@@ -1,10 +1,10 @@
 package usecase.login;
 
+import java.util.List;
+
 import entity.Assignment;
 import entity.Submission;
 import entity.User;
-
-import java.util.List;
 
 /**
  * DAO interface for the Login Use Case.
@@ -33,6 +33,7 @@ public interface LoginDataAccessInterface {
 
     /**
      * Gets the assignments for the users first course.
+     * @return a list of assignment objects for the users course
      */
     List<Assignment> getAssignments();
 

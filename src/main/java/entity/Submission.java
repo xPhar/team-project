@@ -3,13 +3,13 @@ package entity;
 import java.time.LocalDateTime;
 
 public class Submission {
-    private String submitter;
-    private LocalDateTime submissionTime;
-    private String submissionName;
-    private String submissionData;
-    private double grade;
-    private Status status;
-    private String feedback;
+    private final String submitter;
+    private final LocalDateTime submissionTime;
+    private final String submissionName;
+    private final String submissionData;
+    private final double grade;
+    private final Status status;
+    private final String feedback;
 
     public enum Status {
         ON_TIME,
@@ -80,41 +80,87 @@ public class Submission {
             this.feedback = "";
         }
 
-        public SubmissionBuilder submitter(String submitter) {
-            this.submitter = submitter;
+        /**
+         * Sets the submitter of the submission.
+         *
+         * @param newSubmitter the name or identifier of the person submitting the work
+         * @return the current instance*/
+        public SubmissionBuilder submitter(String newSubmitter) {
+            submitter = newSubmitter;
             return this;
         }
 
-        public SubmissionBuilder submissionTime(LocalDateTime submissionTime) {
-            this.submissionTime = submissionTime;
+        /**
+         * Sets the submission time for the submission.
+         *
+         * @param newSubmissionTime the timestamp representing the time of submission
+         * @return the current instance of {@code SubmissionBuilder} for method chaining
+         */
+        public SubmissionBuilder submissionTime(LocalDateTime newSubmissionTime) {
+            this.submissionTime = newSubmissionTime;
             return this;
         }
 
-        public SubmissionBuilder submissionName(String submissionName) {
-            this.submissionName = submissionName;
+        /**
+         * Sets the name of the submission.
+         *
+         * @param newSubmissionName the name of the submission
+         * @return the current instance of {@code SubmissionBuilder} for method chaining
+         */
+        public SubmissionBuilder submissionName(String newSubmissionName) {
+            this.submissionName = newSubmissionName;
             return this;
         }
 
-        public SubmissionBuilder submissionData(String submissionData) {
-            this.submissionData = submissionData;
+        /**
+         * Sets the submission data for the submission.
+         *
+         * @param newSubmissionData the content or data associated with the submission
+         * @return the current instance of {@code SubmissionBuilder} for method chaining
+         */
+        public SubmissionBuilder submissionData(String newSubmissionData) {
+            this.submissionData = newSubmissionData;
             return this;
         }
 
-        public SubmissionBuilder grade(double grade) {
-            this.grade = grade;
+        /**
+         * Sets the grade for the submission.
+         *
+         * @param newGrade the grade assigned to the submission
+         * @return the current instance of {@code SubmissionBuilder} for method chaining
+         */
+        public SubmissionBuilder grade(double newGrade) {
+            this.grade = newGrade;
             return this;
         }
 
-        public SubmissionBuilder status(Status status) {
-            this.status = status;
+        /**
+         * Sets the status of the submission.
+         *
+         * @param newStatus the status of the submission
+         * @return the current instance of {@code SubmissionBuilder} for method chaining
+         */
+        public SubmissionBuilder status(Status newStatus) {
+            this.status = newStatus;
             return this;
         }
 
-        public SubmissionBuilder feedback(String feedback) {
-            this.feedback = feedback;
+        /**
+         * Sets the feedback for the submission.
+         *
+         * @param newFeedback the feedback or comments associated with the submission
+         * @return the current instance of {@code SubmissionBuilder} for method chaining
+         */
+        public SubmissionBuilder feedback(String newFeedback) {
+            this.feedback = newFeedback;
             return this;
         }
 
+        /**
+         * Builds and returns a new instance of the Submission class using the properties.
+         *
+         * @return a new Submission instance
+         */
         public Submission build() {
             return new Submission(this.submitter, this.submissionTime, this.submissionName,
                     this.submissionData, this.grade, this.status, this.feedback);

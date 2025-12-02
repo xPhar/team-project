@@ -1,8 +1,8 @@
 package usecase.SubmissionList;
 
-import entity.Submission;
-
 import java.time.format.DateTimeFormatter;
+
+import entity.Submission;
 
 public class SubmissionListInteractor implements SubmissionListInputBoundary {
     private final SubmissionListOutputBoundary submissionListOutputBoundary;
@@ -20,21 +20,27 @@ public class SubmissionListInteractor implements SubmissionListInputBoundary {
     public void execute(SubmissionListInputData data) {
         if (data.isBack()) {
             submissionListOutputBoundary.goToAssignmentView();
-        } else {
-            Submission submission = submissionListDataAccessInterface
+        }
+        else {
+            final Submission submission = submissionListDataAccessInterface
                     .getSubmissionForSubmissionView(data.getSubmitter());
 
-            SubmissionListOutputData outputData = new SubmissionListOutputData(
+            String gradeString = "";
+            if (submission.getStatus() == Submission.Status.GRADED) {
+                gradeString = String.format("%.1f", submission.getGrade());
+            }
+
+            final SubmissionListOutputData outputData = new SubmissionListOutputData(
                     data.getAssignmentName(),
                     submission.getSubmitter(),
                     submission.getStatus().toString(),
                     submission.getSubmissionTime().format(
                             DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss")
                     ),
-                    submission.getStatus() == Submission.Status.GRADED ? String.format("%.1f", submission.getGrade()) : "",
+                    gradeString,
                     submission.getFeedback(),
                     submission.getSubmissionName(),
-                    "100" // Hardcoded
+                    "100"
             );
 
             submissionListOutputBoundary.prepareSubmissionView(outputData);

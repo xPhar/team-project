@@ -10,6 +10,7 @@ public class SubmissionListState {
     public SubmissionTableModel getTableModel() {
         return tableModel;
     }
+
     public void setTableModel(SubmissionTableModel tableModel) {
         this.tableModel = tableModel;
     }
@@ -17,6 +18,7 @@ public class SubmissionListState {
     public String getTitle() {
         return title;
     }
+
     public void setTitle(String title) {
         this.title = title;
     }

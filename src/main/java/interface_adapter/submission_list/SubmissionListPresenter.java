@@ -2,7 +2,6 @@ package interface_adapter.submission_list;
 
 import interface_adapter.Assignments.AssignmentsViewModel;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.submission.SubmissionState;
 import interface_adapter.submission.SubmissionViewModel;
 import usecase.SubmissionList.SubmissionListOutputBoundary;
@@ -31,7 +30,7 @@ public class SubmissionListPresenter implements SubmissionListOutputBoundary {
 
     @Override
     public void prepareSubmissionView(SubmissionListOutputData outputData) {
-        SubmissionState state = new SubmissionState();
+        final SubmissionState state = new SubmissionState();
         state.setSubmitter(outputData.getSubmitter());
         state.setSubmissionDate(outputData.getSubmissionDate());
         state.setStatus(outputData.getStatus());

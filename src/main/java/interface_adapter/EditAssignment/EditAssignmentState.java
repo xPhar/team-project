@@ -4,17 +4,20 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class EditAssignmentState {
-    private String courseCode;
-    private String name;
-    private String description;
-    private LocalDateTime dueDate;
-    private double gracePeriod;
-    private List<String> supportedFileTypes;
-    private String errorMessage = null;
-    private boolean success = false;
+    private final String courseCode;
+    private final String name;
+    private final String description;
+    private final LocalDateTime dueDate;
+    private final double gracePeriod;
+    private final List<String> supportedFileTypes;
+    private String errorMessage;
+    private boolean success;
 
     public EditAssignmentState(String courseCode, String name, String description,
             LocalDateTime dueDate, double gracePeriod, List<String> supportedFileTypes) {
+
+        success = false;
+        errorMessage = null;
         this.courseCode = courseCode;
         this.name = name;
         this.description = description;

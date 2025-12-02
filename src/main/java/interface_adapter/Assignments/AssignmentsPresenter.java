@@ -29,7 +29,7 @@ public class AssignmentsPresenter implements AssignmentsOutputBoundary {
 
     @Override
     public void prepareSuccessView(AssignmentsOutputData outputData) {
-        AssignmentsState state = new AssignmentsState();
+        final AssignmentsState state = new AssignmentsState();
         state.setAssignments(outputData.getAssignments());
         state.setCourseName(outputData.getCourseName());
         state.setInstructor(outputData.isInstructor());
@@ -41,7 +41,7 @@ public class AssignmentsPresenter implements AssignmentsOutputBoundary {
 
     @Override
     public void prepareFailureView(String errorMessage) {
-        AssignmentsState state = new AssignmentsState();
+        final AssignmentsState state = new AssignmentsState();
         state.setErrorMessage(errorMessage);
 
         viewModel.setState(state);

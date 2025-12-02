@@ -26,10 +26,10 @@ public class AssignmentsInteractor implements AssignmentsInputBoundary {
             boolean isInstructor = dataAccess.getCurrentUser().getUserType() == USER_TYPE.INSTRUCTOR;
 
             // Map Assignment entities to AssignmentDTOs
-            List<AssignmentDTO> assignmentDTOs = assignments.stream()
+            List<AssignmentDataTransferObject> assignmentDataTransferObjects = assignments.stream()
                     .sorted(java.util.Comparator.comparing(Assignment::getDueDate,
                             java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder())))
-                    .map(assignment -> new AssignmentDTO(
+                    .map(assignment -> new AssignmentDataTransferObject(
                             assignment.getName(),
                             assignment.getDescription(),
                             assignment.getDueDate(),
@@ -38,7 +38,7 @@ public class AssignmentsInteractor implements AssignmentsInputBoundary {
                     .collect(Collectors.toList());
 
             AssignmentsOutputData outputData = new AssignmentsOutputData(
-                    assignmentDTOs,
+                    assignmentDataTransferObjects,
                     dataAccess.getCourseCode(),
                     isInstructor);
 
