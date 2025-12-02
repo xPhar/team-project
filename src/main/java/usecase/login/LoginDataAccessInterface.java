@@ -33,6 +33,7 @@ public interface LoginDataAccessInterface {
 
     /**
      * Gets the assignments for the users first course.
+     * @return a list of assignment objects for the users course
      */
     List<Assignment> getAssignments();
 

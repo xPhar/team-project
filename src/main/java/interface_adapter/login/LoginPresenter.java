@@ -36,7 +36,8 @@ public class LoginPresenter implements LoginOutputBoundary {
 
         if ("instructor".equalsIgnoreCase(response.getUserType())) {
             viewManagerModel.setState(assignmentsViewModel.getViewName());
-        } else {
+        }
+        else {
             final LoggedInState loggedInState = loggedInViewModel.getState();
 
             loggedInState.setUsername(response.getUsername());
