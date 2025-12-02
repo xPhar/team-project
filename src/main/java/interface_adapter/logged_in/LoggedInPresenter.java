@@ -87,11 +87,20 @@ public class LoggedInPresenter implements LoggedInOutputBoundary {
 
     @Override
     public void switchToResubmitView(LoggedInOutputData response) {
+
+        final SubmitState newSubmitState = new SubmitState();
+        newSubmitState.setAssignmentName(response.getAssignmentName());
+        newSubmitState.setAssignmentDescription(response.getAssignmentDescription());
+        newSubmitState.setDueDate(response.getAssignmentDueDate());
+        // set state to submitViewModel
+        submitViewModel.setState(newSubmitState);
+        submitViewModel.firePropertyChange();
         // On success, update the resubmitViewModel's state
         final ResubmitState newState = new ResubmitState();
         // set state to resubmitViewModel
         resubmitViewModel.setState(newState);
         resubmitViewModel.firePropertyChange();
+
         // and clear everything from LoggedInViewModel's state
         loggedInViewModel.setState(new LoggedInState());
 
