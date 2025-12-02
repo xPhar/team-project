@@ -1,11 +1,9 @@
 package usecase.Submission;
 
-import entity.Assignment;
-import entity.Submission;
-import interface_adapter.submission_list.SubmissionTableModel;
-
 import java.io.File;
 import java.util.List;
+
+import entity.Submission;
 
 public interface SubmissionDataAccessInterface {
     /**

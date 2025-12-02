@@ -1,7 +1,6 @@
 package usecase.SubmissionList;
-import entity.Submission;
 
-import java.util.List;
+import entity.Submission;
 
 /**
  * Data access interface for submission list view.
