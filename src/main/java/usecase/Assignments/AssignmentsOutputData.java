@@ -3,7 +3,7 @@ package usecase.Assignments;
 import java.util.List;
 
 public class AssignmentsOutputData {
-    private final List<AssignmentDTO> assignments;
+    private final List<AssignmentDataTransferObject> assignments;
     private final String courseName;
     private final boolean isInstructor;
 
@@ -14,7 +14,7 @@ public class AssignmentsOutputData {
     // For switching to login view
     private final String username;
 
-    public AssignmentsOutputData(List<AssignmentDTO> assignments, String courseName, boolean isInstructor) {
+    public AssignmentsOutputData(List<AssignmentDataTransferObject> assignments, String courseName, boolean isInstructor) {
         this.assignments = assignments;
         this.courseName = courseName;
         this.isInstructor = isInstructor;
@@ -47,7 +47,7 @@ public class AssignmentsOutputData {
         return username;
     }
 
-    public List<AssignmentDTO> getAssignments() {
+    public List<AssignmentDataTransferObject> getAssignments() {
         return assignments;
     }
 

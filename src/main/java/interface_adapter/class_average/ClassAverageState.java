@@ -1,7 +1,8 @@
 package interface_adapter.class_average;
 
-import javax.swing.*;
 import java.util.List;
+
+import javax.swing.JPanel;
 
 /**
  * The State object for the ClassAverage ViewModel.

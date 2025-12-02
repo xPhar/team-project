@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Course {
-    private String courseName;
-    private String courseCode;
-    private String latePenalty;
-    private List<String> instructors;
-    private List<String> students;
-    private List<Assignment> assignments;
+    private final String courseName;
+    private final String courseCode;
+    private final String latePenalty;
+    private final List<String> instructors;
+    private final List<String> students;
+    private final List<Assignment> assignments;
 
     public Course(String courseName, String courseCode, String latePenalty,
                   List<String> instructors, List<String> students, List<Assignment> assignments) {
@@ -53,9 +53,9 @@ public class Course {
         private String courseName;
         private String courseCode;
         private String latePenalty;
-        private List<String> instructors;
-        private List<String> students;
-        private List<Assignment> assignments;
+        private final List<String> instructors;
+        private final List<String> students;
+        private final List<Assignment> assignments;
 
         CourseBuilder() {
             this.instructors = new ArrayList<>();
@@ -63,36 +63,79 @@ public class Course {
             this.assignments = new ArrayList<>();
         }
 
-        public CourseBuilder courseName(String courseName) {
-            this.courseName = courseName;
+        /**
+         * Sets the name of the course.
+         *
+         * @param newCourseName the name of the course
+         * @return the current instance of {@code CourseBuilder} for method chaining
+         */
+        public CourseBuilder courseName(String newCourseName) {
+            courseName = newCourseName;
             return this;
         }
 
-        public CourseBuilder courseCode(String courseCode) {
-            this.courseCode = courseCode;
+        /**
+         * Sets the code of the course.
+         *
+         * @param newCourseCode the code of the course
+         * @return the current instance of {@code CourseBuilder} for method chaining
+         */
+        public CourseBuilder courseCode(String newCourseCode) {
+            courseCode = newCourseCode;
             return this;
         }
 
-        public CourseBuilder latePenalty(String latePenalty) {
-            this.latePenalty = latePenalty;
+        /**
+         * Sets the late penalty information for the course.
+         *
+         * @param newLatePenalty the late penalty details, typically describing the rules or deductions
+         *         for late submissions
+         * @return the current instance of {@code CourseBuilder} for method chaining
+         */
+        public CourseBuilder latePenalty(String newLatePenalty) {
+            latePenalty = newLatePenalty;
             return this;
         }
 
+        /**
+         * Adds an instructor to the course being built.
+         *
+         * @param instructor the instructor to be added to the course
+         * @return the current instance of {@code CourseBuilder} for method chaining
+         */
         public CourseBuilder addInstructor(String instructor) {
-            this.instructors.add(instructor);
+            instructors.add(instructor);
             return this;
         }
 
+        /**
+         * Adds a student to the course being built.
+         *
+         * @param student the student to be added to the course
+         * @return the current instance of {@code CourseBuilder} for method chaining
+         */
         public CourseBuilder addStudent(String student) {
-            this.students.add(student);
+            students.add(student);
             return this;
         }
 
+        /**
+         * Adds an assignment to the course being built.
+         *
+         * @param assignment the assignment to be added to the course
+         * @return the current instance of {@code CourseBuilder} for method chaining
+         */
         public CourseBuilder addAssignment(Assignment assignment) {
-            this.assignments.add(assignment);
+            assignments.add(assignment);
             return this;
         }
 
+        /**
+         * Constructs and returns a new {@link Course} instance with the attributes that have been
+         * configured using the {@code CourseBuilder}.
+         *
+         * @return a new instance of {@link Course} initialized with the builder's configured values
+         */
         public Course build() {
             return new Course(courseName, courseCode, latePenalty, instructors, students, assignments);
         }

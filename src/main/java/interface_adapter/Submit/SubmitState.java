@@ -1,7 +1,6 @@
 package interface_adapter.Submit;
 
-
-import java.awt.*;
+import java.awt.Color;
 import java.time.LocalDateTime;
 
 public class SubmitState {
@@ -12,7 +11,6 @@ public class SubmitState {
     private String assignmentName;
     private String assignmentDescription;
     private LocalDateTime dueDate;
-
     public String getMessage() {
         return message;
     }

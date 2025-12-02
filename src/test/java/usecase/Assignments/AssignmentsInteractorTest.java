@@ -59,7 +59,7 @@ class AssignmentsInteractorTest {
 
         assertEquals("CSC207", presenter.outputData.getCourseName());
 
-        List<AssignmentDTO> dtos = presenter.outputData.getAssignments();
+        List<AssignmentDataTransferObject> dtos = presenter.outputData.getAssignments();
         assertEquals(3, dtos.size());
 
         assertEquals("A_First", dtos.get(0).getName(), "Earliest DDL should be first.");
@@ -182,6 +182,10 @@ class AssignmentsInteractorTest {
             this.activeAssignmentSet = assignment;
         }
 
+
+        @Override
+        public void resetSession() {}
+
         @Override
         public List<Submission> getSubmissionList(Assignment assignment) {
             return submissions;
@@ -231,5 +235,8 @@ class AssignmentsInteractorTest {
             switchToSubmissionListViewCalled = true;
             this.outputData = outputData;
         }
+
+        @Override
+        public void switchToLoginView(AssignmentsOutputData outputData) {}
     }
 }

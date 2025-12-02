@@ -4,7 +4,6 @@ package usecase.logged_in;
 import entity.Assignment;
 import entity.Submission;
 import entity.User;
-import interface_adapter.submission_list.SubmissionTableModel;
 
 import java.util.List;
 
