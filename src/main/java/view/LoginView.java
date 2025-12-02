@@ -1,17 +1,33 @@
 package view;
 
-import interface_adapter.login.LoginController;
-import interface_adapter.login.LoginState;
-import interface_adapter.login.LoginViewModel;
-
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import org.jetbrains.annotations.NotNull;
+
+import interface_adapter.login.LoginController;
+import interface_adapter.login.LoginState;
+import interface_adapter.login.LoginViewModel;
 
 /**
  * The View for when the user is logging in to the program.
@@ -25,10 +41,10 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
     private final JPasswordField passwordInputField = new JPasswordField(24);
     private final JLabel errorField = new JLabel();
 
-    private final JButton logIn = new JButton("Log in");
+    private final JButton login = new JButton("Log in");
     private final JButton register = new JButton("Register");
     private final JButton exit = new JButton("Exit");
-    private LoginController loginController = null;
+    private LoginController loginController;
 
     public LoginView(LoginViewModel loginViewModel) {
         this.loginViewModel = loginViewModel;
@@ -38,75 +54,122 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         setBackground(new Color(242, 246, 255));
         setBorder(BorderFactory.createEmptyBorder(24, 24, 24, 24));
 
-        JPanel card = new JPanel();
+        addViewElements();
+    }
+
+    private void addViewElements() {
+        final JPanel card = new JPanel();
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+        card.setAlignmentY(Component.CENTER_ALIGNMENT);
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(210, 218, 235), 1, true),
                 BorderFactory.createEmptyBorder(24, 24, 24, 24)));
 
-        final JLabel title = new JLabel("Coursework Submission Platform");
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
-        title.setFont(new Font("Inter", Font.BOLD, 22));
-        title.setForeground(new Color(38, 50, 74));
+        final JLabel title = initTitle();
 
+        final JPanel textEntryPanel = initTextEntryPanel();
+
+        final JPanel buttons = initButtons();
+
+        final JPanel focusPanel = initFocusPanel(title, textEntryPanel, buttons);
+
+        card.add(focusPanel);
+        add(card, BorderLayout.CENTER);
+    }
+
+    @NotNull
+    private JPanel initFocusPanel(JLabel title, JPanel textEntryPanel, JPanel buttons) {
+        final JPanel focusPanel = new JPanel();
+        focusPanel.setLayout(new BoxLayout(focusPanel, BoxLayout.Y_AXIS));
+        focusPanel.setBackground(Color.LIGHT_GRAY);
+        focusPanel.setPreferredSize(new Dimension(600, 540));
+        focusPanel.setMaximumSize(new Dimension(600, 540));
+
+        focusPanel.add(Box.createVerticalStrut(24));
+        focusPanel.add(title);
+        focusPanel.add(Box.createVerticalStrut(128));
+        focusPanel.add(textEntryPanel);
+        focusPanel.add(Box.createVerticalGlue());
+        focusPanel.add(buttons);
+        return focusPanel;
+    }
+
+    @NotNull
+    private JPanel initButtons() {
+        final JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 0));
+        buttons.setOpaque(false);
+        stylePrimaryButton(login);
+        styleSecondaryButton(register);
+        styleGhostButton(exit);
+        buttons.add(login);
+        buttons.add(register);
+        buttons.add(exit);
+
+        login.addActionListener(this);
+
+        register.addActionListener(this);
+
+        exit.addActionListener(this);
+        return buttons;
+    }
+
+    @NotNull
+    private JPanel initTextEntryPanel() {
         final JPanel textEntryPanel = new JPanel();
-        textEntryPanel.setLayout(new BoxLayout(textEntryPanel, BoxLayout.Y_AXIS));
         textEntryPanel.setOpaque(false);
         textEntryPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         final LabelTextPanel usernameInfo = new LabelTextPanel(
-                new JLabel("Username"), usernameInputField);
+                new JLabel("Username "), usernameInputField);
         final LabelTextPanel passwordInfo = new LabelTextPanel(
-                new JLabel("Password"), passwordInputField);
+                new JLabel(" Password "), passwordInputField);
         errorField.setForeground(Color.RED);
         textEntryPanel.add(usernameInfo);
         textEntryPanel.add(Box.createVerticalStrut(8));
         textEntryPanel.add(passwordInfo);
         textEntryPanel.add(errorField);
 
-        textEntryPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 140));
+        usernameInputField.getDocument().addDocumentListener(usernameListener());
 
-        final JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 0));
-        buttons.setOpaque(false);
-        stylePrimaryButton(logIn);
-        styleSecondaryButton(register);
-        styleGhostButton(exit);
-        buttons.add(logIn);
-        buttons.add(register);
-        buttons.add(exit);
+        passwordInputField.getDocument().addDocumentListener(passwordListener());
 
-        logIn.addActionListener(this);
+        return textEntryPanel;
+    }
 
-        register.addActionListener(this);
+    @NotNull
+    private JLabel initTitle() {
+        final JLabel title = new JLabel("Coursework Submission Platform");
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        title.setFont(new Font("Inter", Font.BOLD, 32));
+        title.setForeground(new Color(38, 50, 74));
+        return title;
+    }
 
-        exit.addActionListener(this);
-
-        usernameInputField.getDocument().addDocumentListener(new DocumentListener() {
-
+    private DocumentListener usernameListener() {
+        return new DocumentListener() {
             private void documentListenerHelper() {
                 final LoginState currentState = loginViewModel.getState();
                 currentState.setUsername(usernameInputField.getText());
                 loginViewModel.setState(currentState);
             }
 
-            @Override
-            public void insertUpdate(DocumentEvent e) {
+            public void insertUpdate(DocumentEvent event) {
                 documentListenerHelper();
             }
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
+            public void removeUpdate(DocumentEvent event) {
                 documentListenerHelper();
             }
 
-            @Override
-            public void changedUpdate(DocumentEvent e) {
+            public void changedUpdate(DocumentEvent event) {
                 documentListenerHelper();
             }
-        });
+        };
+    }
 
-        passwordInputField.getDocument().addDocumentListener(new DocumentListener() {
+    private DocumentListener passwordListener() {
+        return new DocumentListener() {
 
             private void documentListenerHelper() {
                 final LoginState currentState = loginViewModel.getState();
@@ -114,29 +177,18 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
                 loginViewModel.setState(currentState);
             }
 
-            @Override
-            public void insertUpdate(DocumentEvent e) {
+            public void insertUpdate(DocumentEvent event) {
                 documentListenerHelper();
             }
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
+            public void removeUpdate(DocumentEvent event) {
                 documentListenerHelper();
             }
 
-            @Override
-            public void changedUpdate(DocumentEvent e) {
+            public void changedUpdate(DocumentEvent event) {
                 documentListenerHelper();
             }
-        });
-
-        card.add(title);
-        card.add(Box.createVerticalStrut(18));
-        card.add(textEntryPanel);
-        card.add(Box.createVerticalStrut(16));
-        card.add(buttons);
-
-        add(card, BorderLayout.CENTER);
+        };
     }
 
     private void stylePrimaryButton(JButton button) {
@@ -161,12 +213,12 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
     private void styleGhostButton(JButton button) {
         button.setBackground(new Color(247, 249, 252));
-        button.setForeground(new Color(96, 112, 139));
+        button.setForeground(new Color(51, 63, 87));
         button.setFocusPainted(false);
-        button.setFont(button.getFont().deriveFont(Font.PLAIN));
+        button.setFont(button.getFont().deriveFont(Font.BOLD));
         button.setPreferredSize(new Dimension(110, 32));
         button.setOpaque(true);
-        button.setBorderPainted(true);
+        button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     }
 
     /**
@@ -174,7 +226,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
      * @param evt the ActionEvent to react to
      */
     public void actionPerformed(ActionEvent evt) {
-        if (evt.getSource().equals(logIn)) {
+        if (evt.getSource().equals(login)) {
             final LoginState currentState = loginViewModel.getState();
 
             loginController.execute(

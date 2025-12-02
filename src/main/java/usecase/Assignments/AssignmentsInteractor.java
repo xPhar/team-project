@@ -77,6 +77,17 @@ public class AssignmentsInteractor implements AssignmentsInputBoundary {
         presenter.switchToSubmissionListView(outputData);
     }
 
+    @Override
+    public void switchToLoginView() {
+        String username = dataAccess.getCurrentUser().getName();
+
+        dataAccess.resetSession();
+
+        AssignmentsOutputData outputData = new AssignmentsOutputData(username);
+
+        presenter.switchToLoginView(outputData);
+    }
+
     private String[][] getSubmissionText(Assignment assignment) {
         List<Submission> submissions = dataAccess.getSubmissionList(assignment);
         String[][] submissionText = new String[submissions.size()][];

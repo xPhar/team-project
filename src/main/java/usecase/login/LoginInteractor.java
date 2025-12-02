@@ -11,6 +11,12 @@ import entity.User;
  * The Login Interactor.
  */
 public class LoginInteractor implements LoginInputBoundary {
+    private static final int ASSIGNMENT_ARRAY_COLS = 4;
+    private static final int ASSIGNMENT_NAME_COL = 0;
+    private static final int ASSIGNMENT_DUE_DATE_COL = 1;
+    private static final int SUBMISSION_GRADE_COL = 2;
+    private static final int SUBMISSION_STATUS_COL = 3;
+
     private final LoginDataAccessInterface userDataAccessObject;
     private final LoginOutputBoundary loginPresenter;
 
@@ -21,32 +27,40 @@ public class LoginInteractor implements LoginInputBoundary {
     }
 
     private LoginOutputData prepareOutputData(User user) {
-        String username = user.getName();
-        String userRole = user.getUserType() == User.INSTRUCTOR ? "instructor" : "student";
+        final String username = user.getName();
+        final String userRole;
+        if (user.getUserType() == User.INSTRUCTOR) {
+            userRole = "instructor";
+        }
+        else {
+            userRole = "student";
+        }
 
         Object[][] assignmentsArray = null;
         if (user.getUserType() == User.STUDENT) {
-            List<Assignment> assignments = userDataAccessObject.getAssignments();
+            final List<Assignment> assignments = userDataAccessObject.getAssignments();
 
-            assignmentsArray = new Object[assignments.size()][4];
+            assignmentsArray = new Object[assignments.size()][ASSIGNMENT_ARRAY_COLS];
             for (int i = 0; i < assignments.size(); i++) {
-                Assignment assignment = assignments.get(i);
+                final Assignment assignment = assignments.get(i);
 
-                assignmentsArray[i][0] = assignment.getName();
-                assignmentsArray[i][1] = assignment.getDueDate();
+                assignmentsArray[i][ASSIGNMENT_NAME_COL] = assignment.getName();
+                assignmentsArray[i][ASSIGNMENT_DUE_DATE_COL] = assignment.getDueDate();
 
-                finalSubmission submission = userDataAccessObject.getSubmission(assignment);
+                final Submission submission = userDataAccessObject.getSubmission(assignment);
                 if (submission != null) {
-                    finalSubmission.Status status = submission.getStatus();
+                    final Submission.Status status = submission.getStatus();
                     if (status == Submission.GRADED) {
-                        assignmentsArray[i][2] = Double.toString(submission.getGrade());
-                    } else {
-                        assignmentsArray[i][2] = "-";
+                        assignmentsArray[i][SUBMISSION_GRADE_COL] = Double.toString(submission.getGrade());
                     }
-                    assignmentsArray[i][3] = "✔";
-                } else {
-                    assignmentsArray[i][2] = "";
-                    assignmentsArray[i][3] = "✖";
+                    else {
+                        assignmentsArray[i][SUBMISSION_GRADE_COL] = "-";
+                    }
+                    assignmentsArray[i][SUBMISSION_STATUS_COL] = "✔";
+                }
+                else {
+                    assignmentsArray[i][SUBMISSION_GRADE_COL] = "";
+                    assignmentsArray[i][SUBMISSION_STATUS_COL] = "✖";
                 }
             }
         }
@@ -61,35 +75,34 @@ public class LoginInteractor implements LoginInputBoundary {
 
         if (username.isEmpty()) {
             loginPresenter.prepareFailView("Username cannot be empty.");
-            return;
         }
-        if (password.isEmpty()) {
+        else if (password.isEmpty()) {
             loginPresenter.prepareFailView("Password cannot be empty.");
-            return;
         }
 
-        if (!userDataAccessObject.existsByName(username)) {
+        else if (!userDataAccessObject.existsByName(username)) {
             loginPresenter.prepareFailView("Account '" + username + "' does not exist.");
-            return;
         }
 
-        final User user;
-        try {
-            user = userDataAccessObject.getUser(username);
-        } catch (DataAccessException e) {
-            loginPresenter.prepareFailView("An error has occurred, please try again.\n" +
-                    "Error message: " + e.getMessage());
-            return;
+        else {
+            try {
+                final User user;
+                user = userDataAccessObject.getUser(username);
+
+                if (!user.getPassword().equals(password)) {
+                    loginPresenter.prepareFailView("Incorrect password for \"" + username + "\".");
+                }
+                else {
+                    userDataAccessObject.setActiveUser(user);
+
+                    loginPresenter.prepareSuccessView(prepareOutputData(user));
+                }
+            }
+            catch (DataAccessException ex) {
+                loginPresenter.prepareFailView("An error has occurred, please try again.\n"
+                                             + "Error message: " + ex.getMessage());
+            }
         }
-
-        if (!user.getPassword().equals(password)) {
-            loginPresenter.prepareFailView("Incorrect password for \"" + username + "\".");
-            return;
-        }
-
-        userDataAccessObject.setActiveUser(user);
-
-        loginPresenter.prepareSuccessView(prepareOutputData(user));
     }
 
     @Override

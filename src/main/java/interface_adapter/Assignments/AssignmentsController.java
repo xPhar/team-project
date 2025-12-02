@@ -42,4 +42,8 @@ public class AssignmentsController {
     public void switchToSubmissionListView(String assignmentName) {
         interactor.switchToSubmissionListView(assignmentName);
     }
+
+    public void switchToLoginView() {
+        interactor.switchToLoginView();
+    }
 }

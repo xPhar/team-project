@@ -10,4 +10,6 @@ public interface AssignmentsInputBoundary {
     void switchToResubmitView();
 
     void switchToSubmissionListView(String assignmentName);
+
+    void switchToLoginView();
 }
