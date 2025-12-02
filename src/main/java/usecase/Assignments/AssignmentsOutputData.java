@@ -11,7 +11,7 @@ public class AssignmentsOutputData {
     private final String assignmentName;
     private final String[][] submissions;
 
-    public AssignmentsOutputData(List<AssignmentDTO> assignments, String courseName, boolean isInstructor) {
+    public AssignmentsOutputData(List<AssignmentDataTransferObject> assignments, String courseName, boolean isInstructor) {
         this.assignments = assignments;
         this.courseName = courseName;
         this.isInstructor = isInstructor;

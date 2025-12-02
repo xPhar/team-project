@@ -27,7 +27,7 @@ public interface LoggedInDataAccessInterface {
      * Gets the user type of the current user.
      * @return the user type for the current user
      */
-    User.USER_TYPE getUserType();
+    User.UserType getUserType();
 
     /**
      * Gets a list of submissions for the given assignment.

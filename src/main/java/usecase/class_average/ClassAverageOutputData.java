@@ -64,6 +64,8 @@ public class ClassAverageOutputData {
         return histogram;
     }
 
-    public String getAssignmentName() { return assignmentName; }
+    public String getAssignmentName() {
+        return assignmentName;
+    }
 }
 

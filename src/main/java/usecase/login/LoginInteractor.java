@@ -1,11 +1,11 @@
 package usecase.login;
 
+import java.util.List;
+
 import data_access.DataAccessException;
 import entity.Assignment;
 import entity.Submission;
 import entity.User;
-
-import java.util.List;
 
 /**
  * The Login Interactor.
@@ -35,9 +35,9 @@ public class LoginInteractor implements LoginInputBoundary {
                 assignmentsArray[i][0] = assignment.getName();
                 assignmentsArray[i][1] = assignment.getDueDate();
 
-                Submission submission = userDataAccessObject.getSubmission(assignment);
+                finalSubmission submission = userDataAccessObject.getSubmission(assignment);
                 if (submission != null) {
-                    Submission.Status status = submission.getStatus();
+                    finalSubmission.Status status = submission.getStatus();
                     if (status == Submission.GRADED) {
                         assignmentsArray[i][2] = Double.toString(submission.getGrade());
                     } else {

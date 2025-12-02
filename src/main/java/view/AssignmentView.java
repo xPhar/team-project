@@ -207,7 +207,6 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
         }
     }
 
-
     private void addAssignmentRow(AssignmentDTO assignment) {
         String name = (assignment.getName() != null && !assignment.getName().isEmpty())
                 ? assignment.getName()
@@ -374,11 +373,7 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
             button.setText(label);
             currentRow = row;
 
-            if ("Closed".equals(label) && !isInstructor) {
-                button.setEnabled(false);
-            } else {
-                button.setEnabled(true);
-            }
+            button.setEnabled(!"Closed".equals(label) || isInstructor);
 
             return button;
         }
