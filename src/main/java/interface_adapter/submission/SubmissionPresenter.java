@@ -1,6 +1,5 @@
 package interface_adapter.submission;
 
-import entity.Submission;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.submission_list.SubmissionListViewModel;
 import interface_adapter.submission_list.SubmissionTableModel;
@@ -8,15 +7,12 @@ import usecase.Grade.GradeOutputBoundary;
 import usecase.Submission.SubmissionOutputBoundary;
 import usecase.Submission.SubmissionOutputData;
 
-import java.time.format.DateTimeFormatter;
-
 /**
  * Presenter for the submission view.
  */
 public class SubmissionPresenter implements
         SubmissionOutputBoundary,
-        GradeOutputBoundary
-{
+        GradeOutputBoundary {
     private final SubmissionViewModel viewModel;
     private final SubmissionListViewModel submissionListViewModel;
     private final ViewManagerModel viewManagerModel;
@@ -56,7 +52,7 @@ public class SubmissionPresenter implements
 
     @Override
     public void backToSubmissionListView(SubmissionOutputData data) {
-        SubmissionTableModel tableModel = new SubmissionTableModel(data.getSubmissions());
+        final SubmissionTableModel tableModel = new SubmissionTableModel(data.getSubmissions());
         submissionListViewModel.getState().setTableModel(tableModel);
         submissionListViewModel.firePropertyChange();
         viewManagerModel.setState(submissionListViewModel.getViewName());
