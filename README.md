@@ -9,18 +9,19 @@ A desktop coursework submission and feedback application for windows system that
 3.	As a student, I want to check the class average and distribution of each assignment so that I know how good I am compared to peers.
 4.	As an instructor, I want to create assignments for students to submit and add instructions so students can submit assignments to specifications.
 5.	As an instructor, I want to edit an existing assignment so I can update instructions, deadlines, or requirements if something changes.
-6.	As a user, I want to login to the platform using existing credentials so that I can access the platform.
-7.	As a user, I want to register for an account and select whether I am a student or an instructor to gain full access to the platform.
+6.	As an instructor, I would like to view and grade the submissions, so the student can see how they did in the assignment.
+7.	As a user, I want to login to the platform using existing credentials so that I can access the platform.
+8.	As a user, I want to register for an account and select whether I am a student or an instructor to gain full access to the platform.
 
 ## MVPs
 | Lead              | Use Case                   | User Story       |
 | :---------------- | :------------------------  | :--------------- |
-| Aiden             | Login                      | User Story #6    |
+| Aiden             | Login                      | User Story #7    |
 | Gracie            | Create/Edit Assignment     | User Story #4，5 ｜  
 | Wuqingyi (Cherie) | Show Grade Average         | User Story #3    |
-| Jiazheng (Indy)   | Mark Assignment            | User Story #4    |
-| Xihang	        | Submit/Resubmit Assignment | User Story #1，2 |
-| Turkan Yagmur     | Register                   | User Story #7    |
+| Jiazheng (Indy)   | Mark Assignment            | User Story #6    |
+| Xihang	          | Submit/Resubmit Assignment | User Story #1，2 |
+| Turkan Yagmur     | Register                   | User Story #8    |
 
 ## Clean Architecture Layers
 
