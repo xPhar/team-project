@@ -1,18 +1,18 @@
 package app;
 
 import data_access.FacadeDAO;
-import interfaceadapter.Assignments.*;
-import interfaceadapter.CreateAssignment.*;
-import interfaceadapter.EditAssignment.*;
-import interfaceadapter.Resubmit.*;
-import interfaceadapter.Submit.*;
-import interfaceadapter.LoggedIn.*;
-import interfaceadapter.login.*;
-import interfaceadapter.signup.*;
-import interfaceadapter.submission.*;
-import interfaceadapter.submission_list.*;
-import interfaceadapter.ClassAverage.*;
-import interfaceadapter.ViewManagerModel;
+import interface_adapter.Assignments.*;
+import interface_adapter.CreateAssignment.*;
+import interface_adapter.EditAssignment.*;
+import interface_adapter.Resubmit.*;
+import interface_adapter.Submit.*;
+import interface_adapter.LoggedIn.*;
+import interface_adapter.login.*;
+import interface_adapter.signup.*;
+import interface_adapter.submission.*;
+import interface_adapter.submission_list.*;
+import interface_adapter.class_average.*;
+import interface_adapter.ViewManagerModel;
 import usecase.Assignments.*;
 import usecase.CreateAssignment.*;
 import usecase.EditAssignment.*;
@@ -24,7 +24,7 @@ import usecase.signup.*;
 import usecase.Grade.*;
 import usecase.Submission.*;
 import usecase.SubmissionList.*;
-import usecase.ClassAverage.*;
+import usecase.class_average.*;
 
 import view.*;
 

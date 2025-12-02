@@ -1,10 +1,10 @@
 package view;
 
 import usecase.Assignments.AssignmentDataTransferObject;
-import interfaceadapter.Assignments.AssignmentsState;
-import interfaceadapter.Assignments.AssignmentsViewModel;
-import interfaceadapter.Assignments.AssignmentsController;
-import interfaceadapter.EditAssignment.EditAssignmentController;
+import interface_adapter.Assignments.AssignmentsState;
+import interface_adapter.Assignments.AssignmentsViewModel;
+import interface_adapter.Assignments.AssignmentsController;
+import interface_adapter.EditAssignment.EditAssignmentController;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

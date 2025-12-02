@@ -22,9 +22,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import interfaceadapter.submission.SubmissionController;
-import interfaceadapter.submission.SubmissionState;
-import interfaceadapter.submission.SubmissionViewModel;
+import interface_adapter.submission.SubmissionController;
+import interface_adapter.submission.SubmissionState;
+import interface_adapter.submission.SubmissionViewModel;
 
 /**
  * Submission detail view.

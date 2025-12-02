@@ -1,8 +1,8 @@
 package view;
 
-import interfaceadapter.LoggedIn.LoggedInState;
-import interfaceadapter.LoggedIn.LoggedInViewModel;
-import interfaceadapter.LoggedIn.LoggedInController;
+import interface_adapter.LoggedIn.LoggedInState;
+import interface_adapter.LoggedIn.LoggedInViewModel;
+import interface_adapter.LoggedIn.LoggedInController;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;

@@ -25,9 +25,9 @@ import javax.swing.event.DocumentListener;
 
 import org.jetbrains.annotations.NotNull;
 
-import interfaceadapter.login.LoginController;
-import interfaceadapter.login.LoginState;
-import interfaceadapter.login.LoginViewModel;
+import interface_adapter.login.LoginController;
+import interface_adapter.login.LoginState;
+import interface_adapter.login.LoginViewModel;
 
 /**
  * The View for when the user is logging in to the program.

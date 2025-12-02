@@ -12,7 +12,7 @@ import usecase.Resubmit.ResubmitUserDataAccessInterface;
 import usecase.Submission.SubmissionDataAccessInterface;
 import usecase.SubmissionList.SubmissionListDataAccessInterface;
 import usecase.Submit.SubmitUserDataAccessInterface;
-import usecase.ClassAverage.ClassAverageUserDataAccessInterface;
+import usecase.class_average.ClassAverageUserDataAccessInterface;
 import usecase.LoggedIn.LoggedInDataAccessInterface;
 import usecase.login.LoginDataAccessInterface;
 import usecase.signup.SignupDataAccessInterface;

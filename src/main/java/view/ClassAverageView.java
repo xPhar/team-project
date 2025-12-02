@@ -14,10 +14,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import interfaceadapter.ClassAverage.ClassAverageController;
-import interfaceadapter.ClassAverage.ClassAverageState;
-import interfaceadapter.ClassAverage.ClassAverageViewModel;
-import interfaceadapter.LoggedIn.LoggedInController;
+import interface_adapter.class_average.ClassAverageController;
+import interface_adapter.class_average.ClassAverageState;
+import interface_adapter.class_average.ClassAverageViewModel;
+import interface_adapter.LoggedIn.LoggedInController;
 
 /**
  * View for showing class average and grade distribution of an assignment.
