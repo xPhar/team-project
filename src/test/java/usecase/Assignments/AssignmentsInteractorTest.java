@@ -186,6 +186,11 @@ class AssignmentsInteractorTest {
         public List<Submission> getSubmissionList(Assignment assignment) {
             return submissions;
         }
+
+        @Override
+        public void resetSession() {
+            activeAssignmentSet = null;
+        }
     }
 
     static class TestAssignmentsPresenter implements AssignmentsOutputBoundary {
@@ -195,6 +200,7 @@ class AssignmentsInteractorTest {
         boolean switchToSubmitViewCalled = false;
         boolean switchToResubmitViewCalled = false;
         boolean switchToSubmissionListViewCalled = false;
+        boolean switchToLoginViewCalled = false;
 
         String failMessage;
         AssignmentsOutputData outputData;
@@ -229,6 +235,12 @@ class AssignmentsInteractorTest {
         @Override
         public void switchToSubmissionListView(AssignmentsOutputData outputData) {
             switchToSubmissionListViewCalled = true;
+            this.outputData = outputData;
+        }
+
+        @Override
+        public void switchToLoginView(AssignmentsOutputData outputData) {
+            switchToLoginViewCalled = true;
             this.outputData = outputData;
         }
     }

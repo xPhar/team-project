@@ -1,9 +1,6 @@
 package usecase.EditAssignment;
 
 import entity.Assignment;
-import usecase.Assignments.AssignmentsInputBoundary;
-import usecase.Assignments.AssignmentsInputData;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
@@ -79,23 +76,6 @@ class EditAssignmentInteractorTest {
         assertEquals("Assignment not found in database.", presenter.failMessage);
 
         assertFalse(presenter.successCalled);
-    }
-
-    static class TestAssignmentsInputBoundary implements AssignmentsInputBoundary {
-        public boolean executeCalled = false;
-        @Override
-        public void execute(AssignmentsInputData inputData) {
-            executeCalled = true;
-        }
-
-        @Override
-        public void switchToCreateAssignmentView() {}
-        @Override
-        public void switchToSubmitView() {}
-        @Override
-        public void switchToResubmitView() {}
-        @Override
-        public void switchToSubmissionListView(String assignmentName) {}
     }
 
     static class TestEditAssignmentDAO implements EditAssignmentDataAccessInterface {

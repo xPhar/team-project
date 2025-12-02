@@ -1,9 +1,6 @@
 package usecase.CreateAssignment;
 
 import entity.Assignment;
-import usecase.Assignments.AssignmentsInputBoundary;
-import usecase.Assignments.AssignmentsInputData;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
@@ -15,7 +12,6 @@ class CreateAssignmentInteractorTest {
 
     private TestCreateAssignmentDAO dataAccess;
     private TestCreateAssignmentPresenter presenter;
-    private TestAssignmentsInputBoundary assignmentsBoundary;
     private CreateAssignmentInteractor interactor;
 
 
@@ -23,7 +19,6 @@ class CreateAssignmentInteractorTest {
     void setup() {
         dataAccess = new TestCreateAssignmentDAO();
         presenter = new TestCreateAssignmentPresenter();
-        assignmentsBoundary = new TestAssignmentsInputBoundary();
         interactor = new CreateAssignmentInteractor(dataAccess, presenter);
     }
 
@@ -70,7 +65,6 @@ class CreateAssignmentInteractorTest {
         assertEquals("Assignment name cannot be empty.", presenter.failMessage);
 
         assertFalse(dataAccess.saveCalled, "DAO save should NOT be called.");
-        assertFalse(assignmentsBoundary.executeCalled, "Assignments refresh should NOT be called.");
     }
 
     @Test
@@ -99,30 +93,6 @@ class CreateAssignmentInteractorTest {
     void testSwitchToAssignmentView() {
         interactor.switchToAssignmentView();
         assertTrue(presenter.switchToAssignmentViewCalled, "Presenter's switch view method should be called.");
-    }
-
-    static class TestAssignmentsInputBoundary implements AssignmentsInputBoundary {
-        public boolean executeCalled = false;
-        @Override
-        public void execute(AssignmentsInputData inputData) {
-            executeCalled = true;
-        }
-
-        @Override
-        public void switchToCreateAssignmentView() {
-        }
-
-        @Override
-        public void switchToSubmitView() {
-        }
-
-        @Override
-        public void switchToResubmitView() {
-        }
-
-        @Override
-        public void switchToSubmissionListView(String assignmentName) {
-        }
     }
 
     static class TestCreateAssignmentDAO implements CreateAssignmentDataAccessInterface {
