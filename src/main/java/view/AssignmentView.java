@@ -26,6 +26,7 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
     private final DefaultTableModel tableModel;
     private final JTable table;
     private final JButton newAssignmentButton;
+    private final JButton logOutButton;
     private final JLabel courseLabel;
     private final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm");
     private final JLabel errorLabel = new JLabel("");
@@ -135,11 +136,17 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
         newAssignmentButton = new JButton("Create Assignment");
         stylePrimaryButton(newAssignmentButton);
 
+        logOutButton = new JButton("Log Out");
+        styleSecondaryButton(logOutButton);
+
+        bottom.add(logOutButton);
+        bottom.add(Box.createHorizontalGlue());
         bottom.add(newAssignmentButton);
         add(bottom, BorderLayout.SOUTH);
 
         // Add listener for Create New Assignment button
         newAssignmentButton.addActionListener(e -> handleCreateAssignment());
+        logOutButton.addActionListener(e -> handleLogout());
 
         // Add listener for the table row to switch to submission list view
         table.addMouseListener(new MouseAdapter() {
@@ -160,6 +167,17 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
         btn.setForeground(Color.WHITE);
         btn.setBackground(PRIMARY_COLOR);
         btn.setBorder(new EmptyBorder(10, 20, 10, 20));
+        btn.setFocusPainted(false);
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    }
+
+    private void styleSecondaryButton(JButton btn) {
+        btn.setFont(BUTTON_FONT);
+        btn.setForeground(Color.DARK_GRAY);
+        btn.setBackground(Color.WHITE);
+        btn.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.DARK_GRAY, 2),
+                new EmptyBorder(8, 18, 8, 18)));
         btn.setFocusPainted(false);
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
@@ -275,6 +293,12 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
     private void handleCreateAssignment() {
         if (assignmentsController != null) {
             assignmentsController.switchToCreateAssignmentView();
+        }
+    }
+
+    private void handleLogout() {
+        if (assignmentsController != null) {
+            assignmentsController.switchToLoginView();
         }
     }
 

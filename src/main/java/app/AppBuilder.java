@@ -256,7 +256,7 @@ public class AppBuilder {
 
     public AppBuilder addAssignmentsUseCase() {
         final AssignmentsOutputBoundary assignmentsOutputBoundary = new AssignmentsPresenter(
-                assignmentsViewModel, viewManagerModel, submissionListViewModel);
+                assignmentsViewModel, viewManagerModel, submissionListViewModel, loginViewModel);
         final AssignmentsInputBoundary assignmentsInteractor = new AssignmentsInteractor(
                 userDataAccessObject, assignmentsOutputBoundary);
 

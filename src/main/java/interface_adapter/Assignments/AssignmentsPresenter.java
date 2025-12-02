@@ -1,6 +1,8 @@
 package interface_adapter.Assignments;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.login.LoginState;
+import interface_adapter.login.LoginViewModel;
 import interface_adapter.submission_list.SubmissionListState;
 import interface_adapter.submission_list.SubmissionListViewModel;
 import interface_adapter.submission_list.SubmissionTableModel;
@@ -11,15 +13,18 @@ public class AssignmentsPresenter implements AssignmentsOutputBoundary {
     private final AssignmentsViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
     private final SubmissionListViewModel submissionListViewModel;
+    private final LoginViewModel loginViewModel;
 
     public AssignmentsPresenter(
             AssignmentsViewModel viewModel,
             ViewManagerModel viewManagerModel,
-            SubmissionListViewModel submissionListViewModel
+            SubmissionListViewModel submissionListViewModel,
+            LoginViewModel loginViewModel
     ) {
         this.viewModel = viewModel;
         this.viewManagerModel = viewManagerModel;
         this.submissionListViewModel = submissionListViewModel;
+        this.loginViewModel = loginViewModel;
     }
 
     @Override
@@ -69,6 +74,16 @@ public class AssignmentsPresenter implements AssignmentsOutputBoundary {
         submissionListViewModel.firePropertyChange();
 
         viewManagerModel.setState(submissionListViewModel.getViewName());
+        viewManagerModel.firePropertyChange();
+    }
+
+    @Override
+    public void switchToLoginView(AssignmentsOutputData outputData) {
+        final LoginState loginState = loginViewModel.getState();
+        loginState.setUsername(outputData.getUsername());
+        loginViewModel.firePropertyChange();
+
+        viewManagerModel.setState(loginViewModel.getViewName());
         viewManagerModel.firePropertyChange();
     }
 }

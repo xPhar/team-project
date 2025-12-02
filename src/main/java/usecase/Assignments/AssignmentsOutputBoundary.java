@@ -12,4 +12,6 @@ public interface AssignmentsOutputBoundary {
     void switchToResubmitView();
 
     void switchToSubmissionListView(AssignmentsOutputData outputData);
+
+    void switchToLoginView(AssignmentsOutputData outputData);
 }
