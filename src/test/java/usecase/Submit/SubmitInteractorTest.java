@@ -2,12 +2,12 @@ package usecase.Submit;
 
 import data_access.FakeUserDataAccessObject;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 class SubmitInteractorTest {
 
@@ -133,5 +133,35 @@ class SubmitInteractorTest {
 
         SubmitInputBoundary interactor = new SubmitInteractor(fakeDAO, presenter);
         interactor.execute(inputData);
+    }
+
+    @Test
+    void backCase() {
+        SubmitUserDataAccessInterface fakeDAO = new FakeUserDataAccessObject(false, true);
+
+        final SubmitInputBoundary interactor = getSubmitInputBoundary(fakeDAO);
+        interactor.backToLoggedInView();
+
+    }
+
+    @NotNull
+    private SubmitInputBoundary getSubmitInputBoundary(SubmitUserDataAccessInterface fakeDAO) {
+        SubmitOutputBoundary presenter = new SubmitOutputBoundary() {
+            @Override
+            public void prepareSuccessView(SubmitOutputData pack) {
+                fail(FailMsg);
+            }
+
+            @Override
+            public void prepareFailureView(SubmitOutputData pack) {
+                fail(FailMsg);
+            }
+
+            @Override
+            public void switchToLoggedInView() {
+            assertTrue(true);}
+        };
+
+        return new SubmitInteractor(fakeDAO, presenter);
     }
 }

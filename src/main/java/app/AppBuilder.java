@@ -269,13 +269,8 @@ public class AppBuilder {
         final CreateAssignmentOutputBoundary createAssignmentOutputBoundary = new CreateAssignmentPresenter(
                 createAssignmentViewModel, assignmentsViewModel, viewManagerModel);
 
-        final AssignmentsOutputBoundary assignmentsOutputBoundary = new AssignmentsPresenter(
-                assignmentsViewModel, viewManagerModel, submissionListViewModel, loginViewModel);
-        final AssignmentsInputBoundary assignmentsInteractor = new AssignmentsInteractor(
-                userDataAccessObject, assignmentsOutputBoundary);
-
         final CreateAssignmentInputBoundary createAssignmentInteractor = new CreateAssignmentInteractor(
-                userDataAccessObject, createAssignmentOutputBoundary, assignmentsInteractor);
+                userDataAccessObject, createAssignmentOutputBoundary);
 
         CreateAssignmentController createAssignmentController = new CreateAssignmentController(
                 createAssignmentInteractor);
@@ -287,13 +282,8 @@ public class AppBuilder {
         final EditAssignmentOutputBoundary editAssignmentOutputBoundary = new EditAssignmentPresenter(
                 editAssignmentViewModel, assignmentsViewModel, viewManagerModel);
 
-        final AssignmentsOutputBoundary assignmentsOutputBoundary = new AssignmentsPresenter(
-                assignmentsViewModel, viewManagerModel, submissionListViewModel, loginViewModel);
-        final AssignmentsInputBoundary assignmentsInteractor = new AssignmentsInteractor(
-                userDataAccessObject, assignmentsOutputBoundary);
-
         final EditAssignmentInputBoundary editAssignmentInteractor = new EditAssignmentInteractor(
-                userDataAccessObject, editAssignmentOutputBoundary, assignmentsInteractor);
+                userDataAccessObject, editAssignmentOutputBoundary);
 
         EditAssignmentController editAssignmentController = new EditAssignmentController(
                 editAssignmentInteractor, viewManagerModel, assignmentsViewModel, editAssignmentViewModel);
