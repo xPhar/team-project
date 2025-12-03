@@ -1,43 +1,43 @@
 package app;
 
+import java.awt.*;
+
+import javax.swing.*;
+
 import data_access.FacadeDAO;
+import interface_adapter.ViewManagerModel;
 import interface_adapter.assignments.*;
+import interface_adapter.class_average.*;
 import interface_adapter.create_assignment.*;
 import interface_adapter.edit_assignment.*;
-import interface_adapter.resubmit.*;
-import interface_adapter.submit.*;
 import interface_adapter.logged_in.*;
 import interface_adapter.login.*;
+import interface_adapter.resubmit.*;
 import interface_adapter.signup.*;
 import interface_adapter.submission.*;
 import interface_adapter.submission_list.*;
-import interface_adapter.class_average.*;
-import interface_adapter.ViewManagerModel;
+import interface_adapter.submit.*;
 import usecase.assignments.*;
+import usecase.class_average.*;
 import usecase.create_assignment.*;
 import usecase.edit_assignment.*;
-import usecase.resubmit.*;
-import usecase.submit.*;
+import usecase.grade.*;
 import usecase.logged_in.*;
 import usecase.login.*;
+import usecase.resubmit.*;
 import usecase.signup.*;
-import usecase.grade.*;
 import usecase.submission.*;
 import usecase.submission_list.*;
-import usecase.class_average.*;
-
+import usecase.submit.*;
 import view.*;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class AppBuilder {
 
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
 
-    final ViewManagerModel viewManagerModel = new ViewManagerModel();
-    ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
+    private final ViewManagerModel viewManagerModel = new ViewManagerModel();
+    private ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
     private final FacadeDAO userDataAccessObject = new FacadeDAO();
 
