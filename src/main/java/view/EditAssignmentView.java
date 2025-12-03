@@ -1,8 +1,8 @@
 package view;
 
-import interface_adapter.EditAssignment.EditAssignmentController;
-import interface_adapter.EditAssignment.EditAssignmentState;
-import interface_adapter.EditAssignment.EditAssignmentViewModel;
+import interface_adapter.edit_assignment.EditAssignmentController;
+import interface_adapter.edit_assignment.EditAssignmentState;
+import interface_adapter.edit_assignment.EditAssignmentViewModel;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;

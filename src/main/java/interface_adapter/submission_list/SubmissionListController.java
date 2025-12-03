@@ -1,7 +1,7 @@
 package interface_adapter.submission_list;
 
-import usecase.SubmissionList.SubmissionListInputBoundary;
-import usecase.SubmissionList.SubmissionListInputData;
+import usecase.submission_list.SubmissionListInputBoundary;
+import usecase.submission_list.SubmissionListInputData;
 
 /**
  * Submission list view related use case.
@@ -14,13 +14,22 @@ public class SubmissionListController {
         this.submissionListInputBoundary = submissionInputBoundary;
     }
 
+    /**
+     * Choose a submission.
+     * @param submitter the submitter of the submission.
+     * @param assignmentName The assignment name.
+     */
     public void executeChooseSubmission(String submitter, String assignmentName) {
-        SubmissionListInputData data = new SubmissionListInputData(false, submitter, assignmentName);
+        final SubmissionListInputData data = new SubmissionListInputData(false, submitter, assignmentName);
         submissionListInputBoundary.execute(data);
     }
 
+    /**
+     * Go back to assignment.
+     */
     public void executeBack() {
-        SubmissionListInputData data = new SubmissionListInputData(true,"", "");
+        final SubmissionListInputData data =
+                new SubmissionListInputData(true, "", "");
         submissionListInputBoundary.execute(data);
     }
 }

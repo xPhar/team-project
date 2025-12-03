@@ -4,13 +4,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class Assignment {
-    private String name;
-    private String description;
+    private final String name;
+    private final String description;
     private LocalDateTime creationDate;
-    private LocalDateTime dueDate;
-    private double gracePeriod;
-    private String latePenalty;
-    private List<String> supportedFileTypes;
+    private final LocalDateTime dueDate;
+    private final double gracePeriod;
+    private final String latePenalty;
+    private final List<String> supportedFileTypes;
 
     public Assignment(String name, String description, LocalDateTime creationDate, LocalDateTime dueDate,
                       double gracePeriod, String latePenalty, List<String> supportedFileTypes) {
@@ -57,10 +57,22 @@ public class Assignment {
         return supportedFileTypes;
     }
 
+    /**
+     * Creates a new instance of the AssignmentBuilder, which can be used to construct
+     * an Assignment object with specified properties.
+     *
+     * @return a new instance of AssignmentBuilder
+     */
     public static AssignmentBuilder builder() {
         return new AssignmentBuilder();
     }
 
+    /**
+     * A builder class for creating instances of the Assignment class. This builder allows
+     * step-by-step specification of properties such as the assignment's name, description,
+     * creation date, due date, grace period, and supported file types before constructing
+     * the final Assignment object.
+     */
     public static class AssignmentBuilder {
         private String name;
         private String description;
@@ -70,43 +82,95 @@ public class Assignment {
         private String latePenalty;
         private List<String> supportedFileTypes;
 
-        AssignmentBuilder() {}
+        AssignmentBuilder() {
+        }
 
-        public AssignmentBuilder name(String name) {
-            this.name = name;
+        /**
+         * Sets the name of the assignment to be built.
+         *
+         * @param newName the name of the assignment to be built
+         * @return the builder instance for method chaining
+         */
+        public AssignmentBuilder name(String newName) {
+            name = newName;
             return this;
         }
 
-        public AssignmentBuilder description(String description) {
-            this.description = description;
+        /**
+         * Sets the description of the assignment to be built.
+         *
+         * @param newDescription the description of the assignment to be built
+         * @return the builder instance for method chaining
+         */
+        public AssignmentBuilder description(String newDescription) {
+            description = newDescription;
             return this;
         }
 
-        public AssignmentBuilder creationDate(LocalDateTime creationDate) {
-            this.creationDate = creationDate;
+        /**
+         * Sets the creation date of the assignment to be built.
+         *
+         * @param newCreationDate the creation date of the assignment to be built
+         * @return the builder instance for method chaining
+         */
+        public AssignmentBuilder creationDate(LocalDateTime newCreationDate) {
+            creationDate = newCreationDate;
             return this;
         }
 
-        public AssignmentBuilder dueDate(LocalDateTime dueDate) {
-            this.dueDate = dueDate;
+        /**
+         * Sets the due date for the assignment being built.
+         *
+         * @param newDueDate the due date of the assignment to be built
+         * @return the builder instance for method chaining
+         */
+        public AssignmentBuilder dueDate(LocalDateTime newDueDate) {
+            dueDate = newDueDate;
             return this;
         }
 
-        public AssignmentBuilder gracePeriod(double gracePeriod) {
-            this.gracePeriod = gracePeriod;
+        /**
+         * Sets the grace period for the assignment being built.
+         *
+         * @param newGracePeriod the grace period (in days) to allow after the due date
+         *                       for submitting the assignment without penalty
+         * @return the builder instance for method chaining
+         */
+        public AssignmentBuilder gracePeriod(double newGracePeriod) {
+            gracePeriod = newGracePeriod;
             return this;
         }
 
-        public AssignmentBuilder latePenalty(String latePenalty) {
-            this.latePenalty = latePenalty;
+        /**
+         * Sets the late penalty policy for the assignment being built.
+         *
+         * @param LatePenalty a description of how late submissions are penalized
+         *                    (e.g., "10% per day", "no late submissions allowed").
+         * @return this builder instance, to allow method chaining
+         */
+        public AssignmentBuilder latePenalty(String LatePenalty) {
+            this.latePenalty = LatePenalty;
             return this;
         }
 
-        public AssignmentBuilder supportedFileTypes(List<String> supportedFileTypes) {
-            this.supportedFileTypes = supportedFileTypes;
+        /**
+         * Sets the supported file types for the assignment being built.
+         *
+         * @param SupportedFileTypes the list of supported file types for the assignment
+         * @return the builder instance for method chaining
+         */
+        public AssignmentBuilder supportedFileTypes(List<String> SupportedFileTypes) {
+            this.supportedFileTypes = SupportedFileTypes;
             return this;
         }
 
+        /**
+         * Builds and returns a new instance of the Assignment class using the properties
+         * set in the AssignmentBuilder.
+         *
+         * @return a new Assignment instance with the specified name, description,
+         *      creation date, due date, grace period, and supported file types
+         */
         public Assignment build() {
             return new Assignment(
                     this.name,

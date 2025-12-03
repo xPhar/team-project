@@ -1,8 +1,8 @@
 package view;
 
-import interface_adapter.Submit.SubmitController;
-import interface_adapter.Submit.SubmitState;
-import interface_adapter.Submit.SubmitViewModel;
+import interface_adapter.submit.SubmitController;
+import interface_adapter.submit.SubmitState;
+import interface_adapter.submit.SubmitViewModel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

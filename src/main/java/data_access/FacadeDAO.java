@@ -1,29 +1,29 @@
 package data_access;
 
-import entity.*;
-import interface_adapter.submission_list.SubmissionTableModel;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import usecase.Assignments.AssignmentsDataAccessInterface;
-import usecase.CreateAssignment.CreateAssignmentDataAccessInterface;
-import usecase.EditAssignment.EditAssignmentDataAccessInterface;
-import usecase.Grade.GradeDataAccessInterface;
-import usecase.Resubmit.ResubmitUserDataAccessInterface;
-import usecase.Submission.SubmissionDataAccessInterface;
-import usecase.SubmissionList.SubmissionListDataAccessInterface;
-import usecase.Submit.SubmitUserDataAccessInterface;
-import usecase.class_average.ClassAverageUserDataAccessInterface;
-import usecase.logged_in.LoggedInDataAccessInterface;
-import usecase.login.LoginDataAccessInterface;
-import usecase.signup.SignupDataAccessInterface;
-
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import entity.*;
+import usecase.assignments.AssignmentsDataAccessInterface;
+import usecase.class_average.ClassAverageUserDataAccessInterface;
+import usecase.create_assignment.CreateAssignmentDataAccessInterface;
+import usecase.edit_assignment.EditAssignmentDataAccessInterface;
+import usecase.grade.GradeDataAccessInterface;
+import usecase.logged_in.LoggedInDataAccessInterface;
+import usecase.login.LoginDataAccessInterface;
+import usecase.resubmit.ResubmitUserDataAccessInterface;
+import usecase.signup.SignupDataAccessInterface;
+import usecase.submission.SubmissionDataAccessInterface;
+import usecase.submission_list.SubmissionListDataAccessInterface;
+import usecase.submit.SubmitUserDataAccessInterface;
 
 public class FacadeDAO implements
         LoginDataAccessInterface,
@@ -38,14 +38,23 @@ public class FacadeDAO implements
         AssignmentsDataAccessInterface,
         CreateAssignmentDataAccessInterface,
         EditAssignmentDataAccessInterface {
-    private final FileToStringDataAccessObject fsDA;
+    private static final String COURSE_CODE = "course-course-CSC207";
+    private static final String COURSE_PASSWORD = "COURSE";
+    private static final String COURSE_DATA = "courseData";
+    private static final String ASSIGNMENTS = "assignments";
+    private static final String SUBMISSIONS = "submissions";
+    private static final String SUBMITTED_AT = "submittedAt";
+    private static final String FILE_NAME = "fileName";
+    private static final String FILE_DATA = "fileData";
+    private static final String STATUS = "status";
+    private static final String FEEDBACK = "feedback";
+    private static final String GRADE = "grade";
+    private static final String TYPE = "type";
+
     private final GradeAPIDataAccessObject gradeDA;
     private final SessionDataAccessObject sessionDA;
 
-    private final String COURSE_PASSWORD = "COURSE";
-
     public FacadeDAO() {
-        this.fsDA = new FileToStringDataAccessObject();
         this.gradeDA = new GradeAPIDataAccessObject();
         this.sessionDA = new SessionDataAccessObject();
     }
@@ -53,41 +62,42 @@ public class FacadeDAO implements
     private String getCourseUserName(Course course) {
         return course.getCourseName();
     }
+
     private String getCourseUserName() {
-        return "course-course-CSC207";
+        return COURSE_CODE;
     }
 
     // Submit
     @Override
     public void submit(File studentFile)
-            throws IOException
-    {
-        User student = sessionDA.getUser();
-        Assignment assignment = sessionDA.getAssignment();
-        Course course = sessionDA.getCourse();
+            throws IOException {
+        final User student = sessionDA.getUser();
+        final Assignment assignment = sessionDA.getAssignment();
+        final Course course = sessionDA.getCourse();
 
-        Submission.SubmissionBuilder builder = Submission.getBuilder();
+        final Submission.SubmissionBuilder builder = Submission.getBuilder();
 
         builder.submitter(student.getName())
                 .submissionTime(LocalDateTime.now())
                 .submissionName(studentFile.getName())
-                .submissionData(fsDA.readFileToString(studentFile))
+                .submissionData(FileToStringDataAccessObject.readFileToString(studentFile))
                 .feedback("");
         if (assignment.getDueDate().isBefore(LocalDateTime.now())) {
             builder.status(Submission.Status.LATE);
-        } else {
+        }
+        else {
             builder.status(Submission.Status.ON_TIME);
         }
 
-        Submission submission = builder.build();
+        final Submission submission = builder.build();
 
-        JSONObject submissionJSON = submissionToJSON(submission);
+        final JSONObject submissionJSON = submissionToJSON(submission);
 
-        JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
-        JSONObject courseData = courseObject.getJSONObject("courseData");
-        JSONObject assignmentDictionary = courseData.getJSONObject("assignments");
-        JSONObject assignmentObject = assignmentDictionary.getJSONObject(assignment.getName());
-        JSONObject submissionArray = assignmentObject.getJSONObject("submissions");
+        final JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
+        final JSONObject courseData = courseObject.getJSONObject(COURSE_DATA);
+        final JSONObject assignmentDictionary = courseData.getJSONObject(ASSIGNMENTS);
+        final JSONObject assignmentObject = assignmentDictionary.getJSONObject(assignment.getName());
+        final JSONObject submissionArray = assignmentObject.getJSONObject(SUBMISSIONS);
 
         submissionArray.put(submission.getSubmitter(), submissionJSON);
 
@@ -100,38 +110,38 @@ public class FacadeDAO implements
     }
 
     private JSONObject submissionToJSON(Submission submission) {
-        JSONObject jobj = new JSONObject();
-        jobj.put("submittedAt", submission.getSubmissionTime().toString());
-        jobj.put("fileName", submission.getSubmissionName());
-        jobj.put("fileData", submission.getSubmissionData());
-        jobj.put("status", submission.getStatus().toString());
-        jobj.put("feedback", submission.getFeedback());
-        jobj.put("grade",  submission.getGrade());
+        final JSONObject jobj = new JSONObject();
+        jobj.put(SUBMITTED_AT, submission.getSubmissionTime().toString());
+        jobj.put(FILE_NAME, submission.getSubmissionName());
+        jobj.put(FILE_DATA, submission.getSubmissionData());
+        jobj.put(STATUS, submission.getStatus().toString());
+        jobj.put(FEEDBACK, submission.getFeedback());
+        jobj.put(GRADE, submission.getGrade());
 
         return jobj;
     }
 
     // Average
     public List<Submission> getSubmissionsFor(String assignmentName) {
-        ArrayList<Submission> submissions = new ArrayList<>();
+        final ArrayList<Submission> submissions = new ArrayList<>();
 
         JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName());
-        courseObject = courseObject.getJSONObject("courseData");
-        JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
-        JSONObject assignmentObject = assignmentDictionary.getJSONObject(assignmentName);
-        JSONObject submissionArray = assignmentObject.getJSONObject("submissions");
-        Iterator<String> keys = submissionArray.keys();
+        courseObject = courseObject.getJSONObject(COURSE_DATA);
+        final JSONObject assignmentDictionary = courseObject.getJSONObject(ASSIGNMENTS);
+        final JSONObject assignmentObject = assignmentDictionary.getJSONObject(assignmentName);
+        final JSONObject submissionArray = assignmentObject.getJSONObject(SUBMISSIONS);
+        final Iterator<String> keys = submissionArray.keys();
         while (keys.hasNext()) {
-            Submission.SubmissionBuilder builder = Submission.getBuilder();
-            String submitter = keys.next();
-            JSONObject submissionObj = submissionArray.getJSONObject(submitter);
+            final Submission.SubmissionBuilder builder = Submission.getBuilder();
+            final String submitter = keys.next();
+            final JSONObject submissionObj = submissionArray.getJSONObject(submitter);
             builder.submitter(submitter)
-                    .submissionTime(LocalDateTime.parse(submissionObj.getString("submittedAt")))
-                    .submissionName(submissionObj.getString("fileName"))
-                    .submissionData(submissionObj.getString("fileData"))
-                    .status(Submission.Status.valueOf(submissionObj.getString("status").toUpperCase()))
-                    .grade(submissionObj.getDouble("grade"))
-                    .feedback(submissionObj.getString("feedback"));
+                    .submissionTime(LocalDateTime.parse(submissionObj.getString(SUBMITTED_AT)))
+                    .submissionName(submissionObj.getString(FILE_NAME))
+                    .submissionData(submissionObj.getString(FILE_DATA))
+                    .status(Submission.Status.valueOf(submissionObj.getString(STATUS).toUpperCase()))
+                    .grade(submissionObj.getDouble(GRADE))
+                    .feedback(submissionObj.getString(FEEDBACK));
 
             submissions.add(builder.build());
         }
@@ -141,10 +151,10 @@ public class FacadeDAO implements
 
     public List<String> getAllAssignmentNames() {
         JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName());
-        courseObject = courseObject.getJSONObject("courseData");
-        JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
-        Iterator<String> keyIt = assignmentDictionary.keys();
-        ArrayList<String> assignmentNames = new ArrayList<>();
+        courseObject = courseObject.getJSONObject(COURSE_DATA);
+        final JSONObject assignmentDictionary = courseObject.getJSONObject(ASSIGNMENTS);
+        final Iterator<String> keyIt = assignmentDictionary.keys();
+        final ArrayList<String> assignmentNames = new ArrayList<>();
         while (keyIt.hasNext()) {
             assignmentNames.add(keyIt.next());
         }
@@ -154,13 +164,13 @@ public class FacadeDAO implements
 
     public double getMyScore(String assignmentName, String username) {
         JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName());
-        courseObject = courseObject.getJSONObject("courseData");
-        JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
-        JSONObject assignmentObject = assignmentDictionary.getJSONObject(assignmentName);
-        JSONObject submissionObject = assignmentObject.getJSONObject("submissions");
+        courseObject = courseObject.getJSONObject(COURSE_DATA);
+        final JSONObject assignmentDictionary = courseObject.getJSONObject(ASSIGNMENTS);
+        final JSONObject assignmentObject = assignmentDictionary.getJSONObject(assignmentName);
+        final JSONObject submissionObject = assignmentObject.getJSONObject(SUBMISSIONS);
         if (submissionObject.has(username)) {
-            JSONObject submissionObj = submissionObject.getJSONObject(username);
-            return submissionObj.getDouble("grade");
+            final JSONObject submissionObj = submissionObject.getJSONObject(username);
+            return submissionObj.getDouble(GRADE);
         }
         // If the student didn't have a submission, we'll assume they're given a 0
         // (we don't have a way to manually add grades for students, feels a bit outside our scope)
@@ -180,19 +190,19 @@ public class FacadeDAO implements
         gradeDA.createUser(user.getName(), user.getPassword());
 
         // Update user and course data to enroll them into the default course
-        enrollUser(user, "course-course-CSC207");
+        enrollUser(user, COURSE_CODE);
     }
 
     private void enrollUser(User user, String course) {
         user.getCourses().add(course);
 
         // Save user to DB
-        JSONObject info = userToJSON(user);
+        final JSONObject info = userToJSON(user);
         gradeDA.modifyUserInfoEndpoint(user.getName(), user.getPassword(), info);
 
         // Update course list
-        JSONObject courseInfo = gradeDA.getUserInfo(course);
-        JSONObject courseData = courseInfo.getJSONObject("courseData");
+        final JSONObject courseInfo = gradeDA.getUserInfo(course);
+        final JSONObject courseData = courseInfo.getJSONObject(COURSE_DATA);
         if (user.getUserType() == User.INSTRUCTOR) {
             courseData.getJSONArray("instructors").put(user.getName());
         }
@@ -204,7 +214,7 @@ public class FacadeDAO implements
     }
 
     private JSONObject userToJSON(User user) {
-        String userType;
+        final String userType;
         if (user.getUserType() == User.STUDENT) {
             userType = "student";
         }
@@ -212,10 +222,10 @@ public class FacadeDAO implements
             userType = "instructor";
         }
 
-        JSONObject info = new JSONObject();
-        info.put("type", userType);
+        final JSONObject info = new JSONObject();
+        info.put(TYPE, userType);
 
-        JSONObject userData = new JSONObject();
+        final JSONObject userData = new JSONObject();
         userData.put("firstName", user.getFirstName());
         userData.put("lastName", user.getLastName());
         userData.put("courses", user.getCourses());
@@ -228,22 +238,23 @@ public class FacadeDAO implements
     public User getUser(String username) throws DataAccessException {
         // Get the whole object first to allow us to get their password
         JSONObject userObj = gradeDA.getUserObject(username);
-        String password = userObj.getString("password");
-        String userType;
+        final String password = userObj.getString("password");
+        final String userType;
         try {
             // Everything else we need is in the info object
             userObj = userObj.getJSONObject("info");
-            userType =  userObj.getString("type").toUpperCase();
+            userType = userObj.getString(TYPE).toUpperCase();
             // The rest of the info is in the userData object... in hindsight we don't really need this anymore... :|
             userObj = userObj.getJSONObject("userData");
-        } catch (JSONException e) {
+        }
+        catch (JSONException ex) {
             throw new DataAccessException("User data is mangled. Please try a different account.");
         }
-        String firstName = userObj.getString("firstName");
-        String lastName = userObj.getString("lastName");
+        final String firstName = userObj.getString("firstName");
+        final String lastName = userObj.getString("lastName");
 
-        JSONArray courseList = userObj.getJSONArray("courses");
-        ArrayList<String> courses = new ArrayList<>();
+        final JSONArray courseList = userObj.getJSONArray("courses");
+        final ArrayList<String> courses = new ArrayList<>();
         for (int i = 0; i < courseList.length(); i++) {
             courses.add(courseList.getString(i));
         }
@@ -252,15 +263,15 @@ public class FacadeDAO implements
                 password,
                 firstName,
                 lastName,
-                User.USER_TYPE.valueOf(userType),
+                User.UserType.valueOf(userType),
                 courses
         );
     }
 
     @Override
     public Submission getSubmission(Assignment assignment) {
-        String user = getCurrentUsername();
-        List<Submission> submissions = getSubmissionList(assignment.getName());
+        final String user = getCurrentUsername();
+        final List<Submission> submissions = getSubmissionList(assignment.getName());
         for (Submission submission : submissions) {
             if (submission.getSubmitter().equals(user)) {
                 return submission;
@@ -277,39 +288,38 @@ public class FacadeDAO implements
     public void setActiveUser(User user) {
         sessionDA.setUser(user);
 
-        // TODO: Implement course selecting if we get time
         // Since we're currently going under the assumption of a single course, make that course active as well
-        sessionDA.setCourse(getCourse("course-course-CSC207"));
+        sessionDA.setCourse(getCourse(COURSE_CODE));
     }
 
     public Course getCourse(String courseName) {
-        JSONObject userObj = gradeDA.getUserInfo(courseName);
+        final JSONObject userObj = gradeDA.getUserInfo(courseName);
 
-        if (!userObj.getString("type").equals("course")) {
+        if (!userObj.getString(TYPE).equals("course")) {
             return null;
         }
 
-        Course.CourseBuilder courseBuilder = Course.getBuilder();
-        JSONObject courseData = userObj.getJSONObject("courseData");
+        final Course.CourseBuilder courseBuilder = Course.getBuilder();
+        final JSONObject courseData = userObj.getJSONObject(COURSE_DATA);
         courseData.getJSONArray("instructors").toList()
                 .stream()
-                .filter(o -> o instanceof String)
-                .map(o -> (String) o)
+                .filter(String.class::isInstance)
+                .map(String.class::cast)
                 .forEach(courseBuilder::addInstructor);
         courseData.getJSONArray("students").toList()
                 .stream()
-                .filter(o -> o instanceof String)
-                .map(o -> (String) o)
+                .filter(String.class::isInstance)
+                .map(String.class::cast)
                 .forEach(courseBuilder::addInstructor);
 
         courseBuilder.courseName(courseName)
                      .courseCode(courseName)
                      .latePenalty(courseData.getString("latePolicy"));
-        JSONObject assignments = courseData.getJSONObject("assignments");
+        final JSONObject assignments = courseData.getJSONObject(ASSIGNMENTS);
         for (String assignmentName : assignments.keySet()) {
-            JSONObject assignmentObject = assignments.getJSONObject(assignmentName);
+            final JSONObject assignmentObject = assignments.getJSONObject(assignmentName);
 
-            Assignment assignment = Assignment.builder()
+            final Assignment assignment = Assignment.builder()
                     .name(assignmentName)
                     .description(assignmentObject.getString("description"))
                     .creationDate(LocalDateTime.parse(assignmentObject.getString("creationDate")))
@@ -318,8 +328,8 @@ public class FacadeDAO implements
                     .supportedFileTypes(assignmentObject.getJSONArray("supportedFileTypes")
                             .toList()
                             .stream()
-                            .filter(o -> o instanceof String)
-                            .map(o -> (String) o)
+                            .filter(String.class::isInstance)
+                            .map(String.class::cast)
                             .toList())
                     .build();
 
@@ -332,7 +342,7 @@ public class FacadeDAO implements
     // Mark Assignment
     @Override
     public List<Submission> getSubmissionList() {
-        String assignmentName = sessionDA.getAssignment().getName();
+        final String assignmentName = sessionDA.getAssignment().getName();
         return getSubmissionsFor(assignmentName);
     }
     @Override
@@ -345,7 +355,7 @@ public class FacadeDAO implements
     }
 
     public Submission getSubmission(String assignmentName, String submitter) throws DataAccessException {
-        List<Submission> submissionList = getSubmissionList(assignmentName);
+        final List<Submission> submissionList = getSubmissionList(assignmentName);
         for (Submission submission : submissionList) {
             if (submission.getSubmitter().equals(submitter)) {
                 return submission;
@@ -355,34 +365,34 @@ public class FacadeDAO implements
     }
 
     public Submission getSubmissionForSubmissionView(String submitter) {
-        String assignmentName = sessionDA.getAssignment().getName();
+        final String assignmentName = sessionDA.getAssignment().getName();
         return getSubmission(assignmentName, submitter);
     }
 
     public void saveFile(File saveFile, String submitter) throws DataAccessException {
-        String assignmentName = sessionDA.getAssignment().getName();
-        Submission submission = getSubmission(assignmentName, submitter);
+        final String assignmentName = sessionDA.getAssignment().getName();
+        final Submission submission = getSubmission(assignmentName, submitter);
         try {
-            fsDA.saveFileFromString(submission.getSubmissionData(), saveFile);
+            FileToStringDataAccessObject.saveFileFromString(submission.getSubmissionData(), saveFile);
         }
-        catch (Exception e) {
-            throw new DataAccessException(e.getMessage());
+        catch (IOException ex) {
+            throw new DataAccessException(ex.getMessage());
         }
     }
 
     public void grade(String submitter, double grade, String feedback) {
-        Course course = sessionDA.getCourse();
-        String assignment = sessionDA.getAssignment().getName();
+        final Course course = sessionDA.getCourse();
+        final String assignment = sessionDA.getAssignment().getName();
 
-        JSONObject userInfoObject = gradeDA.getUserInfo(getCourseUserName(course));
-        JSONObject courseObject = userInfoObject.getJSONObject("courseData");
-        JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
-        JSONObject assignmentObject = assignmentDictionary.getJSONObject(assignment);
-        JSONObject submissionArray = assignmentObject.getJSONObject("submissions");
-        JSONObject submissionObj = submissionArray.getJSONObject(submitter);
-        submissionObj.put("grade", grade);
-        submissionObj.put("feedback", feedback);
-        submissionObj.put("status", Submission.Status.GRADED.toString());
+        final JSONObject userInfoObject = gradeDA.getUserInfo(getCourseUserName(course));
+        final JSONObject courseObject = userInfoObject.getJSONObject(COURSE_DATA);
+        final JSONObject assignmentDictionary = courseObject.getJSONObject(ASSIGNMENTS);
+        final JSONObject assignmentObject = assignmentDictionary.getJSONObject(assignment);
+        final JSONObject submissionArray = assignmentObject.getJSONObject(SUBMISSIONS);
+        final JSONObject submissionObj = submissionArray.getJSONObject(submitter);
+        submissionObj.put(GRADE, grade);
+        submissionObj.put(FEEDBACK, feedback);
+        submissionObj.put(STATUS, Submission.Status.GRADED.toString());
 
         gradeDA.modifyUserInfoEndpoint(getCourseUserName(course), COURSE_PASSWORD, userInfoObject);
     }
@@ -391,28 +401,6 @@ public class FacadeDAO implements
 
     public List<Assignment> getAssignments() {
         return sessionDA.getCourse().getAssignments();
-
-        // I believe this is unnecessary?
-//        Course course = sessionDA.getCourse();
-//        List<Assignment> assignments = new ArrayList<>();
-//
-//        JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
-//        courseObject = courseObject.getJSONObject("courseData");
-//        JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
-//        Iterator<String> keyIt = assignmentDictionary.keys();
-//        while (keyIt.hasNext()) {
-//            String assignmentName = keyIt.next();
-//            JSONObject assignmentObj = assignmentDictionary.getJSONObject(assignmentName);
-//            Assignment.AssignmentBuilder builder = Assignment.builder();
-//            builder.name(assignmentName)
-//                    .description(assignmentObj.getString("description"))
-//                    .creationDate(LocalDateTime.parse(assignmentObj.getString("creationDate")))
-//                    .dueDate(LocalDateTime.parse(assignmentObj.getString("dueDate")))
-//                    .gracePeriod(assignmentObj.getDouble("gracePeriod"));
-//            assignments.add(builder.build());
-//        }
-//
-   //    return assignments;
     }
 
     @Override
@@ -421,13 +409,13 @@ public class FacadeDAO implements
     }
 
     @Override
-    public User.USER_TYPE getUserType() {
+    public User.UserType getUserType() {
         return sessionDA.getUser().getUserType();
     }
 
     @Override
     public boolean userHasSubmitted(Assignment assignment) {
-        Submission submission = getSubmission(assignment);
+        final Submission submission = getSubmission(assignment);
 
         return submission != null;
     }
@@ -438,13 +426,13 @@ public class FacadeDAO implements
     }
 
     public Assignment getAssignment(String assignmentName) {
-        Course course = sessionDA.getCourse();
+        final Course course = sessionDA.getCourse();
         JSONObject courseObject = gradeDA.getUserInfo(getCourseUserName(course));
-        courseObject = courseObject.getJSONObject("courseData");
-        JSONObject assignmentDictionary = courseObject.getJSONObject("assignments");
-        JSONObject assignmentObj =  assignmentDictionary.getJSONObject(assignmentName);
+        courseObject = courseObject.getJSONObject(COURSE_DATA);
+        final JSONObject assignmentDictionary = courseObject.getJSONObject(ASSIGNMENTS);
+        final JSONObject assignmentObj = assignmentDictionary.getJSONObject(assignmentName);
 
-        var builder = Assignment.builder();
+        final var builder = Assignment.builder();
         return builder.name(assignmentName)
                 .description(assignmentObj.getString("description"))
                 .creationDate(LocalDateTime.parse(assignmentObj.getString("creationDate")))
@@ -452,8 +440,8 @@ public class FacadeDAO implements
                 .gracePeriod(assignmentObj.getDouble("gracePeriod"))
                 .supportedFileTypes(assignmentObj.getJSONArray("supportedFileTypes")
                         .toList().stream()
-                        .filter(s -> s instanceof String)
-                        .map(s -> (String) s)
+                        .filter(String.class::isInstance)
+                        .map(String.class::cast)
                         .toList()
                 )
                 .build();
@@ -471,11 +459,11 @@ public class FacadeDAO implements
 
     @Override
     public void saveAssignment(String courseCode, Assignment assignment) {
-        String courseName = getCourseUserName();
+        final String courseName = getCourseUserName();
 
-        JSONObject courseObject = gradeDA.getUserInfo((courseName));
-        JSONObject courseData = courseObject.getJSONObject("courseData");
-        JSONObject assignmentsObject = courseData.getJSONObject("assignments");
+        final JSONObject courseObject = gradeDA.getUserInfo(courseName);
+        final JSONObject courseData = courseObject.getJSONObject(COURSE_DATA);
+        final JSONObject assignmentsObject = courseData.getJSONObject(ASSIGNMENTS);
 
         assignmentsObject.put(assignment.getName(), assignmentToJSON(assignment));
 
@@ -486,7 +474,7 @@ public class FacadeDAO implements
     @Override
     public void updateAssignment(String courseCode, String originalName, Assignment assignment) {
         // Get the creation date of the original assignment and add it to the new assignment object
-        LocalDateTime creationDate = getAssignment(originalName).getCreationDate();
+        final LocalDateTime creationDate = getAssignment(originalName).getCreationDate();
         assignment.setCreationDate(creationDate);
 
         // If the course name has stayed the same, we can simply use the saveAssignment method and overwrite the old one
@@ -494,9 +482,9 @@ public class FacadeDAO implements
             saveAssignment(courseCode, assignment);
         }
         else {
-            String courseName = getCourseUserName();
-            JSONObject courseObject = gradeDA.getUserInfo(courseName);
-            JSONObject assignmentsObject = courseObject.getJSONObject("courseData").getJSONObject("assignments");
+            final String courseName = getCourseUserName();
+            final JSONObject courseObject = gradeDA.getUserInfo(courseName);
+            final JSONObject assignmentsObject = courseObject.getJSONObject(COURSE_DATA).getJSONObject(ASSIGNMENTS);
 
             // Remove old assignment
             assignmentsObject.put(originalName, (Object) null);
@@ -510,13 +498,13 @@ public class FacadeDAO implements
     }
 
     private JSONObject assignmentToJSON(Assignment assignment) {
-        JSONObject assignmentObj = new JSONObject();
+        final JSONObject assignmentObj = new JSONObject();
         assignmentObj.put("creationDate", assignment.getCreationDate().toString());
         assignmentObj.put("description",  assignment.getDescription());
         assignmentObj.put("dueDate", assignment.getDueDate().toString());
         assignmentObj.put("gracePeriod", Double.toString(assignment.getGracePeriod()));
         assignmentObj.put("supportedFileTypes", new JSONArray(assignment.getSupportedFileTypes()));
-        assignmentObj.put("submissions", new JSONObject());
+        assignmentObj.put(SUBMISSIONS, new JSONObject());
         return assignmentObj;
     }
 }

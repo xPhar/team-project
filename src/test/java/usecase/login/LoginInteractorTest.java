@@ -1,10 +1,7 @@
 package usecase.login;
 
 import data_access.FakeUserDataAccessObject;
-import entity.User;
-import interface_adapter.login.LoginPresenter;
 import org.junit.jupiter.api.Test;
-import usecase.login.*;
 
 import java.time.LocalDateTime;
 

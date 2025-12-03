@@ -1,19 +1,17 @@
 package usecase.logged_in;
 
+import java.util.List;
 
 import entity.Assignment;
 import entity.Submission;
 import entity.User;
-import interface_adapter.submission_list.SubmissionTableModel;
-
-import java.util.List;
 
 /**
  * DAO interface for the Logged In Use Case.
  */
 public interface LoggedInDataAccessInterface {
     /**
-     * Resets all information related to the current session
+     * Resets all information related to the current session.
      */
     void resetSession();
 
@@ -27,7 +25,7 @@ public interface LoggedInDataAccessInterface {
      * Gets the user type of the current user.
      * @return the user type for the current user
      */
-    User.USER_TYPE getUserType();
+    User.UserType getUserType();
 
     /**
      * Gets a list of submissions for the given assignment.

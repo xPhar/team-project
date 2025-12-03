@@ -1,7 +1,8 @@
 package usecase.class_average;
 
-import entity.Submission;
 import java.util.List;
+
+import entity.Submission;
 
 /**
  * Data Access Interface for retrieving submission data

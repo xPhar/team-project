@@ -1,10 +1,10 @@
 package view;
 
-import usecase.Assignments.AssignmentDTO;
-import interface_adapter.Assignments.AssignmentsState;
-import interface_adapter.Assignments.AssignmentsViewModel;
-import interface_adapter.Assignments.AssignmentsController;
-import interface_adapter.EditAssignment.EditAssignmentController;
+import usecase.assignments.AssignmentDataTransferObject;
+import interface_adapter.assignments.AssignmentsState;
+import interface_adapter.assignments.AssignmentsViewModel;
+import interface_adapter.assignments.AssignmentsController;
+import interface_adapter.edit_assignment.EditAssignmentController;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -33,7 +33,7 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
 
     private AssignmentsController assignmentsController;
     private EditAssignmentController editAssignmentController;
-    private List<AssignmentDTO> currentAssignments;
+    private List<AssignmentDataTransferObject> currentAssignments;
     private boolean isInstructor;
     private String courseCode;
 
@@ -225,8 +225,7 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
         }
     }
 
-
-    private void addAssignmentRow(AssignmentDTO assignment) {
+    private void addAssignmentRow(AssignmentDataTransferObject assignment) {
         String name = (assignment.getName() != null && !assignment.getName().isEmpty())
                 ? assignment.getName()
                 : "(unnamed)";
@@ -244,7 +243,7 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
         }
     }
 
-    private String computeStatus(AssignmentDTO assignment) {
+    private String computeStatus(AssignmentDataTransferObject assignment) {
         LocalDateTime due = assignment.getDueDate();
         LocalDateTime now = LocalDateTime.now();
 
@@ -272,7 +271,7 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
         return "Open";
     }
 
-    private String getButtonText(AssignmentDTO assignment) {
+    private String getButtonText(AssignmentDataTransferObject assignment) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime due = assignment.getDueDate();
 
@@ -307,7 +306,7 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
             return;
         }
 
-        AssignmentDTO assignment = currentAssignments.get(assignmentIndex);
+        AssignmentDataTransferObject assignment = currentAssignments.get(assignmentIndex);
 
         if (isInstructor) {
             if (editAssignmentController != null) {
@@ -334,7 +333,7 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
             return;
         }
 
-        AssignmentDTO assignment = currentAssignments.get(assignmentIndex);
+        AssignmentDataTransferObject assignment = currentAssignments.get(assignmentIndex);
 
         if (isInstructor) {
             assignmentsController.switchToSubmissionListView(assignment.getName());
@@ -398,11 +397,7 @@ public class AssignmentView extends JPanel implements PropertyChangeListener {
             button.setText(label);
             currentRow = row;
 
-            if ("Closed".equals(label) && !isInstructor) {
-                button.setEnabled(false);
-            } else {
-                button.setEnabled(true);
-            }
+            button.setEnabled(!"Closed".equals(label) || isInstructor);
 
             return button;
         }

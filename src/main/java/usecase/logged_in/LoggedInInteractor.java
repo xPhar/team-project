@@ -1,11 +1,11 @@
 package usecase.logged_in;
 
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 import entity.Assignment;
 import entity.Submission;
 import entity.User;
-
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 /**
  * The Logged In Interactor.
@@ -24,7 +24,8 @@ public class LoggedInInteractor implements LoggedInInputBoundary {
     public void execute(LoggedInInputData loggedInInputData) {
         if (loggedInInputData.getLogout()) {
             // Create output data BEFORE resetting the session (or else username is null...)
-            LoggedInOutputData outputData = new LoggedInOutputData(userDataAccessObject.getCurrentUsername(), null, null, null);
+            final LoggedInOutputData outputData = new LoggedInOutputData(userDataAccessObject.getCurrentUsername(),
+                    null, null, null);
 
             userDataAccessObject.resetSession();
 
@@ -32,20 +33,22 @@ public class LoggedInInteractor implements LoggedInInputBoundary {
         }
         else if (loggedInInputData.getAssignment() == null) {
             if (userDataAccessObject.getUserType() == User.STUDENT) {
-                LoggedInOutputData outputData = new LoggedInOutputData(
-                        null, null, null, userDataAccessObject.getAllAssignmentNames());
+                final LoggedInOutputData outputData = new LoggedInOutputData(null, null, null,
+                        userDataAccessObject.getAllAssignmentNames());
 
                 loginPresenter.switchToClassAverageView(outputData);
             }
-            else
+            else {
                 loginPresenter.switchToCreateAssignmentView();
+            }
         }
         else {
-            Assignment assignment = userDataAccessObject.getAssignment(loggedInInputData.getAssignment());
+            final Assignment assignment = userDataAccessObject.getAssignment(loggedInInputData.getAssignment());
             userDataAccessObject.setActiveAssignment(assignment);
 
             if (userDataAccessObject.getUserType() == User.STUDENT) {
-                LoggedInOutputData outputData = new LoggedInOutputData(assignment.getName(), assignment.getDescription(),
+                final LoggedInOutputData outputData = new LoggedInOutputData(assignment.getName(),
+                        assignment.getDescription(),
                         assignment.getDueDate());
                 if (userDataAccessObject.userHasSubmitted(assignment)) {
                     loginPresenter.switchToResubmitView(outputData);
@@ -55,7 +58,7 @@ public class LoggedInInteractor implements LoggedInInputBoundary {
                 }
             }
             else if (userDataAccessObject.getUserType() == User.INSTRUCTOR) {
-                LoggedInOutputData outputData = new LoggedInOutputData(
+                final LoggedInOutputData outputData = new LoggedInOutputData(
                         userDataAccessObject.getCurrentUsername(),
                         assignment.getName(),
                         getSubmissionText(assignment),
@@ -66,13 +69,13 @@ public class LoggedInInteractor implements LoggedInInputBoundary {
     }
 
     private String[][] getSubmissionText(Assignment assignment) {
-        List<Submission> submissions = userDataAccessObject.getSubmissionList(assignment);
-        String[][] submissionText = new String[submissions.size()][];
+        final List<Submission> submissions = userDataAccessObject.getSubmissionList(assignment);
+        final String[][] submissionText = new String[submissions.size()][];
         for (int i = 0; i < submissions.size(); i++) {
-            Submission submission = submissions.get(i);
+            final Submission submission = submissions.get(i);
 
             String gradeString = "pending";
-            Submission.Status status = submission.getStatus();
+            final Submission.Status status = submission.getStatus();
             if (status == Submission.Status.GRADED) {
                 gradeString = String.format("%.1f", submission.getGrade());
             }
@@ -81,8 +84,7 @@ public class LoggedInInteractor implements LoggedInInputBoundary {
                     submission.getSubmitter(),
                     submission.getSubmissionTime().format(
                             DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss")
-                    ),
-                    gradeString
+                    ), gradeString,
             };
         }
         return submissionText;

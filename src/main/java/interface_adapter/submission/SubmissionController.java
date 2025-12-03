@@ -1,16 +1,18 @@
 package interface_adapter.submission;
 
-import usecase.Grade.GradeInputBoundary;
-import usecase.Grade.GradeInputData;
-import usecase.Submission.SubmissionInputBoundary;
-import usecase.Submission.SubmissionInputData;
-
 import java.io.File;
+
+import usecase.grade.GradeInputBoundary;
+import usecase.grade.GradeInputData;
+import usecase.submission.SubmissionInputBoundary;
+import usecase.submission.SubmissionInputData;
 
 /**
  * Submission related use case.
  */
 public class SubmissionController {
+    private static final int SUBMITTER_SUBSTRING_INDEX = 11;
+
     private final SubmissionInputBoundary submissionInputBoundary;
     private final GradeInputBoundary gradeInputBoundary;
 
@@ -22,20 +24,34 @@ public class SubmissionController {
         this.gradeInputBoundary = gradeInputBoundary;
     }
 
+    /**
+     * Grade the submission.
+     * @param grade the grade
+     * @param submitter the submitter
+     * @param feedback the feedback
+     */
     public void executeGrade(String grade, String submitter, String feedback) {
-        submitter = submitter.substring(11);
-        GradeInputData data = new GradeInputData(grade, submitter, feedback);
+        final String submitterSubstring = submitter.substring(SUBMITTER_SUBSTRING_INDEX);
+        final GradeInputData data = new GradeInputData(grade, submitterSubstring, feedback);
         gradeInputBoundary.execute(data);
     }
 
+    /**
+     * Go back to submission list.
+     */
     public void executeBack() {
-        SubmissionInputData data = new SubmissionInputData(true, null, null);
+        final SubmissionInputData data = new SubmissionInputData(true, null, null);
         submissionInputBoundary.execute(data);
     }
 
+    /**
+     * Download the file.
+     * @param saveFile the file path to save
+     * @param submitter the submitter
+     */
     public void executeDownload(File saveFile, String submitter) {
-        submitter = submitter.substring(11);
-        SubmissionInputData data = new SubmissionInputData(false, saveFile, submitter);
+        final String submitterSubstring = submitter.substring(SUBMITTER_SUBSTRING_INDEX);
+        final SubmissionInputData data = new SubmissionInputData(false, saveFile, submitterSubstring);
         submissionInputBoundary.execute(data);
     }
 }

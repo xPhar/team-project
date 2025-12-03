@@ -1,22 +1,45 @@
 package view;
 
-import interface_adapter.submission.SubmissionController;
-import interface_adapter.submission.SubmissionState;
-import interface_adapter.submission.SubmissionViewModel;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.time.LocalTime;
+
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+import interface_adapter.submission.SubmissionController;
+import interface_adapter.submission.SubmissionState;
+import interface_adapter.submission.SubmissionViewModel;
 
 /**
  * Submission detail view.
  */
 public class SubmissionView extends JPanel implements PropertyChangeListener {
+    private static final int BORDER_SIZE = 10;
+    private static final int FEEDBACKPANEL_MAX_W = 500;
+    private static final int GRADE_TEXT_FIELD_COLUMNS = 8;
+    private static final int FEEDBACK_TEXT_FIELD_ROWS = 3;
+    private static final int FEEDBACK_TEXT_FIELD_COLUMNS = 5;
+    private static final int FEEDBACK_TEXT_FIELD_BORDER = 5;
+    private static final int TITLE_FONT = 20;
+    private static final int FONT_SIZE = 20;
+    private static final int BUTTON_PANEL_MAX_H = 20;
+
     private final String viewName = "submission";
     private SubmissionController submissionController;
 
@@ -44,17 +67,27 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
         gradePanel.add(new JLabel("Grade"));
         gradePanel.add(gradeTextField);
         gradePanel.add(maxGradeLabel);
-        gradePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        gradePanel.setBorder(
+                BorderFactory.createEmptyBorder(BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, BORDER_SIZE)
+        );
         feedbackPanel.setLayout(new BorderLayout());
         feedbackPanel.add(new JLabel("Feedback:"), BorderLayout.NORTH);
         feedbackPanel.add(new JScrollPane(feedbackTextArea), BorderLayout.CENTER);
-        feedbackPanel.setMaximumSize(new Dimension(500,feedbackPanel.getMaximumSize().height));
+        feedbackPanel.setMaximumSize(
+                new Dimension(FEEDBACKPANEL_MAX_W, feedbackPanel.getMaximumSize().height)
+        );
         feedbackPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        gradeTextField.setColumns(8);
-        feedbackTextArea.setRows(3);
-        feedbackTextArea.setColumns(5);
-        feedbackTextArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        gradeTextField.setColumns(GRADE_TEXT_FIELD_COLUMNS);
+        feedbackTextArea.setRows(FEEDBACK_TEXT_FIELD_ROWS);
+        feedbackTextArea.setColumns(FEEDBACK_TEXT_FIELD_COLUMNS);
+        feedbackTextArea.setBorder(
+                BorderFactory.createEmptyBorder(
+                        FEEDBACK_TEXT_FIELD_BORDER,
+                        FEEDBACK_TEXT_FIELD_BORDER,
+                        FEEDBACK_TEXT_FIELD_BORDER,
+                        FEEDBACK_TEXT_FIELD_BORDER)
+        );
 
         final JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
@@ -63,30 +96,37 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
         infoPanel.add(submittedDateLabel);
         infoPanel.add(submissionStatusLabel);
         infoPanel.add(downloadButton);
-        infoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        infoPanel.setBorder(
+                BorderFactory.createEmptyBorder(BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, BORDER_SIZE)
+        );
 
         title = new JLabel("");
         title.setHorizontalAlignment(SwingConstants.CENTER);
-        title.setFont(new Font("Helvetica", Font.BOLD, 20));
+        title.setFont(new Font("Helvetica", Font.BOLD, TITLE_FONT));
 
         final JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
-        titlePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        titlePanel.setBorder(
+                BorderFactory.createEmptyBorder(BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, BORDER_SIZE)
+        );
         titlePanel.add(title);
 
         final JPanel buttonPanel = new JPanel(new BorderLayout());
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        buttonPanel.setMaximumSize(new Dimension(buttonPanel.getMaximumSize().width, 80));
+        buttonPanel.setBorder(
+                BorderFactory.createEmptyBorder(BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, BORDER_SIZE)
+        );
+        buttonPanel.setMaximumSize(
+                new Dimension(buttonPanel.getMaximumSize().width, BUTTON_PANEL_MAX_H));
         buttonPanel.add(backButton, BorderLayout.WEST);
         buttonPanel.add(gradeButton, BorderLayout.EAST);
 
-        this.setLayout(new BoxLayout(this,  BoxLayout.Y_AXIS));
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.add(titlePanel);
         this.add(infoPanel);
         this.add(gradePanel);
         this.add(feedbackPanel);
         this.add(buttonPanel);
-        this.setFont(new Font("Helvetica", Font.PLAIN, 16));
+        this.setFont(new Font("Helvetica", Font.PLAIN, FONT_SIZE));
 
         titlePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         infoPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -105,9 +145,9 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
                 new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        String grade = gradeTextField.getText();
-                        String submitter = submitterLabel.getText();
-                        String feedback = feedbackTextArea.getText();
+                        final String grade = gradeTextField.getText();
+                        final String submitter = submitterLabel.getText();
+                        final String feedback = feedbackTextArea.getText();
 
                         submissionController.executeGrade(grade, submitter, feedback);
                     }
@@ -126,7 +166,7 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("state")) {
-            SubmissionState submissionState = (SubmissionState) evt.getNewValue();
+            final SubmissionState submissionState = (SubmissionState) evt.getNewValue();
             submitterLabel.setText("Submitter: " + submissionState.getSubmitter());
             submittedDateLabel.setText("Submitted at: " + submissionState.getSubmissionDate());
             submissionStatusLabel.setText("Status: " + submissionState.getStatus());
@@ -141,40 +181,40 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
             submissionStatusLabel.setText("Status: GRADED");
         }
         else if (evt.getPropertyName().equals("gradeFailure")) {
-            SubmissionState submissionState = (SubmissionState) evt.getNewValue();
+            final SubmissionState submissionState = (SubmissionState) evt.getNewValue();
             showFailureDialog(submissionState.getGradeFailureMessage(), "Failure");
         }
         else if (evt.getPropertyName().equals("downloadSuccess")) {
-            SubmissionState submissionState = (SubmissionState) evt.getNewValue();
+            final SubmissionState submissionState = (SubmissionState) evt.getNewValue();
             showSuccessDialog(submissionState.getDownloadSuccessMessage(), "Success");
         }
         else if (evt.getPropertyName().equals("downloadFailure")) {
-            SubmissionState submissionState = (SubmissionState) evt.getNewValue();
+            final SubmissionState submissionState = (SubmissionState) evt.getNewValue();
             showSuccessDialog(submissionState.getDownloadFailureMessage(), "Failure");
         }
     }
 
-    private void showSuccessDialog(String msg, String title) {
+    private void showSuccessDialog(String msg, String MsgTitle) {
         JOptionPane.showMessageDialog(this,
                 msg,
-                title,
+                MsgTitle,
                 JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private void showFailureDialog(String msg, String title) {
+    private void showFailureDialog(String msg, String MsgTitle) {
         JOptionPane.showMessageDialog(this,
                 msg,
-                title,
+                MsgTitle,
                 JOptionPane.ERROR_MESSAGE);
     }
 
     private void chooseFilePathToSave() {
-        JFileChooser fileChooser = new JFileChooser();
+        final JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Download file");
         fileChooser.setSelectedFile(new File(submissionNameLabel.getText().substring(11)));
-        int result = fileChooser.showSaveDialog(this);
+        final int result = fileChooser.showSaveDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = fileChooser.getSelectedFile();
+            final File selectedFile = fileChooser.getSelectedFile();
             submissionController.executeDownload(selectedFile, submitterLabel.getText());
         }
     }

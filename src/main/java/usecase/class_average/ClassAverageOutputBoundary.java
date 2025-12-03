@@ -11,7 +11,7 @@ public interface ClassAverageOutputBoundary {
     void prepareSuccessView(ClassAverageOutputData outputData);
 
     /**
-     * Returns back to loggedIn view
+     * Returns back to loggedIn view.
      */
     void backToLoggedInView();
 

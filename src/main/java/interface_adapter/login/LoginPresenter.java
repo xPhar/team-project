@@ -1,6 +1,6 @@
 package interface_adapter.login;
 
-import interface_adapter.Assignments.AssignmentsViewModel;
+import interface_adapter.assignments.AssignmentsViewModel;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.logged_in.LoggedInState;
 import interface_adapter.logged_in.LoggedInViewModel;
@@ -36,7 +36,8 @@ public class LoginPresenter implements LoginOutputBoundary {
 
         if ("instructor".equalsIgnoreCase(response.getUserType())) {
             viewManagerModel.setState(assignmentsViewModel.getViewName());
-        } else {
+        }
+        else {
             final LoggedInState loggedInState = loggedInViewModel.getState();
 
             loggedInState.setUsername(response.getUsername());

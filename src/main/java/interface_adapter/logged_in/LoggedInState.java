@@ -19,6 +19,11 @@ public class LoggedInState {
         return username;
     }
 
+    /**
+     * Sets the username for this user.
+     *
+     * @param name the new username to assign
+     */
     public void setUsername(String name) {
         this.username = name;
         updateWelcomeMessage();
@@ -28,6 +33,11 @@ public class LoggedInState {
         return userType;
     }
 
+    /**
+     * Sets the type for this user (STUDENT/INSTRUCTOR).
+     *
+     * @param userType the type of this user
+     */
     public void setUserType(String userType) {
         this.userType = userType;
         updateWelcomeMessage();
@@ -65,9 +75,9 @@ public class LoggedInState {
 
     @Override
     public String toString() {
-        return "LoggedInState{" +
-                "username='" + username + '\'' +
-                ", userType='" + userType + '\'' +
-                '}';
+        return "LoggedInState{"
+                + "username='" + username + '\''
+                + ", userType='" + userType + '\''
+                + '}';
     }
 }

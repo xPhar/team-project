@@ -4,8 +4,8 @@ import entity.Assignment;
 import entity.Submission;
 import entity.User;
 
-import usecase.Resubmit.ResubmitUserDataAccessInterface;
-import usecase.Submit.SubmitUserDataAccessInterface;
+import usecase.resubmit.ResubmitUserDataAccessInterface;
+import usecase.submit.SubmitUserDataAccessInterface;
 import usecase.login.LoginDataAccessInterface;
 import usecase.signup.SignupDataAccessInterface;
 

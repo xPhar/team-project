@@ -1,13 +1,13 @@
 package interface_adapter.logged_in;
 
-import interface_adapter.CreateAssignment.CreateAssignmentViewModel;
-import interface_adapter.Resubmit.ResubmitState;
-import interface_adapter.Resubmit.ResubmitViewModel;
-import interface_adapter.Submit.SubmitState;
-import interface_adapter.Submit.SubmitViewModel;
-import interface_adapter.ViewManagerModel;
 import interface_adapter.class_average.ClassAverageState;
 import interface_adapter.class_average.ClassAverageViewModel;
+import interface_adapter.create_assignment.CreateAssignmentViewModel;
+import interface_adapter.resubmit.ResubmitState;
+import interface_adapter.resubmit.ResubmitViewModel;
+import interface_adapter.submit.SubmitState;
+import interface_adapter.submit.SubmitViewModel;
+import interface_adapter.ViewManagerModel;
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.submission_list.SubmissionListState;
@@ -38,7 +38,7 @@ public class LoggedInPresenter implements LoggedInOutputBoundary {
                              ClassAverageViewModel classAverageViewModel,
                              CreateAssignmentViewModel createAssignmentViewModel) {
         this.viewManagerModel = viewManagerModel;
-        this.loggedInViewModel =  loggedInViewModel;
+        this.loggedInViewModel = loggedInViewModel;
         this.loginViewModel = loginViewModel;
         this.submitViewModel = submitViewModel;
         this.resubmitViewModel = resubmitViewModel;

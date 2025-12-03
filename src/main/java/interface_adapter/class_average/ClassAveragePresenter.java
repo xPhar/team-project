@@ -1,16 +1,17 @@
 package interface_adapter.class_average;
 
-import interface_adapter.ViewManagerModel;
-import interface_adapter.logged_in.LoggedInState;
-import interface_adapter.logged_in.LoggedInViewModel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.DefaultCategoryDataset;
+
+import interface_adapter.ViewManagerModel;
+import interface_adapter.logged_in.LoggedInViewModel;
 import usecase.class_average.ClassAverageOutputBoundary;
 import usecase.class_average.ClassAverageOutputData;
-
-import javax.swing.*;
 
 public class ClassAveragePresenter implements ClassAverageOutputBoundary {
 
@@ -38,7 +39,7 @@ public class ClassAveragePresenter implements ClassAverageOutputBoundary {
 
     @Override
     public void prepareSuccessView(ClassAverageOutputData data) {
-        ClassAverageState state = classAverageViewModel.getState();
+        final ClassAverageState state = classAverageViewModel.getState();
 
         state.setAssignmentNames(data.getAssignmentNames());
         state.setStudentCount(data.getStudentCount());
@@ -46,7 +47,7 @@ public class ClassAveragePresenter implements ClassAverageOutputBoundary {
         state.setMedian(data.getMedian());
         state.setStdDev(data.getStdDev());
         state.setMyScore(data.getMyScore());
-        JPanel chartPanel = buildHistogramChart(data);
+        final JPanel chartPanel = buildHistogramChart(data);
         state.setChartPanel(chartPanel);
         classAverageViewModel.setState(state);
         classAverageViewModel.firePropertyChange();
@@ -59,25 +60,28 @@ public class ClassAveragePresenter implements ClassAverageOutputBoundary {
 
     /**
      * Build JFreeChart histogram panel based on histogram bucket data.
+     *
+     * @param data histogram bucket data
+     * @return JFreeChart histogram panel
      */
     private JPanel buildHistogramChart(ClassAverageOutputData data) {
 
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
         for (String bucketName : data.getHistogram().keySet()) {
-            int count = data.getHistogram().get(bucketName);
+            final int count = data.getHistogram().get(bucketName);
             dataset.addValue(count, "Students", bucketName);
         }
 
-        JFreeChart chart = ChartFactory.createBarChart(
+        final JFreeChart chart = ChartFactory.createBarChart(
                 data.getAssignmentName() + " Grade Distribution",
                 "Range",
                 "Students",
                 dataset
         );
 
-        org.jfree.chart.plot.CategoryPlot plot = chart.getCategoryPlot();
-        org.jfree.chart.axis.NumberAxis rangeAxis = (org.jfree.chart.axis.NumberAxis) plot.getRangeAxis();
+        final org.jfree.chart.plot.CategoryPlot plot = chart.getCategoryPlot();
+        final org.jfree.chart.axis.NumberAxis rangeAxis = (org.jfree.chart.axis.NumberAxis) plot.getRangeAxis();
         rangeAxis.setStandardTickUnits(org.jfree.chart.axis.NumberAxis.createIntegerTickUnits());
 
         return new ChartPanel(chart);
