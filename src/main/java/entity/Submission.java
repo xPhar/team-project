@@ -3,6 +3,11 @@ package entity;
 import java.time.LocalDateTime;
 
 public class Submission {
+    public static final Status ON_TIME = Status.ON_TIME;
+    public static final Status LATE = Status.LATE;
+    public static final Status GRADED = Status.GRADED;
+    public static final Status UNDER_REVIEW = Status.UNDER_REVIEW;
+
     private final String submitter;
     private final LocalDateTime submissionTime;
     private final String submissionName;
@@ -17,11 +22,6 @@ public class Submission {
         GRADED,
         UNDER_REVIEW
     }
-
-    public static final Status ON_TIME = Status.ON_TIME;
-    public static final Status LATE = Status.LATE;
-    public static final Status GRADED = Status.GRADED;
-    public static final Status UNDER_REVIEW = Status.UNDER_REVIEW;
 
     public Submission(String submitter, LocalDateTime submissionTime, String submissionName,
                       String submissionData, double grade, Status status, String feedback) {

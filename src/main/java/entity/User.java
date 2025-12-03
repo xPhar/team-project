@@ -4,12 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class User {
-
-    public enum UserType {
-        STUDENT,
-        INSTRUCTOR
-    }
-
     public static final UserType INSTRUCTOR = UserType.INSTRUCTOR;
     public static final UserType STUDENT = UserType.STUDENT;
 
@@ -19,6 +13,11 @@ public class User {
     private final String firstName;
     private final String lastName;
     private final List<String> courses;
+
+    public enum UserType {
+        STUDENT,
+        INSTRUCTOR
+    }
 
     public User(String name, String password, String first, String last, UserType userType) {
         this(name, password, first, last, userType, new ArrayList<>());
