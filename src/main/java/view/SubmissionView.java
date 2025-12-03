@@ -178,6 +178,7 @@ public class SubmissionView extends JPanel implements PropertyChangeListener {
         }
         else if (evt.getPropertyName().equals("gradeSuccess")) {
             showSuccessDialog("Graded submission successfully", "Success");
+            submissionStatusLabel.setText("Status: GRADED");
         }
         else if (evt.getPropertyName().equals("gradeFailure")) {
             final SubmissionState submissionState = (SubmissionState) evt.getNewValue();

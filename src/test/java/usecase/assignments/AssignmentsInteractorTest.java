@@ -59,7 +59,7 @@ class AssignmentsInteractorTest {
 
         assertEquals("CSC207", presenter.outputData.getCourseName());
 
-        List<AssignmentDTO> dtos = presenter.outputData.getAssignments();
+        List<AssignmentDataTransferObject> dtos = presenter.outputData.getAssignments();
         assertEquals(3, dtos.size());
 
         assertEquals("A_First", dtos.get(0).getName(), "Earliest DDL should be first.");
@@ -143,15 +143,29 @@ class AssignmentsInteractorTest {
         assertTrue(presenter.switchToResubmitViewCalled, "Presenter's method should be called.");
     }
 
+    @Test
+    void testSwitchToLoginView() {
+        dao.currentUserType = UserType.STUDENT;
+        dao.currentUserName = "LoggedInStudent";
+
+        interactor.switchToLoginView();
+
+        assertTrue(presenter.switchToLoginViewCalled);
+        assertEquals("LoggedInStudent", presenter.usernameForLogin, "Username should be passed and stored in presenter.");
+        assertTrue(dao.sessionReset);
+    }
+
     static class TestAssignmentsDAO implements AssignmentsDataAccessInterface {
         List<Assignment> assignments = Collections.emptyList();
         UserType currentUserType = UserType.STUDENT;
+        String currentUserName = "TestUser";
         String courseCode = "";
         boolean shouldThrowException = false;
         String exceptionMessage = "";
         Assignment assignmentToReturn = null;
         Assignment activeAssignmentSet = null;
         List<Submission> submissions = Collections.emptyList();
+        boolean sessionReset = false;
 
 
         @Override
@@ -164,7 +178,7 @@ class AssignmentsInteractorTest {
 
         @Override
         public User getCurrentUser() {
-            return new User("testUser", "pass", "test", "user", currentUserType);
+            return new User(currentUserName, "pass", "test", "user", currentUserType);
         }
 
         @Override
@@ -189,6 +203,7 @@ class AssignmentsInteractorTest {
 
         @Override
         public void resetSession() {
+            this.sessionReset = true;
             activeAssignmentSet = null;
         }
     }
@@ -204,6 +219,7 @@ class AssignmentsInteractorTest {
 
         String failMessage;
         AssignmentsOutputData outputData;
+        String usernameForLogin;
 
         @Override
         public void prepareSuccessView(AssignmentsOutputData outputData) {
@@ -242,6 +258,7 @@ class AssignmentsInteractorTest {
         public void switchToLoginView(AssignmentsOutputData outputData) {
             switchToLoginViewCalled = true;
             this.outputData = outputData;
+            this.usernameForLogin = outputData.getUsername();
         }
     }
 }
