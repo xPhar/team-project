@@ -51,28 +51,29 @@ public class ClassAverageInteractor implements ClassAverageInputBoundary {
 
             if (grades.isEmpty()) {
                 presenter.prepareFailView("Assignment not graded yet!");
+            }else {
+
+                final double mean = computeMean(grades);
+                final double median = computeMedian(grades);
+                final double stdDev = computeStdDev(grades, mean);
+                final int studentCount = grades.size();
+
+                final double myScore = submissionDao.getMyScore(assignmentName, submissionDao.getCurrentUsername());
+                final Map<String, Integer> histogram = buildHistogram(grades);
+                final List<String> assignmentNames = submissionDao.getAllAssignmentNames();
+                final ClassAverageOutputData outputData = new ClassAverageOutputData(
+                        assignmentNames,
+                        studentCount,
+                        mean,
+                        median,
+                        stdDev,
+                        myScore,
+                        histogram,
+                        assignmentName
+                );
+
+                presenter.prepareSuccessView(outputData);
             }
-
-            final double mean = computeMean(grades);
-            final double median = computeMedian(grades);
-            final double stdDev = computeStdDev(grades, mean);
-            final int studentCount = grades.size();
-
-            final double myScore = submissionDao.getMyScore(assignmentName, submissionDao.getCurrentUsername());
-            final Map<String, Integer> histogram = buildHistogram(grades);
-            final List<String> assignmentNames = submissionDao.getAllAssignmentNames();
-            final ClassAverageOutputData outputData = new ClassAverageOutputData(
-                    assignmentNames,
-                    studentCount,
-                    mean,
-                    median,
-                    stdDev,
-                    myScore,
-                    histogram,
-                    assignmentName
-            );
-
-            presenter.prepareSuccessView(outputData);
         }
     }
 
