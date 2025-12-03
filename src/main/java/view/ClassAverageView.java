@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 import interface_adapter.class_average.ClassAverageController;
 import interface_adapter.class_average.ClassAverageState;
 import interface_adapter.class_average.ClassAverageViewModel;
-import interface_adapter.LoggedIn.LoggedInController;
+import interface_adapter.logged_in.LoggedInController;
 
 /**
  * View for showing class average and grade distribution of an assignment.

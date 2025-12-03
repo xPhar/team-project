@@ -3,9 +3,9 @@ package interface_adapter.submission;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.submission_list.SubmissionListViewModel;
 import interface_adapter.submission_list.SubmissionTableModel;
-import usecase.Grade.GradeOutputBoundary;
-import usecase.Submission.SubmissionOutputBoundary;
-import usecase.Submission.SubmissionOutputData;
+import usecase.grade.GradeOutputBoundary;
+import usecase.submission.SubmissionOutputBoundary;
+import usecase.submission.SubmissionOutputData;
 
 /**
  * Presenter for the submission view.

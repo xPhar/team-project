@@ -1,11 +1,11 @@
 package interface_adapter.submission_list;
 
-import interface_adapter.Assignments.AssignmentsViewModel;
+import interface_adapter.assignments.AssignmentsViewModel;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.submission.SubmissionState;
 import interface_adapter.submission.SubmissionViewModel;
-import usecase.SubmissionList.SubmissionListOutputBoundary;
-import usecase.SubmissionList.SubmissionListOutputData;
+import usecase.submission_list.SubmissionListOutputBoundary;
+import usecase.submission_list.SubmissionListOutputData;
 
 /**
  * Presenter for the submission list view.

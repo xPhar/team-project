@@ -3,12 +3,12 @@ package data_access;
 import entity.Assignment;
 import entity.Submission;
 import entity.User;
-import usecase.Assignments.AssignmentsDataAccessInterface;
-import usecase.CreateAssignment.CreateAssignmentDataAccessInterface;
-import usecase.EditAssignment.EditAssignmentDataAccessInterface;
-import usecase.Grade.GradeDataAccessInterface;
-import usecase.SubmissionList.SubmissionListDataAccessInterface;
-import usecase.Submission.SubmissionDataAccessInterface;
+import usecase.assignments.AssignmentsDataAccessInterface;
+import usecase.create_assignment.CreateAssignmentDataAccessInterface;
+import usecase.edit_assignment.EditAssignmentDataAccessInterface;
+import usecase.grade.GradeDataAccessInterface;
+import usecase.submission_list.SubmissionListDataAccessInterface;
+import usecase.submission.SubmissionDataAccessInterface;
 
 import java.io.File;
 import java.time.LocalDateTime;

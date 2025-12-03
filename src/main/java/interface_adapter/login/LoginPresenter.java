@@ -1,9 +1,9 @@
 package interface_adapter.login;
 
-import interface_adapter.Assignments.AssignmentsViewModel;
+import interface_adapter.assignments.AssignmentsViewModel;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.LoggedIn.LoggedInState;
-import interface_adapter.LoggedIn.LoggedInViewModel;
+import interface_adapter.logged_in.LoggedInState;
+import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.signup.SignupViewModel;
 import usecase.login.LoginOutputBoundary;
 import usecase.login.LoginOutputData;

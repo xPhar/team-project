@@ -1,7 +1,7 @@
 package interface_adapter.submission_list;
 
-import usecase.SubmissionList.SubmissionListInputBoundary;
-import usecase.SubmissionList.SubmissionListInputData;
+import usecase.submission_list.SubmissionListInputBoundary;
+import usecase.submission_list.SubmissionListInputData;
 
 /**
  * Submission list view related use case.

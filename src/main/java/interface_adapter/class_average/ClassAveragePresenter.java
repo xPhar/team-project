@@ -9,7 +9,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.LoggedIn.LoggedInViewModel;
+import interface_adapter.logged_in.LoggedInViewModel;
 import usecase.class_average.ClassAverageOutputBoundary;
 import usecase.class_average.ClassAverageOutputData;
 

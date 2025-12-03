@@ -2,10 +2,10 @@ package interface_adapter.submission;
 
 import java.io.File;
 
-import usecase.Grade.GradeInputBoundary;
-import usecase.Grade.GradeInputData;
-import usecase.Submission.SubmissionInputBoundary;
-import usecase.Submission.SubmissionInputData;
+import usecase.grade.GradeInputBoundary;
+import usecase.grade.GradeInputData;
+import usecase.submission.SubmissionInputBoundary;
+import usecase.submission.SubmissionInputData;
 
 /**
  * Submission related use case.
