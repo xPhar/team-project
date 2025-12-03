@@ -89,13 +89,24 @@ class EditAssignmentInteractorTest {
         }
 
         @Override
-        public void switchToCreateAssignmentView() {}
+        public void switchToCreateAssignmentView() {
+        }
+
         @Override
-        public void switchToSubmitView() {}
+        public void switchToSubmitView() {
+        }
+
         @Override
-        public void switchToResubmitView() {}
+        public void switchToResubmitView() {
+        }
+
         @Override
-        public void switchToSubmissionListView(String assignmentName) {}
+        public void switchToSubmissionListView(String assignmentName) {
+        }
+
+        @Override
+        public void switchToLoginView() {
+        }
     }
 
     static class TestEditAssignmentDAO implements EditAssignmentDataAccessInterface {

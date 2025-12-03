@@ -123,6 +123,10 @@ class CreateAssignmentInteractorTest {
         @Override
         public void switchToSubmissionListView(String assignmentName) {
         }
+
+        @Override
+        public void switchToLoginView() {
+        }
     }
 
     static class TestCreateAssignmentDAO implements CreateAssignmentDataAccessInterface {
