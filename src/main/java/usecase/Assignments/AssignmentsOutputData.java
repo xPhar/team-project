@@ -34,7 +34,7 @@ public class AssignmentsOutputData {
     }
 
     public AssignmentsOutputData(String username) {
-        this.username = null;
+        this.username = username;
 
         assignments = null;
         courseName = null;
